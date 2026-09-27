@@ -10,6 +10,9 @@ const paths = {
   review: <Path d="M4 12l5 5L20 6" />,
   overview: <Path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />,
   videos: <><Path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" /><Circle cx="12" cy="12" r="3" /></>,
+  back: <Path d="M15 5l-7 7 7 7" />,
+  chevron: <Path d="M9 5l7 7-7 7" />,
+  add: <Path d="M12 5v14M5 12h14" />,
   people: <><Circle cx="9" cy="8" r="3.5" /><Path d="M2.5 20c1-3.5 3.5-5 6.5-5s5.5 1.5 6.5 5" /><Path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 15c2 .6 3.2 2.2 3.8 5" /></>,
 } as const;
 

@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { AccountSection } from '../../components/AccountSection';
+import { Icon } from '../../components/Icon';
 import { PostingActivity } from '../../components/parts';
 import { Avatar, Button, Card, Empty, ErrorNote, Field, List, Loading, Pill, Row, Screen, Section, Sheet, T, Tile, Tiles, hueFor, useToast } from '../../components/ui';
 import { useAuth } from '../../lib/auth';
@@ -59,7 +60,7 @@ export default function Profile() {
               <T variant="bodyStrong">Your creator code</T>
               <T variant="muted">{d && d.balance.invites ? `${d.balance.invites} invited · ${usd(d.balance.referral_earned_cents)} earned` : 'Earn by inviting creators'}</T>
             </View>
-            <T variant="h2" style={{ color: colors.muted }}>›</T>
+            <Icon name="chevron" color={colors.muted} size={20} />
           </Card>
         </Pressable>
         {q.error ? <ErrorNote text={q.error} onRetry={q.reload} /> : null}

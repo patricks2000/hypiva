@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { CampaignForm } from '../../components/CampaignForm';
@@ -47,7 +48,8 @@ export default function AdminCampaigns() {
         {!q.data ? (q.error ? null : <Loading />) : (
           <>
             {q.data.campaigns.length ? q.data.campaigns.map((c) => (
-              <CampaignStatsCard key={c.id} c={c} stats={q.data!.stats.get(c.id)} onToggle={() => toggle(c)} />
+              <CampaignStatsCard key={c.id} c={c} stats={q.data!.stats.get(c.id)} onToggle={() => toggle(c)}
+            onOpen={() => router.push({ pathname: '/manage/[id]', params: { id: c.id } })} />
             )) : <Card><Empty text="No campaigns yet. Add a brand, then create a campaign." /></Card>}
             <Section title="Brands" right={<Button small kind="ghost" title="Add brand" onPress={() => setAddingBrand(true)} />}>
               <List>

@@ -26,6 +26,8 @@ export interface Campaign {
   min_views: number;
   budget_cents: number;
   status: 'live' | 'paused' | 'ended';
+  instructions: string;
+  requirements: string[];
   created_at: string;
   brands?: { name: string } | null;
 }
@@ -42,6 +44,7 @@ export interface Submission {
   views: number;
   views_updated_at: string | null;
   reject_reason: string | null;
+  content_pack_id?: string | null;
   created_at: string;
   campaigns?: Pick<Campaign, 'name' | 'cpm_cents' | 'min_views'> | null;
   tiktok_accounts?: { username: string } | null;
@@ -94,6 +97,13 @@ export interface Bonus { id: string; creator_id: string; amount_cents: number; r
 export interface LeaderRow { rank: number; creator_id: string | null; first_name: string; views_gained: number; earned_cents: number | null; is_me: boolean }
 
 export interface LeaderboardSettings { visible: boolean; prize_text: string }
+
+export interface ContentSlide { id: string; pack_id: string; position: number; image_url: string; overlay_text: string }
+
+export interface ContentPack {
+  id: string; campaign_id: string; title: string; description: string; hashtags: string; active: boolean; created_at: string;
+  content_slides?: ContentSlide[];
+}
 
 export interface CampaignStats { campaign_id: string; videos: number; views: number; spent_cents: number }
 

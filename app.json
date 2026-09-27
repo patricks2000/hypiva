@@ -28,7 +28,24 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      "expo-image",
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Viewtra saves campaign slides to your photos so you can post them.",
+          "savePhotosPermission": "Viewtra saves campaign slides to your photos so you can post them.",
+          "isAccessMediaLocationEnabled": false
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Pick images to add as campaign content.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ]
     ],
     "scheme": "viewtra",
     "backgroundColor": "#0D0E13"

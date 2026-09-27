@@ -49,7 +49,8 @@ export default function Discover() {
         {q.error ? <ErrorNote text={q.error} onRetry={q.reload} /> : null}
         {!q.data ? (q.error ? null : <Loading />) : list.length ? list.map((c) => (
           <CampaignCard key={c.id} c={c} joined={q.data!.joined.has(c.id)} busy={busy === c.id} onJoin={() => join(c)} rate={rateFor(q.data!.rates, profile!.id, c)}
-            onSubmit={() => router.push({ pathname: '/(creator)/submit', params: { campaign: c.id } })} />
+            onOpen={() => router.push({ pathname: '/campaign/[id]', params: { id: c.id } })}
+            onSubmit={() => router.push({ pathname: '/post/[id]', params: { id: c.id } })} />
         )) : (
           <Card><Empty text={q.data.campaigns.length ? 'No campaigns match your search.' : 'No campaigns are live right now. Check back soon.'} /></Card>
         )}

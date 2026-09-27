@@ -10,6 +10,7 @@ Brands run pay-per-view TikTok campaigns; creators post, see their views and get
 - **Special rates**: the owner can give one creator a different rate (all campaigns or one).
 - **Weekly totals**: view counts are recorded on every change, so earnings can be split per week.
 - **Bonuses & leaderboard**: admins can add a bonus with a reason; a monthly top list (views gained) that the owner can show to creators.
+- **Ready-to-post content**: campaigns hold slide packs (images, overlay text, title, hashtags) and a checklist; each TikTok account gets content it has not posted yet.
 - **Invites**: every creator has a code. Inviters earn a share of invited creators' approved earnings (default 5% for 6 months, max $100 each), paid on top.
 
 ## Stack

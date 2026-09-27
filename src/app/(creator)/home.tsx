@@ -50,7 +50,8 @@ export default function CreatorHome() {
                 contentContainerStyle={{ gap: 12, paddingHorizontal: 16 }}>
                 {d.joined.map((c) => (
                   <CampaignCard key={c.id} c={c} joined width={Math.min(width, 480) * 0.82} rate={rateFor(d.rates, profile!.id, c)}
-                    onSubmit={() => router.push({ pathname: '/(creator)/submit', params: { campaign: c.id } })} />
+                    onOpen={() => router.push({ pathname: '/campaign/[id]', params: { id: c.id } })}
+                    onSubmit={() => router.push({ pathname: '/post/[id]', params: { id: c.id } })} />
                 ))}
               </ScrollView>
             ) : (

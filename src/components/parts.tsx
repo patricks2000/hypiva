@@ -7,30 +7,34 @@ import { kindLabel, type Campaign, type Submission } from '../lib/types';
 import { Button, Card, Pill, Row, T, hueFor } from './ui';
 
 /** A campaign as creators see it. */
-export function CampaignCard({ c, joined, onJoin, onSubmit, busy, width, rate }: {
-  c: Campaign; joined: boolean; onJoin?: () => void; onSubmit?: () => void; busy?: boolean; width?: number;
+export function CampaignCard({ c, joined, onJoin, onSubmit, onOpen, busy, width, rate }: {
+  c: Campaign; joined: boolean; onJoin?: () => void; onSubmit?: () => void; onOpen?: () => void; busy?: boolean; width?: number;
   rate?: { cpm_cents: number; min_views: number; custom: boolean };
 }) {
   const color = hueFor(c.brand_id);
   const cpm = rate?.cpm_cents ?? c.cpm_cents, min = rate?.min_views ?? c.min_views;
   return (
     <View style={{ width, borderRadius: 22, overflow: 'hidden', backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
+      <Pressable onPress={onOpen} disabled={!onOpen} accessibilityRole="button" accessibilityLabel={`Open ${c.name}`}>
       <View style={{ height: 110, backgroundColor: color, padding: 16, justifyContent: 'space-between' }}>
         <View style={{ alignSelf: 'flex-start', backgroundColor: 'rgba(0,0,0,0.35)', paddingHorizontal: 9, paddingVertical: 4, borderRadius: 999 }}>
           <T variant="label" style={{ color: '#fff', fontSize: 10.5 }}>{kindLabel(c.kind)}</T>
         </View>
         <T variant="title" style={{ color: '#fff', fontSize: 28 }} numberOfLines={1}>{c.brands?.name ?? c.name}</T>
       </View>
-      <View style={{ padding: 16, gap: 10 }}>
+      <View style={{ padding: 16, paddingBottom: 12, gap: 10 }}>
         <T variant="bodyStrong" style={{ fontSize: 17 }}>{c.name}</T>
         {c.description ? <T variant="muted" numberOfLines={3}>{c.description}</T> : null}
+      </View>
+      </Pressable>
+      <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, borderTopWidth: 1, borderTopColor: colors.line, paddingTop: 12 }}>
           <View style={{ flex: 1 }}>
             <T variant="h2" style={{ color: colors.money }}>{usd(cpm)}</T>
             <T variant="small">per 1K views · min. {short(min)} views per video{rate?.custom ? ' · your rate' : ''}</T>
           </View>
           {joined
-            ? onSubmit ? <Button small kind="ghost" title="Submit video" onPress={onSubmit} /> : <Pill kind="linked" label="Joined" />
+            ? onSubmit ? <Button small title="Post now" onPress={onSubmit} /> : <Pill kind="linked" label="Joined" />
             : onJoin ? <Button small title="Join" onPress={onJoin} busy={busy} /> : null}
         </View>
       </View>
