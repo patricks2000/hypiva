@@ -59,7 +59,7 @@ export default function Wallet() {
               {d.balance.requested_cents > 0 ? <T variant="small">You have a request of {usd(d.balance.requested_cents)} open.</T> : null}
             </Card>
             <Tiles>
-              <Tile label="Earned" value={usd(d.balance.earned_cents)} />
+              <Tile label="Earned" value={usd(d.balance.earned_cents)} sub={d.balance.referral_earned_cents ? `${usd(d.balance.video_earned_cents)} videos + ${usd(d.balance.referral_earned_cents)} invites` : undefined} />
               <Tile label="Paid out" value={usd(d.balance.paid_cents)} />
             </Tiles>
             <Section title="Paid to" right={<Button small kind="ghost" title={hasMethod ? 'Change' : 'Add'} onPress={() => setEditing(true)} />}>

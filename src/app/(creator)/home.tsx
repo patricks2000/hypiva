@@ -30,7 +30,7 @@ export default function CreatorHome() {
         <>
           <Tiles>
             <Tile highlight label="Views" value={num(d.balance.views)} sub={`${d.balance.videos} videos`} />
-            <Tile label="Earned" value={usd(d.balance.earned_cents)} sub={`${d.balance.paid_videos} of ${d.balance.videos} videos over the minimum`} />
+            <Tile label="Earned" value={usd(d.balance.earned_cents)} sub={`${d.balance.paid_videos} of ${d.balance.videos} videos over the minimum${d.balance.referral_earned_cents ? ` · ${usd(d.balance.referral_earned_cents)} from invites` : ''}`} />
           </Tiles>
           <Card>
             <T variant="h2">Views by posting day</T>

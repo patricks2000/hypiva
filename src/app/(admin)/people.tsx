@@ -3,10 +3,11 @@ import { View } from 'react-native';
 import { AccountSection } from '../../components/AccountSection';
 import { Avatar, Button, Card, Chips, Empty, ErrorNote, Field, List, Loading, Pill, Row, Screen, Sheet, T, hueFor, useToast } from '../../components/ui';
 import { useAuth } from '../../lib/auth';
-import { day } from '../../lib/format';
 import { friendlyError, supabase } from '../../lib/supabase';
 import { colors } from '../../lib/theme';
-import type { Brand, Profile, Role } from '../../lib/types';
+import { day, parseDollars, usd } from '../../lib/format';
+import { programLine } from '../../lib/queries';
+import type { Brand, Profile, Referral, ReferralSettings, Role } from '../../lib/types';
 import { must, useLoad } from '../../lib/useLoad';
 
 const ROLE_LABEL: Record<Role, string> = { creator: 'Creator', brand: 'Brand', admin: 'Admin' };
@@ -17,13 +18,21 @@ export default function People() {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<'all' | Role>('all');
   const [editing, setEditing] = useState<Profile | null>(null);
+  const [rules, setRules] = useState(false);
   const q = useLoad(async () => {
-    const [p, b] = await Promise.all([
+    const [p, b, r, st] = await Promise.all([
       supabase.from('profiles').select('*').order('created_at', { ascending: false }),
       supabase.from('brands').select('*').order('name'),
+      supabase.from('referrals').select('*'),
+      supabase.from('referral_settings').select('*').single(),
     ]);
-    return { people: must(p) as Profile[], brands: must(b) as Brand[] };
+    return { people: must(p) as Profile[], brands: must(b) as Brand[], referrals: must(r) as Referral[], settings: must(st) as ReferralSettings };
   });
+  const invitedBy = (id: string) => {
+    const r = q.data?.referrals.find((x) => x.referred_id === id);
+    const who = r && q.data?.people.find((x) => x.id === r.referrer_id);
+    return who ? ` · invited by ${who.name.split(' ')[0] || 'a creator'}` : '';
+  };
   const needle = search.trim().toLowerCase().replace(/^@/, '');
   const list = (q.data?.people ?? []).filter((p) => (filter === 'all' || p.role === filter) &&
     (!needle || `${p.name} ${p.handle ?? ''}`.toLowerCase().includes(needle)));
@@ -47,14 +56,23 @@ export default function People() {
             {list.length ? list.map((p, i) => (
               <Row key={p.id} last={i === list.length - 1} left={<Avatar name={p.name || '?'} color={hueFor(p.id)} />}
                 title={p.name || 'No name'}
-                subtitle={`${p.handle ? '@' + p.handle + ' · ' : ''}joined ${day(p.created_at)}${p.role === 'brand' ? ' · ' + (q.data!.brands.find((b) => b.id === p.brand_id)?.name ?? 'no brand') : ''}`}
+                subtitle={`${p.handle ? '@' + p.handle + ' · ' : ''}joined ${day(p.created_at)}${p.role === 'brand' ? ' · ' + (q.data!.brands.find((b) => b.id === p.brand_id)?.name ?? 'no brand') : ''}${invitedBy(p.id)}`}
                 onPress={me?.is_owner && p.id !== me.id ? () => setEditing(p) : undefined}
                 right={p.is_owner ? <Pill kind="live" label="Owner" /> : <Pill kind={p.role === 'admin' ? 'live' : p.role === 'brand' ? 'requested' : 'linked'} label={ROLE_LABEL[p.role]} />} />
             )) : <Empty text="Nobody matches." />}
           </List>
         )}
+        {q.data ? (
+          <Card style={{ gap: 8, marginTop: 16 }}>
+            <T variant="h2">Invite program</T>
+            <T variant="muted">Creators earn {programLine(q.data.settings)} New creators can add a code in their first {q.data.settings.signup_window_days} days.</T>
+            <T variant="small">{q.data.referrals.length} {q.data.referrals.length === 1 ? 'creator' : 'creators'} joined with a code.</T>
+            {me?.is_owner ? <Button small kind="ghost" title="Change rules" onPress={() => setRules(true)} /> : null}
+          </Card>
+        ) : null}
         <AccountSection onToast={show} />
       </Screen>
+      {rules && q.data ? <RulesSheet s={q.data.settings} onClose={() => setRules(false)} onSaved={() => { setRules(false); show('Invite rules saved'); q.reload(); }} /> : null}
       {editing && q.data ? (
         <RoleSheet person={editing} brands={q.data.brands} onClose={() => setEditing(null)}
           onSaved={(m) => { show(m); setEditing(null); q.reload(); }} />
@@ -95,6 +113,37 @@ function RoleSheet({ person, brands, onClose, onSaved }: { person: Profile; bran
       ) : null}
       {error ? <T variant="muted" style={{ color: colors.bad }}>{error}</T> : null}
       <Button title="Save" onPress={save} busy={busy} disabled={role === person.role && (role !== 'brand' || brand === person.brand_id) || (role === 'brand' && !brand)} />
+    </Sheet>
+  );
+}
+
+function RulesSheet({ s, onClose, onSaved }: { s: ReferralSettings; onClose: () => void; onSaved: () => void }) {
+  const [pct, setPct] = useState(String(s.percent_bp / 100));
+  const [months, setMonths] = useState(String(s.months));
+  const [cap, setCap] = useState((s.cap_cents / 100).toFixed(2));
+  const [days, setDays] = useState(String(s.signup_window_days));
+  const [error, setError] = useState<string | null>(null);
+  const save = async () => {
+    const p = Number(pct.replace(',', '.')), m = parseInt(months, 10), d = parseInt(days, 10), c = parseDollars(cap);
+    if (!(p >= 0 && p <= 50) || !(m >= 1 && m <= 36) || c === null || !(d >= 0 && d <= 365)) return setError('Check the numbers: 0-50%, 1-36 months, 0-365 days.');
+    const { error: e } = await supabase.from('referral_settings').update({ percent_bp: Math.round(p * 100), months: m, cap_cents: c, signup_window_days: d }).eq('id', true);
+    if (e) return setError(friendlyError(e));
+    onSaved();
+  };
+  return (
+    <Sheet visible onClose={onClose} title="Invite rules">
+      <T variant="muted">Changes apply to all invites, also ones that already exist.</T>
+      <View style={{ flexDirection: 'row', gap: 12 }}>
+        <View style={{ flex: 1 }}><Field label="Share (%)" value={pct} onChangeText={setPct} keyboardType="decimal-pad" /></View>
+        <View style={{ flex: 1 }}><Field label="For (months)" value={months} onChangeText={setMonths} keyboardType="number-pad" /></View>
+      </View>
+      <View style={{ flexDirection: 'row', gap: 12 }}>
+        <View style={{ flex: 1 }}><Field label="Max per creator ($)" value={cap} onChangeText={setCap} keyboardType="decimal-pad" /></View>
+        <View style={{ flex: 1 }}><Field label="Code allowed for (days)" value={days} onChangeText={setDays} keyboardType="number-pad" /></View>
+      </View>
+      {error ? <T variant="muted" style={{ color: colors.bad }}>{error}</T> : null}
+      <T variant="small">Example: someone you invited earns $200 → the inviter gets {usd(Math.min(Math.round(20000 * (Number(pct.replace(',', '.')) || 0) / 100), parseDollars(cap) ?? 0))}.</T>
+      <Button title="Save rules" onPress={save} />
     </Sheet>
   );
 }

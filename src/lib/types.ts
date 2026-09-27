@@ -10,6 +10,7 @@ export interface Profile {
   brand_id: string | null;
   payout_method: 'paypal' | 'bank' | null;
   payout_details: string | null;
+  referral_code: string;
   created_at: string;
 }
 
@@ -65,12 +66,23 @@ export interface CreatorBalance {
   videos: number;
   paid_videos: number;
   views: number;
+  video_earned_cents: number;
+  invites: number;
+  referral_earned_cents: number;
   earned_cents: number;
   paid_cents: number;
   requested_cents: number;
   owed_cents: number;
   available_cents: number;
 }
+
+export interface ReferralSettings { percent_bp: number; months: number; cap_cents: number; signup_window_days: number }
+
+export interface MyReferral { referred_id: string; first_name: string; joined_at: string; ends_at: string; bonus_cents: number; capped: boolean }
+
+export interface Referral { referred_id: string; referrer_id: string; created_at: string }
+
+export interface ReferralBonus { referrer_id: string; referred_id: string; created_at: string; ends_at: string; invited_earned_cents: number; bonus_cents: number; capped: boolean }
 
 export interface CampaignStats { campaign_id: string; videos: number; views: number; spent_cents: number }
 

@@ -1,9 +1,12 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { AccountSection } from '../../components/AccountSection';
 import { PostingActivity } from '../../components/parts';
 import { Avatar, Button, Card, Empty, ErrorNote, Field, List, Loading, Pill, Row, Screen, Section, Sheet, T, Tile, Tiles, hueFor, useToast } from '../../components/ui';
 import { useAuth } from '../../lib/auth';
+import { usd } from '../../lib/format';
+import { colors } from '../../lib/theme';
 import { friendlyError, supabase } from '../../lib/supabase';
 import { loadCreator } from '../../lib/queries';
 import { useLoad } from '../../lib/useLoad';
@@ -47,6 +50,18 @@ export default function Profile() {
             <T variant="muted">{profile?.handle ? '@' + profile.handle : 'No username yet'}</T>
           </View>
         </Card>
+        <Pressable onPress={() => router.push('/invite')} accessibilityRole="button">
+          <Card style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
+            <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: colors.accentSoft, alignItems: 'center', justifyContent: 'center' }}>
+              <T variant="h2" style={{ color: colors.accent }}>+</T>
+            </View>
+            <View style={{ flex: 1 }}>
+              <T variant="bodyStrong">Your creator code</T>
+              <T variant="muted">{d && d.balance.invites ? `${d.balance.invites} invited · ${usd(d.balance.referral_earned_cents)} earned` : 'Earn by inviting creators'}</T>
+            </View>
+            <T variant="h2" style={{ color: colors.muted }}>›</T>
+          </Card>
+        </Pressable>
         {q.error ? <ErrorNote text={q.error} onRetry={q.reload} /> : null}
         {!d ? (q.error ? null : <Loading />) : (
           <>

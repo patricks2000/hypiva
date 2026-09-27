@@ -7,7 +7,7 @@ import { day, num, short, usd } from '../../lib/format';
 import { SUB_FIELDS } from '../../lib/queries';
 import { friendlyError, supabase } from '../../lib/supabase';
 import { colors } from '../../lib/theme';
-import type { CreatorBalance, Payout, Profile, Submission } from '../../lib/types';
+import type { CreatorBalance, Payout, Profile, ReferralBonus, Submission } from '../../lib/types';
 import { must, useLoad } from '../../lib/useLoad';
 
 type Sort = 'owed' | 'views' | 'name';
@@ -16,14 +16,16 @@ export default function Money() {
   const { toast, show } = useToast();
   const [sort, setSort] = useState<Sort>('owed');
   const [paying, setPaying] = useState<CreatorBalance | null>(null);
+  const [inviter, setInviter] = useState<CreatorBalance | null>(null);
   const q = useLoad(async () => {
-    const [b, p, pend] = await Promise.all([
+    const [b, p, pend, rb] = await Promise.all([
       supabase.from('creator_balances').select('*'),
       supabase.from('payouts').select('*').eq('status', 'requested').order('requested_at'),
       supabase.from('submissions').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+      supabase.from('referral_bonuses').select('*').order('created_at', { ascending: false }),
     ]);
     if (pend.error) throw pend.error;
-    return { balances: must(b) as CreatorBalance[], requests: must(p) as Payout[], pending: pend.count ?? 0 };
+    return { balances: must(b) as CreatorBalance[], requests: must(p) as Payout[], pending: pend.count ?? 0, bonuses: must(rb) as ReferralBonus[] };
   });
   const d = q.data;
   const rows = (d?.balances ?? []).filter((b) => b.videos || b.paid_cents || b.requested_cents).sort((a, b) =>
@@ -32,9 +34,9 @@ export default function Money() {
   const asked = new Set(d?.requests.map((r) => r.creator_id));
 
   const copySheet = async () => {
-    const lines = [['Name', 'Username', 'Videos', 'Videos over minimum', 'Views', 'Earned', 'Paid', 'Owed'].join('\t')].concat(
+    const lines = [['Name', 'Username', 'Videos', 'Videos over minimum', 'Views', 'From videos', 'From invites', 'Earned', 'Paid', 'Owed'].join('\t')].concat(
       rows.map((r) => [r.name, r.handle ? '@' + r.handle : '', r.videos, r.paid_videos, r.views,
-        (r.earned_cents / 100).toFixed(2), (r.paid_cents / 100).toFixed(2), (r.owed_cents / 100).toFixed(2)].join('\t')));
+        (r.video_earned_cents / 100).toFixed(2), (r.referral_earned_cents / 100).toFixed(2), (r.earned_cents / 100).toFixed(2), (r.paid_cents / 100).toFixed(2), (r.owed_cents / 100).toFixed(2)].join('\t')));
     await Clipboard.setStringAsync(lines.join('\n'));
     show('Copied. Paste it into Excel or Google Sheets.');
   };
@@ -70,7 +72,7 @@ export default function Money() {
               </Section>
             ) : null}
 
-            <Section title="Per creator" hint="Owed = earnings from approved videos that reached the minimum, minus what you already paid."
+            <Section title="Per creator" hint="Owed = earnings from approved videos that reached the minimum, plus invite bonus, minus what you already paid."
               right={<LinkButton title="Copy as spreadsheet" onPress={copySheet} />}>
               <View style={{ flexDirection: 'row', gap: 8 }}>
                 {(['owed', 'views', 'name'] as Sort[]).map((k) => (
@@ -79,10 +81,10 @@ export default function Money() {
               </View>
               <List>
                 {rows.length ? rows.map((r, i) => (
-                  <Row key={r.creator_id} last={i === rows.length - 1} onPress={() => setPaying(r)}
+                  <Row key={r.creator_id} last={i === rows.length - 1} onPress={() => setPaying(r)} lines={3}
                     left={<Avatar name={r.name || '?'} color={hueFor(r.creator_id)} />}
                     title={r.name || 'No name'}
-                    subtitle={`${r.paid_videos} of ${r.videos} videos over the minimum · ${short(r.views)} views`}
+                    subtitle={`${r.paid_videos} of ${r.videos} videos over the minimum · ${short(r.views)} views${r.referral_earned_cents ? ` · ${usd(r.referral_earned_cents)} from invites` : ''}`}
                     right={<>
                       <T variant="bodyStrong" style={{ color: r.owed_cents > 0 ? colors.money : colors.muted }}>{usd(r.owed_cents)}</T>
                       {asked.has(r.creator_id) ? <Pill kind="requested" label="Asked" /> : r.owed_cents > 0 ? <T variant="small">owed</T> : <T variant="small">settled</T>}
@@ -90,9 +92,39 @@ export default function Money() {
                 )) : <Empty text="No creators have posted yet." />}
               </List>
             </Section>
+
+            <Section title="Invites" hint="Bonus creators earn for bringing in other creators. It is already included in what you owe above.">
+              <List>
+                {(() => {
+                  const inv = d.balances.filter((x) => x.invites > 0).sort((x, y) => y.referral_earned_cents - x.referral_earned_cents);
+                  return inv.length ? inv.map((r, i) => (
+                    <Row key={r.creator_id} last={i === inv.length - 1} onPress={() => setInviter(r)}
+                      left={<Avatar name={r.name || '?'} color={hueFor(r.creator_id)} />}
+                      title={r.name || 'Creator'} subtitle={`Invited ${r.invites} ${r.invites === 1 ? 'creator' : 'creators'}`}
+                      right={<T variant="bodyStrong" style={{ color: colors.money }}>{usd(r.referral_earned_cents)}</T>} />
+                  )) : <Empty text="Nobody has used an invite code yet." />;
+                })()}
+              </List>
+            </Section>
           </>
         )}
       </Screen>
+      {inviter && d ? (
+        <Sheet visible onClose={() => setInviter(null)} title={`${inviter.name || 'Creator'}'s invites`}>
+          <T variant="muted">{inviter.invites} invited · {usd(inviter.referral_earned_cents)} bonus in total</T>
+          <List>
+            {d.bonuses.filter((x) => x.referrer_id === inviter.creator_id).map((x, i, arr) => {
+              const who = d.balances.find((b) => b.creator_id === x.referred_id);
+              return (
+                <Row key={x.referred_id} last={i === arr.length - 1} left={<Avatar name={who?.name || '?'} color={hueFor(x.referred_id)} />}
+                  title={who?.name || 'Creator'}
+                  subtitle={`Joined ${day(x.created_at)} · they earned ${usd(x.invited_earned_cents)} in the bonus period${x.capped ? ' · maximum reached' : ''}`}
+                  right={<T variant="bodyStrong" style={{ color: colors.money }}>{usd(x.bonus_cents)}</T>} />
+              );
+            })}
+          </List>
+        </Sheet>
+      ) : null}
       {paying ? <PaySheet b={paying} onClose={() => setPaying(null)} onPaid={(m) => { show(m); setPaying(null); q.reload(); }} /> : null}
       {toast}
     </View>
@@ -124,7 +156,8 @@ function PaySheet({ b, onClose, onPaid }: { b: CreatorBalance; onClose: () => vo
       <Card style={{ gap: 6 }}>
         <T variant="label">Owed now</T>
         <T variant="title" style={{ color: colors.money }}>{usd(b.owed_cents)}</T>
-        <T variant="muted">{b.paid_videos} of {b.videos} videos reached the minimum · {num(b.views)} views · {usd(b.earned_cents)} earned · {usd(b.paid_cents)} already paid</T>
+        <T variant="muted">{b.paid_videos} of {b.videos} videos reached the minimum · {num(b.views)} views</T>
+        <T variant="muted">{usd(b.video_earned_cents)} from videos{b.referral_earned_cents ? ` + ${usd(b.referral_earned_cents)} from invites` : ''} − {usd(b.paid_cents)} already paid</T>
       </Card>
       <Card style={{ gap: 6 }}>
         <T variant="label">Send to</T>

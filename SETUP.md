@@ -10,6 +10,7 @@ Je hoeft niet te programmeren. Volg de stappen in deze volgorde.
    - Kies een sterk database-wachtwoord en bewaar het goed.
 2. Open in je project **SQL Editor** → **New query**.
 3. Open het bestand `supabase/migrations/0001_init.sql`, kopieer alles, plak het erin en klik op **Run**.
+   Doe daarna hetzelfde met `supabase/migrations/0002_referrals.sql` (het uitnodigingsprogramma).
    Nu staan alle tabellen, beveiligingsregels en de berekening per video klaar.
 4. Ga naar **Project Settings → API** en kopieer:
    - **Project URL**
@@ -62,6 +63,13 @@ Nodig: **Apple Developer-account** (€99 per jaar). Met je KvK meld je je aan a
   - 1.500 views op één video → **$3,00**
 - Alleen **goedgekeurde** video's tellen mee.
 - **Money** laat per creator zien wat je nog moet betalen. Tik op iemand voor de berekening per video en het PayPal-adres of IBAN. Maak het geld over, tik op **Mark as paid** en het saldo gaat naar $0.
+
+## Uitnodigingen (creator code)
+- Elke creator heeft een eigen code (bijvoorbeeld `VTCJZWPB`) onder **Profile → Your creator code**, met een knop om te kopiëren en te delen.
+- Wie zich aanmeldt met die code, levert de uitnodiger een bonus op: standaard **5% van hun goedgekeurde verdiensten, 6 maanden lang, tot maximaal $100 per persoon**. De nieuwe creator levert daar zelf niets voor in.
+- Iemand kan de code ook later nog toevoegen, tot 14 dagen na het aanmelden. Eigen codes en dubbel gebruik worden geweigerd.
+- De bonus telt automatisch mee in **Money**. Onder **Invites** zie je per uitnodiger wie ze hebben binnengebracht en wat het oplevert.
+- De regels (percentage, maanden, maximum, dagen) pas je aan onder **People → Invite program**. Alleen jij als eigenaar kunt dat.
 
 ## Views bijwerken
 Tot TikTok de koppeling goedkeurt, vul je de views in bij **Videos → Update views**. Het bedrag onder elk getal verandert meteen.

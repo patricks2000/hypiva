@@ -1,4 +1,4 @@
-import { Redirect } from 'expo-router';
+import { Redirect, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { Button, Card, Chips, Field, Screen, T } from '../components/ui';
@@ -10,7 +10,9 @@ type Mode = 'signin' | 'signup';
 
 export default function SignIn() {
   const { session, profile } = useAuth();
-  const [mode, setMode] = useState<Mode>('signin');
+  const params = useLocalSearchParams<{ code?: string }>();
+  const [mode, setMode] = useState<Mode>(params.code ? 'signup' : 'signin');
+  const [invite, setInvite] = useState(params.code ?? '');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,7 +33,7 @@ export default function SignIn() {
         const { error: e } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
         if (e) throw e;
       } else {
-        const { data, error: e } = await supabase.auth.signUp({ email: email.trim(), password, options: { data: { name: name.trim() } } });
+        const { data, error: e } = await supabase.auth.signUp({ email: email.trim(), password, options: { data: { name: name.trim(), referral_code: invite.trim().toUpperCase() } } });
         if (e) throw e;
         if (!data.session) setInfo('Check your email and tap the link to confirm your account, then sign in.');
       }
@@ -72,6 +74,10 @@ export default function SignIn() {
             options={[{ value: 'signin', label: 'Sign in' }, { value: 'signup', label: 'Create account' }]} />
           {mode === 'signup' ? (
             <Field label="Your name" value={name} onChangeText={setName} autoComplete="name" textContentType="name" placeholder="Alex Rivera" />
+          ) : null}
+          {mode === 'signup' ? (
+            <Field label="Invite code (optional)" value={invite} onChangeText={setInvite} autoCapitalize="characters" autoCorrect={false}
+              placeholder="VT..." hint="Got a code from another creator? Enter it here." />
           ) : null}
           <Field label="Email" value={email} onChangeText={setEmail} autoCapitalize="none" autoComplete="email"
             keyboardType="email-address" textContentType="emailAddress" placeholder="you@example.com" />
