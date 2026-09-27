@@ -165,6 +165,10 @@ function ContentStep({ pack, onToast, onNext }: { pack: ContentPack; onToast: (t
           </View>
         </Card>
       ) : null}
+      {pack.title || pack.hashtags ? (
+        <Button kind="money" title="Copy caption (title + hashtags)"
+          onPress={() => copyText([pack.title, pack.description, pack.hashtags].filter(Boolean).join('\n\n'), 'Caption')} />
+      ) : null}
       {pack.title ? <CopyCard label="Title" text={pack.title} hint="Paste as the TikTok title." onCopy={() => copyText(pack.title, 'Title')} /> : null}
       {pack.description ? <CopyCard label="Description" text={pack.description} hint="Paste as the description." onCopy={() => copyText(pack.description, 'Description')} /> : null}
       {pack.hashtags ? <CopyCard label="Hashtags" text={pack.hashtags} hint="Paste these hashtags with the post." onCopy={() => copyText(pack.hashtags, 'Hashtags')} /> : null}
