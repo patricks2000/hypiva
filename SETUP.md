@@ -10,7 +10,7 @@ Je hoeft niet te programmeren. Volg de stappen in deze volgorde.
    - Kies een sterk database-wachtwoord en bewaar het goed.
 2. Open in je project **SQL Editor** → **New query**.
 3. Open het bestand `supabase/migrations/0001_init.sql`, kopieer alles, plak het erin en klik op **Run**.
-   Doe daarna hetzelfde met `0002_referrals.sql` (uitnodigingen) en `0003_rates_and_weeks.sql` (eigen tarieven en weekoverzicht) en `0004_bonuses_and_leaderboard.sql` (bonussen en ranglijst), in die volgorde.
+   Doe daarna hetzelfde met `0002_referrals.sql` (uitnodigingen) en `0003_rates_and_weeks.sql` (eigen tarieven en weekoverzicht) `0004_bonuses_and_leaderboard.sql` (bonussen en ranglijst) en `0005_exchange_rate.sql` (euro-bedragen), in die volgorde.
    Nu staan alle tabellen, beveiligingsregels en de berekening per video klaar.
 4. Ga naar **Project Settings → API** en kopieer:
    - **Project URL**
@@ -63,6 +63,12 @@ Nodig: **Apple Developer-account** (€99 per jaar). Met je KvK meld je je aan a
   - 1.500 views op één video → **$3,00**
 - Alleen **goedgekeurde** video's tellen mee.
 - **Money** laat per creator zien wat je nog moet betalen. Tik op iemand voor de berekening per video en het PayPal-adres of IBAN. Maak het geld over, tik op **Mark as paid** en het saldo gaat naar $0.
+
+## Betalen in euro's
+- Alle bedragen in de app zijn in **dollars** (bijvoorbeeld $2 per 1.000 views).
+- Je maakt over vanuit je Nederlandse bank. Stel daarom één keer de koers in onder **People → Dollars and euros** (bijvoorbeeld 0.86 als $1 = €0,86). Pas die af en toe aan.
+- Daarna laat **Money** bij elke creator zien: **"Transfer from your bank: €77,40"**. Dat bedrag maak je over naar hun IBAN, en daarna tik je op **Mark as paid**.
+- Creators zien de koers niet; zij zien hun bedragen in dollars.
 
 ## Eigen tarief per creator
 - Standaard krijgt iedereen het tarief van de campagne (bijvoorbeeld $2 per 1.000 views).

@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { Leaderboard } from '../../components/Leaderboard';
 import { VideoRow } from '../../components/parts';
 import { Avatar, Button, Card, Chips, Empty, ErrorNote, Field, LinkButton, List, Loading, Pill, Row, Screen, Section, Sheet, T, Tile, Tiles, hueFor, useToast } from '../../components/ui';
-import { day, num, parseDollars, short, usd } from '../../lib/format';
+import { day, eur, num, parseDollars, short, usd } from '../../lib/format';
 import { SUB_FIELDS, monthLabel, weekLabel, withRates } from '../../lib/queries';
 import { friendlyError, supabase } from '../../lib/supabase';
 import { colors } from '../../lib/theme';
@@ -25,7 +25,7 @@ export default function Money() {
   const { profile: me } = useAuth();
   const q = useLoad(async () => {
     const lastMonth = new Date(); lastMonth.setDate(1); lastMonth.setMonth(lastMonth.getMonth() - 1);
-    const [b, p, pend, rb, wk, lbNow, lbLast, lbs] = await Promise.all([
+    const [b, p, pend, rb, wk, lbNow, lbLast, lbs, app] = await Promise.all([
       supabase.from('creator_balances').select('*'),
       supabase.from('payouts').select('*').eq('status', 'requested').order('requested_at'),
       supabase.from('submissions').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
@@ -34,10 +34,12 @@ export default function Money() {
       supabase.rpc('leaderboard', { p_limit: 10 }),
       supabase.rpc('leaderboard', { p_month: lastMonth.toISOString().slice(0, 10), p_limit: 10 }),
       supabase.from('leaderboard_settings').select('*').single(),
+      supabase.from('app_settings').select('eur_per_usd').single(),
     ]);
     if (pend.error) throw pend.error;
     return { balances: must(b) as CreatorBalance[], requests: must(p) as Payout[], pending: pend.count ?? 0, bonuses: must(rb) as ReferralBonus[], weeks: must(wk) as WeekRow[],
-      board: { now: must(lbNow) as LeaderRow[], last: must(lbLast) as LeaderRow[], lastMonth }, boardSettings: must(lbs) as LeaderboardSettings };
+      board: { now: must(lbNow) as LeaderRow[], last: must(lbLast) as LeaderRow[], lastMonth }, boardSettings: must(lbs) as LeaderboardSettings,
+      rate: Number((must(app) as { eur_per_usd: number | null }).eur_per_usd) || null };
   });
   const d = q.data;
   const rows = (d?.balances ?? []).filter((b) => b.videos || b.paid_cents || b.requested_cents).sort((a, b) =>
@@ -60,7 +62,7 @@ export default function Money() {
         {!d ? (q.error ? null : <Loading />) : (
           <>
             <Tiles>
-              <Tile highlight label="You owe" value={usd(total('owed_cents'))} color={colors.money} sub={`${d.requests.length} asked to be paid`} />
+              <Tile highlight label="You owe" value={usd(total('owed_cents'))} color={colors.money} sub={`${d.rate ? '≈ ' + eur(total('owed_cents'), d.rate) + ' · ' : ''}${d.requests.length} asked to be paid`} />
               <Tile label="Paid out" value={usd(total('paid_cents'))} sub="all time" />
             </Tiles>
             <Tiles>
@@ -175,7 +177,7 @@ export default function Money() {
             };
             return (
               <>
-                <Card style={{ gap: 4 }}><T variant="label">Earned this week</T><T variant="title" style={{ color: colors.money }}>{usd(total)}</T></Card>
+                <Card style={{ gap: 4 }}><T variant="label">Earned this week</T><T variant="title" style={{ color: colors.money }}>{usd(total)}</T>{d.rate ? <T variant="muted">≈ {eur(total, d.rate)} to transfer</T> : null}</Card>
                 <LinkButton title="Copy as spreadsheet" onPress={copyWeek} />
                 <List>
                   {rowsW.map((r, i) => (
@@ -189,14 +191,14 @@ export default function Money() {
           })()}
         </Sheet>
       ) : null}
-      {paying ? <PaySheet b={paying} onClose={() => setPaying(null)} onPaid={(m) => { show(m); setPaying(null); q.reload(); }} /> : null}
+      {paying ? <PaySheet rate={d?.rate ?? null} b={paying} onClose={() => setPaying(null)} onPaid={(m) => { show(m); setPaying(null); q.reload(); }} /> : null}
       {toast}
     </View>
   );
 }
 
 /** Everything about one creator's money, with the video-by-video maths. */
-function PaySheet({ b, onClose, onPaid }: { b: CreatorBalance; onClose: () => void; onPaid: (msg: string) => void }) {
+function PaySheet({ b, rate, onClose, onPaid }: { b: CreatorBalance; rate: number | null; onClose: () => void; onPaid: (msg: string) => void }) {
   const [rateOpen, setRateOpen] = useState(false);
   const [bonusOpen, setBonusOpen] = useState(false);
   const [note, setNote] = useState('');
@@ -241,7 +243,14 @@ function PaySheet({ b, onClose, onPaid }: { b: CreatorBalance; onClose: () => vo
       ) : null}
       {b.owed_cents > 0 ? (
         <>
-          <T variant="muted">Send {usd(b.owed_cents)} first, then mark it as paid so the balance goes to $0.</T>
+          {rate ? (
+            <Card style={{ gap: 2, backgroundColor: colors.surface2 }}>
+              <T variant="label">Transfer from your bank</T>
+              <T variant="h2" selectable>{eur(b.owed_cents, rate)}</T>
+              <T variant="small">{`${usd(b.owed_cents)} at $1 = €${rate}. Your bank may use a slightly different rate.`}</T>
+            </Card>
+          ) : null}
+          <T variant="muted">Send {rate ? eur(b.owed_cents, rate) : usd(b.owed_cents)} first, then mark it as paid so the balance goes to $0.</T>
           <Field label="Note (optional)" value={note} onChangeText={setNote} placeholder="PayPal transaction ID" error={error} />
           <Button kind="money" title={`Mark ${usd(b.owed_cents)} as paid`} onPress={pay} busy={busy} />
         </>

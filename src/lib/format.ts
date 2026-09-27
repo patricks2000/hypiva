@@ -30,3 +30,7 @@ export const parseDollars = (text: string): number | null => {
   const n = Number(text.replace(/[$\s]/g, '').replace(',', '.'));
   return Number.isFinite(n) && n >= 0 ? Math.round(n * 100) : null;
 };
+
+/** Dollar cents shown in euros at the owner's rate: "€77.40". */
+export const eur = (usdCents: number, eurPerUsd: number) =>
+  '€' + ((usdCents / 100) * eurPerUsd).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

@@ -39,3 +39,17 @@ select pg_temp.check((select visible from leaderboard_settings), 'a creator cann
 reset role;
 \o
 \echo ALL BONUS AND LEADERBOARD CHECKS PASSED
+
+-- Exchange rate: admins read it, only the owner sets it, creators never see it
+\o /dev/null
+set role authenticated;
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
+update app_settings set eur_per_usd = 0.86;
+select pg_temp.check((select eur_per_usd = 0.86 from app_settings), 'the owner sets $1 = €0.86');
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000e1');
+select pg_temp.check((select count(*) = 0 from app_settings), 'creators cannot see the exchange rate');
+update app_settings set eur_per_usd = 5;
+reset role;
+select pg_temp.check((select eur_per_usd = 0.86 from app_settings), 'creators cannot change it');
+\o
+\echo ALL EXCHANGE RATE CHECKS PASSED

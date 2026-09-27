@@ -19,14 +19,17 @@ export default function People() {
   const [filter, setFilter] = useState<'all' | Role>('all');
   const [editing, setEditing] = useState<Profile | null>(null);
   const [rules, setRules] = useState(false);
+  const [rateEdit, setRateEdit] = useState(false);
   const q = useLoad(async () => {
-    const [p, b, r, st] = await Promise.all([
+    const [p, b, r, st, app] = await Promise.all([
       supabase.from('profiles').select('*').order('created_at', { ascending: false }),
       supabase.from('brands').select('*').order('name'),
       supabase.from('referrals').select('*'),
       supabase.from('referral_settings').select('*').single(),
+      supabase.from('app_settings').select('eur_per_usd').single(),
     ]);
-    return { people: must(p) as Profile[], brands: must(b) as Brand[], referrals: must(r) as Referral[], settings: must(st) as ReferralSettings };
+    return { people: must(p) as Profile[], brands: must(b) as Brand[], referrals: must(r) as Referral[], settings: must(st) as ReferralSettings,
+      rate: Number((must(app) as { eur_per_usd: number | null }).eur_per_usd) || null };
   });
   const invitedBy = (id: string) => {
     const r = q.data?.referrals.find((x) => x.referred_id === id);
@@ -70,8 +73,18 @@ export default function People() {
             {me?.is_owner ? <Button small kind="ghost" title="Change rules" onPress={() => setRules(true)} /> : null}
           </Card>
         ) : null}
+        {q.data ? (
+          <Card style={{ gap: 8 }}>
+            <T variant="h2">Dollars and euros</T>
+            <T variant="muted">{q.data.rate
+              ? `Amounts stay in dollars. When you pay, the app also shows euros at $1 = €${q.data.rate}.`
+              : 'Amounts are in dollars. Set a rate to also see what to transfer in euros.'}</T>
+            {me?.is_owner ? <Button small kind="ghost" title={q.data.rate ? 'Change rate' : 'Set euro rate'} onPress={() => setRateEdit(true)} /> : null}
+          </Card>
+        ) : null}
         <AccountSection onToast={show} />
       </Screen>
+      {rateEdit && q.data ? <RateSheet current={q.data.rate} onClose={() => setRateEdit(false)} onSaved={() => { setRateEdit(false); show('Euro rate saved'); q.reload(); }} /> : null}
       {rules && q.data ? <RulesSheet s={q.data.settings} onClose={() => setRules(false)} onSaved={() => { setRules(false); show('Invite rules saved'); q.reload(); }} /> : null}
       {editing && q.data ? (
         <RoleSheet person={editing} brands={q.data.brands} onClose={() => setEditing(null)}
@@ -144,6 +157,26 @@ function RulesSheet({ s, onClose, onSaved }: { s: ReferralSettings; onClose: () 
       {error ? <T variant="muted" style={{ color: colors.bad }}>{error}</T> : null}
       <T variant="small">Example: someone you invited earns $200 → the inviter gets {usd(Math.min(Math.round(20000 * (Number(pct.replace(',', '.')) || 0) / 100), parseDollars(cap) ?? 0))}.</T>
       <Button title="Save rules" onPress={save} />
+    </Sheet>
+  );
+}
+
+function RateSheet({ current, onClose, onSaved }: { current: number | null; onClose: () => void; onSaved: () => void }) {
+  const [value, setValue] = useState(current ? String(current) : '');
+  const [error, setError] = useState<string | null>(null);
+  const save = async () => {
+    const n = value.trim() ? Number(value.replace(',', '.')) : null;
+    if (n !== null && !(n > 0 && n < 10)) return setError('Enter how many euros one dollar is, for example 0.86.');
+    const { error: e } = await supabase.from('app_settings').update({ eur_per_usd: n }).eq('id', true);
+    if (e) return setError(friendlyError(e));
+    onSaved();
+  };
+  return (
+    <Sheet visible onClose={onClose} title="Euro rate">
+      <T variant="muted">{'How many euros is $1? Look it up in your bank app or search "1 USD to EUR", and update it now and then. Leave empty to hide euro amounts.'}</T>
+      <Field label="€ per $1" value={value} onChangeText={setValue} keyboardType="decimal-pad" placeholder="0.86" error={error} />
+      <T variant="small">{value && Number(value.replace(',', '.')) > 0 ? `Example: $90.00 owed = €${(90 * Number(value.replace(',', '.'))).toFixed(2)} to transfer.` : ' '}</T>
+      <Button title="Save" onPress={save} />
     </Sheet>
   );
 }
