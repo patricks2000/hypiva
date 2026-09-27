@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider } from '../lib/auth';
+import { LanguageProvider } from '../lib/i18n';
 import { colors } from '../lib/theme';
 
 export default function RootLayout() {
@@ -16,12 +17,14 @@ export default function RootLayout() {
   if (!loaded) return <View style={{ flex: 1, backgroundColor: colors.bg }} />;
   return (
     <SafeAreaProvider>
+      <LanguageProvider>
       <AuthProvider>
         <StatusBar style="light" />
         <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }}>
           <Stack.Screen name="invite" options={{ presentation: 'modal' }} />
         </Stack>
       </AuthProvider>
+      </LanguageProvider>
     </SafeAreaProvider>
   );
 }

@@ -4,6 +4,7 @@ import { homeFor, useAuth } from '../lib/auth';
 import { colors, fonts } from '../lib/theme';
 import type { Role } from '../lib/types';
 import { Icon, type IconName } from './Icon';
+import { t as tr } from '../lib/i18n';
 
 /** Bottom tabs for one role. Anyone with another role is sent to their own home. */
 export function RoleTabs({ role, tabs }: { role: Role; tabs: { name: string; title: string; icon: IconName }[] }) {
@@ -24,7 +25,7 @@ export function RoleTabs({ role, tabs }: { role: Role; tabs: { name: string; tit
       }}
     >
       {tabs.map((t) => (
-        <Tabs.Screen key={t.name} name={t.name} options={{ title: t.title, tabBarIcon: ({ color }) => <Icon name={t.icon} color={String(color)} /> }} />
+        <Tabs.Screen key={t.name} name={t.name} options={{ title: tr(t.title), tabBarIcon: ({ color }) => <Icon name={t.icon} color={String(color)} /> }} />
       ))}
     </Tabs>
   );

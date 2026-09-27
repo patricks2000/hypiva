@@ -8,6 +8,7 @@ import { friendlyError, supabase } from '../../lib/supabase';
 import { rateFor } from '../../lib/queries';
 import type { Campaign, CreatorRate } from '../../lib/types';
 import { must, useLoad } from '../../lib/useLoad';
+import { t } from '../../lib/i18n';
 
 type Filter = 'all' | 'ready_to_post' | 'create_your_own';
 
@@ -31,7 +32,7 @@ export default function Discover() {
     const { error } = await supabase.from('campaign_members').insert({ campaign_id: c.id, creator_id: profile!.id });
     setBusy(null);
     if (error) return show(friendlyError(error));
-    show(`Joined ${c.name}`);
+    show(t('Joined {name}', { name: c.name }));
     q.reload();
   };
 
@@ -41,10 +42,10 @@ export default function Discover() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Screen title="Discover" onRefresh={q.refresh} refreshing={q.refreshing}>
-        <Field label="Search" value={search} onChangeText={setSearch} placeholder="Search campaigns" autoCorrect={false} />
+      <Screen title={t("Discover")} onRefresh={q.refresh} refreshing={q.refreshing}>
+        <Field label={t("Search")} value={search} onChangeText={setSearch} placeholder={t("Search campaigns")} autoCorrect={false} />
         <Chips<Filter> value={filter} onChange={setFilter} options={[
-          { value: 'all', label: 'All' }, { value: 'ready_to_post', label: 'Content included' }, { value: 'create_your_own', label: 'Film it yourself' },
+          { value: 'all', label: t('All') }, { value: 'ready_to_post', label: t('Content included') }, { value: 'create_your_own', label: t('Film it yourself') },
         ]} />
         {q.error ? <ErrorNote text={q.error} onRetry={q.reload} /> : null}
         {!q.data ? (q.error ? null : <Loading />) : list.length ? list.map((c) => (
@@ -52,7 +53,7 @@ export default function Discover() {
             onOpen={() => router.push({ pathname: '/campaign/[id]', params: { id: c.id } })}
             onSubmit={() => router.push({ pathname: '/post/[id]', params: { id: c.id } })} />
         )) : (
-          <Card><Empty text={q.data.campaigns.length ? 'No campaigns match your search.' : 'No campaigns are live right now. Check back soon.'} /></Card>
+          <Card><Empty text={q.data.campaigns.length ? t('No campaigns match your search.') : t('No campaigns are live right now. Check back soon.')} /></Card>
         )}
       </Screen>
       {toast}

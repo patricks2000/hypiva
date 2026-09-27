@@ -3,6 +3,7 @@ import { Avatar, Empty, List, Row, T, hueFor } from './ui';
 import { num, short, usd } from '../lib/format';
 import { colors } from '../lib/theme';
 import type { LeaderRow } from '../lib/types';
+import { t } from '../lib/i18n';
 
 const MEDAL = ['#FFC24B', '#C9CED6', '#D98C5F'];
 
@@ -21,12 +22,12 @@ export function Leaderboard({ rows, onPress, empty }: { rows: LeaderRow[]; onPre
               <Avatar name={r.first_name} color={r.creator_id ? hueFor(r.creator_id) : colors.faint} size={36} />
             </View>
           }
-          title={r.is_me ? `${r.first_name} (you)` : r.first_name}
-          subtitle={`${num(r.views_gained)} views this month`}
+          title={r.is_me ? t('{name} (you)', { name: r.first_name }) : r.first_name}
+          subtitle={t('{n} views this month', { n: num(r.views_gained) })}
           right={r.earned_cents != null
             ? <T variant="bodyStrong" style={{ color: colors.money }}>{usd(r.earned_cents)}</T>
             : <T variant="bodyStrong">{short(r.views_gained)}</T>} />
-      )) : <Empty text={empty ?? 'Nobody has gained views this month yet.'} />}
+      )) : <Empty text={empty ?? t('Nobody has gained views this month yet.')} />}
     </List>
   );
 }

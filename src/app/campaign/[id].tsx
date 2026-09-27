@@ -10,6 +10,7 @@ import { friendlyError, supabase } from '../../lib/supabase';
 import { colors } from '../../lib/theme';
 import { kindLabel, type Campaign, type CreatorRate } from '../../lib/types';
 import { must, useLoad } from '../../lib/useLoad';
+import { t } from '../../lib/i18n';
 
 export default function CampaignScreen() {
   const { session, profile, loading } = useAuth();
@@ -41,7 +42,7 @@ function CampaignDetail() {
     const { error } = await supabase.from('campaign_members').insert({ campaign_id: id, creator_id: profile!.id });
     setBusy(false);
     if (error) return show(friendlyError(error));
-    show('Joined');
+    show(t('Joined'));
     q.reload();
   };
 
@@ -49,7 +50,7 @@ function CampaignDetail() {
     <View style={{ flex: 1 }}>
       <Screen onRefresh={q.refresh} refreshing={q.refreshing}>
         <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace('/(creator)/discover'))} accessibilityRole="button" hitSlop={10}>
-          <T variant="bodyStrong" style={{ color: colors.accent }}>‹ Back</T>
+          <T variant="bodyStrong" style={{ color: colors.accent }}>{t("\u2039 Back")}</T>
         </Pressable>
         {q.error ? <ErrorNote text={q.error} onRetry={q.reload} /> : null}
         {!d || !rate ? (q.error ? null : <Loading />) : (
@@ -64,28 +65,28 @@ function CampaignDetail() {
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <View style={{ flex: 1 }}>
                     <T variant="h2" style={{ color: '#fff' }}>{usd(rate.cpm_cents)}</T>
-                    <T variant="small" style={{ color: 'rgba(255,255,255,0.8)' }}>per 1K views{rate.custom ? ' · your rate' : ''}</T>
+                    <T variant="small" style={{ color: 'rgba(255,255,255,0.8)' }}>{t('per 1K views')}{rate.custom ? ' · ' + t('your rate') : ''}</T>
                   </View>
-                  {d.joined ? <View style={{ backgroundColor: 'rgba(255,255,255,0.2)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999 }}><T variant="bodyStrong" style={{ color: '#fff' }}>Joined</T></View>
-                    : <Button small title="Join" onPress={join} busy={busy} />}
+                  {d.joined ? <View style={{ backgroundColor: 'rgba(255,255,255,0.2)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999 }}><T variant="bodyStrong" style={{ color: '#fff' }}>{t("Joined")}</T></View>
+                    : <Button small title={t("Join")} onPress={join} busy={busy} />}
                 </View>
                 <View style={{ flexDirection: 'row' }}>
-                  <T variant="body" style={{ flex: 1, color: '#fff' }}>Starts paying at</T>
-                  <T variant="bodyStrong" style={{ color: '#fff' }}>{short(rate.min_views)} views per video</T>
+                  <T variant="body" style={{ flex: 1, color: '#fff' }}>{t("Starts paying at")}</T>
+                  <T variant="bodyStrong" style={{ color: '#fff' }}>{t('{n} views per video', { n: short(rate.min_views) })}</T>
                 </View>
               </View>
             </View>
 
             {d.c.instructions ? (
               <Card style={{ gap: 8 }}>
-                <T variant="h2">How it works</T>
+                <T variant="h2">{t("How it works")}</T>
                 <T variant="body">{d.c.instructions}</T>
               </Card>
             ) : null}
 
             {d.c.requirements.length ? (
               <Card style={{ gap: 8 }}>
-                <T variant="h2">Your post must</T>
+                <T variant="h2">{t("Your post must")}</T>
                 {d.c.requirements.map((r) => <T key={r} variant="body">• {r}</T>)}
               </Card>
             ) : null}
@@ -94,14 +95,14 @@ function CampaignDetail() {
               <Pressable onPress={() => router.push({ pathname: '/post/[id]', params: { id } })} accessibilityRole="button"
                 style={{ backgroundColor: colors.accent, borderRadius: 20, padding: 18, flexDirection: 'row', alignItems: 'center' }}>
                 <View style={{ flex: 1 }}>
-                  <T variant="h2" style={{ color: colors.onAccent }}>Start posting</T>
+                  <T variant="h2" style={{ color: colors.onAccent }}>{t("Start posting")}</T>
                   <T variant="body" style={{ color: colors.onAccent }}>
-                    {d.packs ? 'Get your slides and caption, post them, get paid for your views' : 'Post your video and send us the link'}
+                    {d.packs ? t('Get your slides and caption, post them, get paid for your views') : t('Post your video and send us the link')}
                   </T>
                 </View>
                 <Icon name="chevron" color={colors.onAccent} size={26} />
               </Pressable>
-            ) : <T variant="muted" style={{ textAlign: 'center' }}>Join the campaign to start posting.</T>}
+            ) : <T variant="muted" style={{ textAlign: 'center' }}>{t("Join the campaign to start posting.")}</T>}
           </>
         )}
       </Screen>

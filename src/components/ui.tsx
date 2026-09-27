@@ -6,6 +6,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, fonts, radius } from '../lib/theme';
 import { initials } from '../lib/format';
+import { t } from '../lib/i18n';
 
 /* ---------- text ---------- */
 export function T({ children, style, variant = 'body', numberOfLines, selectable }: {
@@ -190,7 +191,7 @@ export function Pill({ kind, label }: { kind: keyof typeof PILL; label?: string 
   const [bg, fg, text] = PILL[kind];
   return (
     <View style={{ backgroundColor: bg, paddingHorizontal: 9, paddingVertical: 3, borderRadius: radius.pill, alignSelf: 'flex-start' }}>
-      <Text style={{ color: fg, fontFamily: fonts.bodyBold, fontSize: 12 }}>{label ?? text}</Text>
+      <Text style={{ color: fg, fontFamily: fonts.bodyBold, fontSize: 12 }}>{label ?? t(text)}</Text>
     </View>
   );
 }
@@ -211,9 +212,9 @@ export function Loading() {
 export function ErrorNote({ text, onRetry }: { text: string; onRetry?: () => void }) {
   return (
     <Card style={{ borderColor: colors.bad, gap: 8 }}>
-      <T variant="bodyStrong" style={{ color: colors.bad }}>Something went wrong</T>
+      <T variant="bodyStrong" style={{ color: colors.bad }}>{t("Something went wrong")}</T>
       <T variant="muted">{text}</T>
-      {onRetry ? <LinkButton title="Try again" onPress={onRetry} /> : null}
+      {onRetry ? <LinkButton title={t("Try again")} onPress={onRetry} /> : null}
     </Card>
   );
 }
@@ -223,7 +224,7 @@ export function Sheet({ visible, onClose, title, children }: { visible: boolean;
   const insets = useSafeAreaInsets();
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable style={s.scrim} onPress={onClose} accessibilityLabel="Close" />
+      <Pressable style={s.scrim} onPress={onClose} accessibilityLabel={t("Close")} />
       <View style={[s.sheet, { paddingBottom: insets.bottom + 20 }]}>
         <View style={s.grab} />
         <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ gap: 14 }}>

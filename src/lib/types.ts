@@ -1,3 +1,5 @@
+import { t } from './i18n';
+
 export type Role = 'creator' | 'brand' | 'admin';
 export type SubmissionStatus = 'pending' | 'approved' | 'rejected';
 
@@ -107,4 +109,4 @@ export interface ContentPack {
 
 export interface CampaignStats { campaign_id: string; videos: number; views: number; spent_cents: number }
 
-export const kindLabel = (k: Campaign['kind']) => (k === 'ready_to_post' ? 'Content included' : 'Film it yourself');
+export const kindLabel = (k: Campaign['kind']) => (k === 'ready_to_post' ? t('Content included') : t('Film it yourself'));

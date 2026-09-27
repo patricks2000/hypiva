@@ -2,6 +2,7 @@ import 'react-native-url-polyfill/auto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
 import { AppState, Platform } from 'react-native';
+import { t } from './i18n';
 
 const url = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
 const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '';
@@ -28,13 +29,14 @@ if (Platform.OS !== 'web') {
 /** Turns a Supabase error into a sentence people can act on. */
 export function friendlyError(err: unknown): string {
   const msg = typeof err === 'object' && err && 'message' in err ? String((err as { message: unknown }).message) : String(err);
-  if (/duplicate key.*url/i.test(msg)) return 'This video was already sent in.';
-  if (/duplicate key.*username/i.test(msg)) return 'This TikTok account is already linked to someone.';
-  if (/duplicate key.*handle/i.test(msg)) return 'That username is taken. Try another one.';
-  if (/payouts_one_open_request/i.test(msg)) return 'You already have a payout request open.';
-  if (/Invalid login credentials/i.test(msg)) return 'Email or password is wrong.';
-  if (/check constraint.*handle/i.test(msg)) return 'Usernames use 2-30 lowercase letters, numbers, dots or underscores.';
-  if (/check constraint.*username/i.test(msg)) return 'TikTok usernames use letters, numbers, dots or underscores.';
-  if (/network|fetch/i.test(msg)) return 'No connection. Check your internet and try again.';
-  return msg;
+  if (/duplicate key.*url/i.test(msg)) return t('This video was already sent in.');
+  if (/duplicate key.*username/i.test(msg)) return t('This TikTok account is already linked to someone.');
+  if (/duplicate key.*handle/i.test(msg)) return t('That username is taken. Try another one.');
+  if (/payouts_one_open_request/i.test(msg)) return t('You already have a payout request open.');
+  if (/Invalid login credentials/i.test(msg)) return t('Email or password is wrong.');
+  if (/check constraint.*handle/i.test(msg)) return t('Usernames use 2-30 lowercase letters, numbers, dots or underscores.');
+  if (/check constraint.*username/i.test(msg)) return t('TikTok usernames use letters, numbers, dots or underscores.');
+  if (/network|fetch/i.test(msg)) return t('No connection. Check your internet and try again.');
+  // Messages from the database are written as plain English sentences; translate the ones we know.
+  return t(msg);
 }

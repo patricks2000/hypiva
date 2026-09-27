@@ -72,6 +72,12 @@ Nodig: **Apple Developer-account** (€99 per jaar). Met je KvK meld je je aan a
 - Elk TikTok-account krijgt steeds content die het nog **niet** heeft gepost. Bij de content zie je hoe vaak die al gepost is. Zet genoeg content klaar zodat accounts niet opraken.
 - Afbeeldingen worden opgeslagen in Supabase Storage (bucket `content`, wordt vanzelf aangemaakt door de migratie).
 
+## Taal
+- De app kiest automatisch de taal van de telefoon: **Nederlands** voor Nederlandse telefoons, anders **Engels**.
+- Creators wisselen zelf onder **Profile → Account → Language/Taal**.
+- Teksten die jij of een merk schrijft (campagnenaam, uitleg, checklist, prijs-tekst, content) worden getoond zoals je ze typt. Schrijf die voor buitenlandse creators in het Engels.
+- Een nieuwe taal toevoegen: kopieer `src/lib/i18n.nl.ts` naar bijvoorbeeld `i18n.de.ts`, vertaal de teksten en voeg de taal toe in `src/lib/i18n.tsx`. `npm run check:i18n` laat zien of er iets mist.
+
 ## Betalen in euro's
 - Alle bedragen in de app zijn in **dollars** (bijvoorbeeld $2 per 1.000 views).
 - Je maakt over vanuit je Nederlandse bank. Stel daarom één keer de koers in onder **People → Dollars and euros** (bijvoorbeeld 0.86 als $1 = €0,86). Pas die af en toe aan.

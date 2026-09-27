@@ -5,6 +5,7 @@ import { day, short, usd, videoEarningsCents } from '../lib/format';
 import { colors, fonts } from '../lib/theme';
 import { kindLabel, type Campaign, type Submission } from '../lib/types';
 import { Button, Card, Pill, Row, T, hueFor } from './ui';
+import { dateLocale, t } from '../lib/i18n';
 
 /** A campaign as creators see it. */
 export function CampaignCard({ c, joined, onJoin, onSubmit, onOpen, busy, width, rate }: {
@@ -31,11 +32,11 @@ export function CampaignCard({ c, joined, onJoin, onSubmit, onOpen, busy, width,
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, borderTopWidth: 1, borderTopColor: colors.line, paddingTop: 12 }}>
           <View style={{ flex: 1 }}>
             <T variant="h2" style={{ color: colors.money }}>{usd(cpm)}</T>
-            <T variant="small">per 1K views · min. {short(min)} views per video{rate?.custom ? ' · your rate' : ''}</T>
+            <T variant="small">{t('per 1K views · min. {n} views per video', { n: short(min) })}{rate?.custom ? ' · ' + t('your rate') : ''}</T>
           </View>
           {joined
-            ? onSubmit ? <Button small title="Start posting" onPress={onSubmit} /> : <Pill kind="linked" label="Joined" />
-            : onJoin ? <Button small title="Join" onPress={onJoin} busy={busy} /> : null}
+            ? onSubmit ? <Button small title={t("Start posting")} onPress={onSubmit} /> : <Pill kind="linked" label={t("Joined")} />
+            : onJoin ? <Button small title={t("Join")} onPress={onJoin} busy={busy} /> : null}
         </View>
       </View>
     </View>
@@ -46,10 +47,10 @@ export function CampaignCard({ c, joined, onJoin, onSubmit, onOpen, busy, width,
 export function earningLine(s: Submission) {
   const min = s.campaigns?.min_views ?? 1000;
   const cpm = s.campaigns?.cpm_cents ?? 0;
-  if (s.status === 'rejected') return { text: s.reject_reason ? `Rejected: ${s.reject_reason}` : 'Rejected', cents: 0 };
-  if (s.status === 'pending') return { text: 'Waiting for review', cents: 0 };
-  if (s.views < min) return { text: `Needs ${short(min - s.views)} more views to start earning`, cents: 0 };
-  return { text: `${usd(cpm)} per 1K views`, cents: videoEarningsCents(s.views, min, cpm) };
+  if (s.status === 'rejected') return { text: s.reject_reason ? t('Rejected: {why}', { why: s.reject_reason }) : t('Rejected'), cents: 0 };
+  if (s.status === 'pending') return { text: t('Waiting for review'), cents: 0 };
+  if (s.views < min) return { text: t('Needs {n} more views to start earning', { n: short(min - s.views) }), cents: 0 };
+  return { text: t('{x} per 1K views', { x: usd(cpm) }), cents: videoEarningsCents(s.views, min, cpm) };
 }
 
 export function VideoRow({ s, last, showCreator }: { s: Submission; last?: boolean; showCreator?: boolean }) {
@@ -64,10 +65,10 @@ export function VideoRow({ s, last, showCreator }: { s: Submission; last?: boole
       lines={4}
       subtitle={`${s.campaigns?.name ?? ''} · ${day(s.created_at)}\n${e.text}`}
       right={<>
-        <T variant="bodyStrong" style={{ fontVariant: ['tabular-nums'] }}>{short(s.views)} views</T>
+        <T variant="bodyStrong" style={{ fontVariant: ['tabular-nums'] }}>{t('{n} views', { n: short(s.views) })}</T>
         {s.status === 'approved' && !under
           ? <T variant="bodyStrong" style={{ color: colors.money }}>{usd(e.cents)}</T>
-          : <Pill kind={under ? 'under' : s.status} label={under ? 'Under ' + short(s.campaigns?.min_views ?? 1000) : undefined} />}
+          : <Pill kind={under ? 'under' : s.status} label={under ? t('Under {n}', { n: short(s.campaigns?.min_views ?? 1000) }) : undefined} />}
       </>}
     />
   );
@@ -116,7 +117,7 @@ export function ViewsChart({ subs, days = 30 }: { subs: Submission[]; days?: num
         return (
           <SvgText key={'l' + i} x={x(i)} y={H - 5} fontSize={10} fill={colors.faint} fontFamily={fonts.body}
             textAnchor={i === 0 ? 'start' : i === days - 1 ? 'end' : 'middle'}>
-            {dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+            {dt.toLocaleDateString(dateLocale(), { day: 'numeric', month: 'short' })}
           </SvgText>
         );
       })}
@@ -137,7 +138,7 @@ export function PostingActivity({ subs }: { subs: Submission[] }) {
   let col: { key: string; n: number; label: string }[] = Array.from({ length: shift }, (_, i) => ({ key: 'pad' + i, n: -1, label: '' }));
   for (let i = 0; i < weeks * 7; i++) {
     const dt = new Date(first.getTime() + i * 864e5);
-    col.push({ key: dt.toDateString(), n: counts.get(dt.toDateString()) ?? 0, label: dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) });
+    col.push({ key: dt.toDateString(), n: counts.get(dt.toDateString()) ?? 0, label: dt.toLocaleDateString(dateLocale(), { day: 'numeric', month: 'short' }) });
     if (col.length === 7) { cols.push(col); col = []; }
   }
   if (col.length) cols.push(col);
@@ -148,13 +149,13 @@ export function PostingActivity({ subs }: { subs: Submission[] }) {
         {cols.map((c, ci) => (
           <View key={ci} style={{ flex: 1, gap: 3 }}>
             {c.map((cell) => (
-              <Pressable key={cell.key} disabled={cell.n < 0} onPress={() => setPicked(`${cell.label}: ${cell.n} ${cell.n === 1 ? 'post' : 'posts'}`)}
+              <Pressable key={cell.key} disabled={cell.n < 0} onPress={() => setPicked(`${cell.label}: ${cell.n === 1 ? t('1 post') : t('{n} posts', { n: cell.n })}`)}
                 style={{ aspectRatio: 1, borderRadius: 3, backgroundColor: cell.n < 0 ? 'transparent' : shade(cell.n) }} />
             ))}
           </View>
         ))}
       </View>
-      <T variant="small">{picked ?? 'Tap a square to see how many posts that day'}</T>
+      <T variant="small">{picked ?? t('Tap a square to see how many posts that day')}</T>
     </View>
   );
 }
@@ -162,10 +163,9 @@ export function PostingActivity({ subs }: { subs: Submission[] }) {
 export function Explainer({ minViews = 1000, cpmCents = 200 }: { minViews?: number; cpmCents?: number }) {
   return (
     <Card style={{ gap: 6, backgroundColor: colors.surface2 }}>
-      <T variant="bodyStrong">How you earn</T>
+      <T variant="bodyStrong">{t("How you earn")}</T>
       <T variant="muted">
-        Each video counts on its own. A video starts earning once it reaches {short(minViews)} views, then every view pays.
-        At {usd(cpmCents)} per 1K: 900 views = $0, {short(minViews)} views = {usd(videoEarningsCents(minViews, minViews, cpmCents))}, 5K views = {usd(videoEarningsCents(5000, minViews, cpmCents))}.
+        {t('Each video counts on its own. A video starts earning once it reaches {min} views, then every view pays. At {rate} per 1K: 900 views = $0, {min} views = {a}, 5K views = {b}.', { min: short(minViews), rate: usd(cpmCents), a: usd(videoEarningsCents(minViews, minViews, cpmCents)), b: usd(videoEarningsCents(5000, minViews, cpmCents)) })}
       </T>
     </Card>
   );

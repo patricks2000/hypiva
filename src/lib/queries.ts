@@ -1,6 +1,7 @@
 import { must } from './useLoad';
 import { supabase } from './supabase';
 import { usd } from './format';
+import { dateLocale, t } from './i18n';
 import type { Bonus, Campaign, CreatorBalance, CreatorRate, LeaderRow, LeaderboardSettings, MyReferral, Payout, Referral, ReferralSettings, Submission, TikTokAccount, WeekRow } from './types';
 
 export const SUB_FIELDS = '*, campaigns(name, cpm_cents, min_views), tiktok_accounts(username)';
@@ -55,7 +56,7 @@ export async function loadReferrals(userId: string) {
 
 /** "5% of their approved earnings for 6 months, up to $100 per creator" */
 export const programLine = (s: ReferralSettings) =>
-  `You get ${s.percent_bp / 100}% of what each person you invite earns, for ${s.months} months, up to ${usd(s.cap_cents)} per person.`;
+  t('You get {p}% of what each person you invite earns, for {m} months, up to {cap} per person.', { p: s.percent_bp / 100, m: s.months, cap: usd(s.cap_cents) });
 
 /** The rate a creator gets on a campaign: a rate for that campaign, else a rate for all campaigns, else the campaign's own. */
 export function rateFor(rates: CreatorRate[], creatorId: string, c: Pick<Campaign, 'id' | 'cpm_cents' | 'min_views'>) {
@@ -77,9 +78,9 @@ export function withRates(subs: Submission[], rates: CreatorRate[]): Submission[
 /** Monday date string -> "22-28 Sep" */
 export const weekLabel = (start: string) => {
   const a = new Date(start + 'T00:00:00'), b = new Date(a.getTime() + 6 * 864e5);
-  const m = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short' });
+  const m = (d: Date) => d.toLocaleDateString(dateLocale(), { month: 'short' });
   return a.getMonth() === b.getMonth() ? `${a.getDate()}-${b.getDate()} ${m(b)}` : `${a.getDate()} ${m(a)} - ${b.getDate()} ${m(b)}`;
 };
 
 /** "September 2026" for the first day of a month. */
-export const monthLabel = (d: Date) => d.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+export const monthLabel = (d: Date) => d.toLocaleDateString(dateLocale(), { month: 'long', year: 'numeric' });
