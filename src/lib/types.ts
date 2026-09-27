@@ -74,6 +74,7 @@ export interface CreatorBalance {
   requested_cents: number;
   owed_cents: number;
   available_cents: number;
+  bonus_cents: number;
 }
 
 export interface ReferralSettings { percent_bp: number; months: number; cap_cents: number; signup_window_days: number }
@@ -87,6 +88,12 @@ export interface ReferralBonus { referrer_id: string; referred_id: string; creat
 export interface CreatorRate { id: string; creator_id: string; campaign_id: string | null; cpm_cents: number; min_views: number | null; note: string | null }
 
 export interface WeekRow { week_start: string; creator_id: string; name: string; video_cents: number; videos_counted: number }
+
+export interface Bonus { id: string; creator_id: string; amount_cents: number; reason: string; created_at: string }
+
+export interface LeaderRow { rank: number; creator_id: string | null; first_name: string; views_gained: number; earned_cents: number | null; is_me: boolean }
+
+export interface LeaderboardSettings { visible: boolean; prize_text: string }
 
 export interface CampaignStats { campaign_id: string; videos: number; views: number; spent_cents: number }
 

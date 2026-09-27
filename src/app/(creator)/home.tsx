@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import { ScrollView, View, useWindowDimensions } from 'react-native';
+import { Leaderboard } from '../../components/Leaderboard';
 import { CampaignCard, Explainer, VideoRow, ViewsChart } from '../../components/parts';
 import { Avatar, Card, Empty, ErrorNote, LinkButton, List, Loading, Screen, Section, T, Tile, Tiles } from '../../components/ui';
 import { useAuth } from '../../lib/auth';
@@ -30,7 +31,7 @@ export default function CreatorHome() {
         <>
           <Tiles>
             <Tile highlight label="Views" value={num(d.balance.views)} sub={`${d.balance.videos} videos`} />
-            <Tile label="Earned" value={usd(d.balance.earned_cents)} sub={`${d.balance.paid_videos} of ${d.balance.videos} videos over the minimum${d.balance.referral_earned_cents ? ` · ${usd(d.balance.referral_earned_cents)} from invites` : ''}`} />
+            <Tile label="Earned" value={usd(d.balance.earned_cents)} sub={`${d.balance.paid_videos} of ${d.balance.videos} videos over the minimum${d.balance.referral_earned_cents ? ` · ${usd(d.balance.referral_earned_cents)} from invites` : ''}${d.balance.bonus_cents ? ` · ${usd(d.balance.bonus_cents)} bonus` : ''}`} />
           </Tiles>
           <Card>
             <T variant="h2">Views by posting day</T>
@@ -38,6 +39,11 @@ export default function CreatorHome() {
             <View style={{ marginTop: 10 }}><ViewsChart subs={d.subs} /></View>
           </Card>
           {d.subs.length < 3 ? <Explainer /> : null}
+          {d.boardSettings.visible ? (
+            <Section title="Top creators this month" hint={d.boardSettings.prize_text || 'Ranked by views gained this month.'}>
+              <Leaderboard rows={d.board} empty="Nobody is on the board yet. Your views this month count." />
+            </Section>
+          ) : null}
           <Section title="Your campaigns" right={<LinkButton title="Find more" onPress={() => router.push('/(creator)/discover')} />}>
             {d.joined.length ? (
               <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -16 }}

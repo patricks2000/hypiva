@@ -59,7 +59,7 @@ export default function Wallet() {
               {d.balance.requested_cents > 0 ? <T variant="small">You have a request of {usd(d.balance.requested_cents)} open.</T> : null}
             </Card>
             <Tiles>
-              <Tile label="Earned" value={usd(d.balance.earned_cents)} sub={d.balance.referral_earned_cents ? `${usd(d.balance.video_earned_cents)} videos + ${usd(d.balance.referral_earned_cents)} invites` : undefined} />
+              <Tile label="Earned" value={usd(d.balance.earned_cents)} sub={d.balance.referral_earned_cents || d.balance.bonus_cents ? [`${usd(d.balance.video_earned_cents)} videos`, d.balance.referral_earned_cents ? `${usd(d.balance.referral_earned_cents)} invites` : '', d.balance.bonus_cents ? `${usd(d.balance.bonus_cents)} bonus` : ''].filter(Boolean).join(' + ') : undefined} />
               <Tile label="Paid out" value={usd(d.balance.paid_cents)} />
             </Tiles>
             <Section title="Per week" hint="What your videos earned each week, as their views grew.">
@@ -74,6 +74,16 @@ export default function Wallet() {
                 })()}
               </List>
             </Section>
+            {d.bonuses.length ? (
+              <Section title="Bonuses">
+                <List>
+                  {d.bonuses.map((b, i) => (
+                    <Row key={b.id} last={i === d.bonuses.length - 1} title={b.reason} subtitle={day(b.created_at)}
+                      right={<T variant="bodyStrong" style={{ color: b.amount_cents > 0 ? colors.money : colors.bad }}>{(b.amount_cents > 0 ? '+' : '') + usd(b.amount_cents)}</T>} />
+                  ))}
+                </List>
+              </Section>
+            ) : null}
             <Section title="Paid to" right={<Button small kind="ghost" title={hasMethod ? 'Change' : 'Add'} onPress={() => setEditing(true)} />}>
               <Card>
                 {hasMethod

@@ -10,7 +10,7 @@ Je hoeft niet te programmeren. Volg de stappen in deze volgorde.
    - Kies een sterk database-wachtwoord en bewaar het goed.
 2. Open in je project **SQL Editor** → **New query**.
 3. Open het bestand `supabase/migrations/0001_init.sql`, kopieer alles, plak het erin en klik op **Run**.
-   Doe daarna hetzelfde met `0002_referrals.sql` (uitnodigingen) en `0003_rates_and_weeks.sql` (eigen tarieven en weekoverzicht), in die volgorde.
+   Doe daarna hetzelfde met `0002_referrals.sql` (uitnodigingen) en `0003_rates_and_weeks.sql` (eigen tarieven en weekoverzicht) en `0004_bonuses_and_leaderboard.sql` (bonussen en ranglijst), in die volgorde.
    Nu staan alle tabellen, beveiligingsregels en de berekening per video klaar.
 4. Ga naar **Project Settings → API** en kopieer:
    - **Project URL**
@@ -73,6 +73,11 @@ Nodig: **Apple Developer-account** (€99 per jaar). Met je KvK meld je je aan a
 ## Per week
 - **Money → Per week** laat per week (maandag t/m zondag) zien wat alle creators samen verdiend hebben. Tik op een week voor de lijst per creator, en kopieer die naar Excel.
 - Dit werkt doordat de app elke keer onthoudt hoeveel views een video had. Groeit een video van 800 naar 3.000 views, dan telt de groei mee in die week.
+
+## Bonus geven en ranglijst
+- **Bonus**: Money → tik op een creator → **Give a bonus**. Kies een reden (bijvoorbeeld "Top creator of September") en een bedrag. De creator ziet de bonus met de reden in de wallet, en het bedrag telt mee in wat je moet betalen. Vergist? Tik op **Remove**, of geef een min-bedrag (bijvoorbeeld -10).
+- **Ranglijst**: Money → **Top creators** toont wie deze of vorige maand de meeste views heeft gehaald. Tik op iemand om meteen een bonus te geven.
+- De ranglijst staat standaard **alleen voor jou** aan. Wil je creators motiveren? Tik op **Show leaderboard to creators** en vul een prijs in, bijvoorbeeld "$50 for the #1 creator of the month". Creators zien dan alleen voornamen en views, nooit geld.
 
 ## Uitnodigingen (creator code)
 - Elke creator heeft een eigen code (bijvoorbeeld `VTCJZWPB`) onder **Profile → Your creator code**, met een knop om te kopiëren en te delen.

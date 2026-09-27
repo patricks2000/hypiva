@@ -1,13 +1,13 @@
 import { must } from './useLoad';
 import { supabase } from './supabase';
 import { usd } from './format';
-import type { Campaign, CreatorBalance, CreatorRate, MyReferral, Payout, Referral, ReferralSettings, Submission, TikTokAccount, WeekRow } from './types';
+import type { Bonus, Campaign, CreatorBalance, CreatorRate, LeaderRow, LeaderboardSettings, MyReferral, Payout, Referral, ReferralSettings, Submission, TikTokAccount, WeekRow } from './types';
 
 export const SUB_FIELDS = '*, campaigns(name, cpm_cents, min_views), tiktok_accounts(username)';
 export const SUB_FIELDS_WITH_CREATOR = '*, campaigns(name, cpm_cents, min_views), tiktok_accounts(username), profiles!submissions_creator_id_fkey(name, handle)';
 
 export async function loadCreator(userId: string) {
-  const [balance, subs, members, accounts, payouts, rates, weeks] = await Promise.all([
+  const [balance, subs, members, accounts, payouts, rates, weeks, bonuses, board, boardSettings] = await Promise.all([
     supabase.from('creator_balances').select('*').eq('creator_id', userId).maybeSingle(),
     supabase.from('submissions').select(SUB_FIELDS).eq('creator_id', userId).order('created_at', { ascending: false }),
     supabase.from('campaign_members').select('campaigns(*, brands(name))').eq('creator_id', userId),
@@ -15,6 +15,9 @@ export async function loadCreator(userId: string) {
     supabase.from('payouts').select('*').eq('creator_id', userId).order('requested_at', { ascending: false }),
     supabase.from('creator_rates').select('*').eq('creator_id', userId),
     supabase.rpc('weekly_earnings', { p_weeks: 8 }),
+    supabase.from('bonuses').select('*').eq('creator_id', userId).order('created_at', { ascending: false }),
+    supabase.rpc('leaderboard', { p_limit: 5 }),
+    supabase.from('leaderboard_settings').select('*').single(),
   ]);
   const joined = must(members as { data: { campaigns: Campaign | null }[] | null; error: unknown })
     .map((m) => m.campaigns).filter((c): c is Campaign => !!c);
@@ -24,6 +27,9 @@ export async function loadCreator(userId: string) {
     joined,
     rates: must(rates) as CreatorRate[],
     weeks: must(weeks) as WeekRow[],
+    bonuses: must(bonuses) as Bonus[],
+    board: must(board) as LeaderRow[],
+    boardSettings: must(boardSettings) as LeaderboardSettings,
     accounts: must(accounts) as TikTokAccount[],
     payouts: must(payouts) as Payout[],
   };
@@ -31,7 +37,7 @@ export async function loadCreator(userId: string) {
 
 export const emptyBalance = (id: string): CreatorBalance => ({
   creator_id: id, name: '', handle: null, videos: 0, paid_videos: 0, views: 0, video_earned_cents: 0, invites: 0, referral_earned_cents: 0,
-  earned_cents: 0, paid_cents: 0, requested_cents: 0, owed_cents: 0, available_cents: 0,
+  earned_cents: 0, paid_cents: 0, requested_cents: 0, owed_cents: 0, available_cents: 0, bonus_cents: 0,
 });
 
 export async function loadReferrals(userId: string) {
@@ -74,3 +80,6 @@ export const weekLabel = (start: string) => {
   const m = (d: Date) => d.toLocaleDateString('en-GB', { month: 'short' });
   return a.getMonth() === b.getMonth() ? `${a.getDate()}-${b.getDate()} ${m(b)}` : `${a.getDate()} ${m(a)} - ${b.getDate()} ${m(b)}`;
 };
+
+/** "September 2026" for the first day of a month. */
+export const monthLabel = (d: Date) => d.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });

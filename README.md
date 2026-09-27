@@ -9,6 +9,7 @@ Brands run pay-per-view TikTok campaigns; creators post, see their views and get
   At $2 per 1K: 999 views = $0, 1,000 = $2.00, 1,500 = $3.00.
 - **Special rates**: the owner can give one creator a different rate (all campaigns or one).
 - **Weekly totals**: view counts are recorded on every change, so earnings can be split per week.
+- **Bonuses & leaderboard**: admins can add a bonus with a reason; a monthly top list (views gained) that the owner can show to creators.
 - **Invites**: every creator has a code. Inviters earn a share of invited creators' approved earnings (default 5% for 6 months, max $100 each), paid on top.
 
 ## Stack
@@ -21,7 +22,7 @@ npm install
 npx expo start            # run the app (scan the QR code with Expo Go)
 npm run typecheck
 npx expo lint
-npm run test:db           # 60 checks on the money rules and who-can-see-what (needs a local Postgres on :5439)
+npm run test:db           # 71 checks on the money rules and who-can-see-what (needs a local Postgres on :5439)
 ```
 
 Setup, TestFlight and App Store steps: see [SETUP.md](SETUP.md).
