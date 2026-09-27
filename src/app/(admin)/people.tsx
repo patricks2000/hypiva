@@ -6,7 +6,6 @@ import { useAuth } from '../../lib/auth';
 import { friendlyError, supabase } from '../../lib/supabase';
 import { colors } from '../../lib/theme';
 import { day, parseDollars, usd } from '../../lib/format';
-import { programLine } from '../../lib/queries';
 import type { Brand, Profile, Referral, ReferralSettings, Role } from '../../lib/types';
 import { must, useLoad } from '../../lib/useLoad';
 
@@ -68,7 +67,7 @@ export default function People() {
         {q.data ? (
           <Card style={{ gap: 8, marginTop: 16 }}>
             <T variant="h2">Invite program</T>
-            <T variant="muted">Creators earn {programLine(q.data.settings)} New creators can add a code in their first {q.data.settings.signup_window_days} days.</T>
+            <T variant="muted">{`Inviters get ${q.data.settings.percent_bp / 100}% of what the people they invite earn, for ${q.data.settings.months} months, up to ${usd(q.data.settings.cap_cents)} per person. New creators can add a code in their first ${q.data.settings.signup_window_days} days.`}</T>
             <T variant="small">{q.data.referrals.length} {q.data.referrals.length === 1 ? 'creator' : 'creators'} joined with a code.</T>
             {me?.is_owner ? <Button small kind="ghost" title="Change rules" onPress={() => setRules(true)} /> : null}
           </Card>

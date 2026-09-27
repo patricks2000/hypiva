@@ -1,10 +1,11 @@
 import { Image } from 'expo-image';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, View, useWindowDimensions } from 'react-native';
+import { Linking, Pressable, View, useWindowDimensions } from 'react-native';
 import { Icon } from '../../components/Icon';
 import { Avatar, Button, Card, Empty, ErrorNote, Field, LinkButton, List, Loading, Row, Screen, T, hueFor, useToast } from '../../components/ui';
 import { homeFor, useAuth } from '../../lib/auth';
+import * as Clipboard from 'expo-clipboard';
 import { copy, saveToPhotos } from '../../lib/content';
 import { isTikTokUrl } from '../../lib/format';
 import { friendlyError, supabase } from '../../lib/supabase';
@@ -66,7 +67,9 @@ function PostFlow() {
     setStep('content');
   };
 
-  const title = step === 'account' ? 'Select account' : step === 'content' ? 'Content' : 'Submit clip';
+  const steps: Step[] = d?.hasContent ? ['account', 'content', 'submit'] : ['account', 'submit'];
+  const title = step === 'account' ? 'Your account' : step === 'content' ? 'Your post' : 'Send the link';
+  const stepNo = steps.indexOf(step) + 1;
 
   return (
     <View style={{ flex: 1 }}>
@@ -76,7 +79,13 @@ function PostFlow() {
             style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, alignItems: 'center', justifyContent: 'center' }}>
             <Icon name="back" color={colors.text} />
           </Pressable>
-          <T variant="h2" style={{ flex: 1 }}>{title}</T>
+          <View style={{ flex: 1 }}>
+            <T variant="small">Step {stepNo} of {steps.length}</T>
+            <T variant="h2">{title}</T>
+          </View>
+        </View>
+        <View style={{ flexDirection: 'row', gap: 6 }}>
+          {steps.map((s, k) => <View key={s} style={{ flex: 1, height: 4, borderRadius: 2, backgroundColor: k < stepNo ? colors.accent : colors.line }} />)}
         </View>
         {q.error ? <ErrorNote text={q.error} onRetry={q.reload} /> : null}
         {!d ? (q.error ? null : <Loading />) : step === 'account' ? (
@@ -99,9 +108,9 @@ function AccountStep({ accounts, busy, onPick }: { accounts: TikTokAccount[]; bu
   return (
     <>
       <View style={{ alignItems: 'center', gap: 8, marginVertical: 12 }}>
-        <T variant="title" style={{ fontSize: 26, textAlign: 'center' }}>Choose where you will post</T>
+        <T variant="title" style={{ fontSize: 26, textAlign: 'center' }}>Which account are you posting from?</T>
         <T variant="muted" style={{ textAlign: 'center' }}>
-          Use no more than three TikTok accounts per phone. TikTok may otherwise limit the accounts as suspected spam.
+          Tip: keep it to 3 TikTok accounts per phone. More can look like spam to TikTok and cost you views.
         </T>
       </View>
       {busy ? <Loading /> : null}
@@ -111,7 +120,7 @@ function AccountStep({ accounts, busy, onPick }: { accounts: TikTokAccount[]; bu
             title={a.username} subtitle={'@' + a.username} right={<Icon name="chevron" color={colors.muted} size={20} />} />
         ))}
         <Row last onPress={() => router.push('/(creator)/profile')} left={<View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: colors.surface2, alignItems: 'center', justifyContent: 'center' }}><Icon name="add" color={colors.accent} /></View>}
-          title="Add TikTok account" subtitle="Link an account you post from" right={<Icon name="chevron" color={colors.muted} size={20} />} />
+          title="Add an account" subtitle="Link another TikTok account" right={<Icon name="chevron" color={colors.muted} size={20} />} />
       </List>
     </>
   );
@@ -138,8 +147,12 @@ function ContentStep({ pack, onToast, onNext }: { pack: ContentPack; onToast: (t
 
   return (
     <>
-      <T variant="title" style={{ fontSize: 24 }}>Here&apos;s your slideshow</T>
-      <T variant="muted">Save the slides and copy the text to post on TikTok.</T>
+      <T variant="title" style={{ fontSize: 24 }}>Your post is ready</T>
+      <Card style={{ gap: 6, backgroundColor: colors.surface2 }}>
+        <T variant="body">1. Tap <T variant="bodyStrong">Save all</T> to put the slides in your photos</T>
+        <T variant="body">2. Tap <T variant="bodyStrong">Copy caption</T></T>
+        <T variant="body">3. Open TikTok, make a photo post with the slides and paste the caption</T>
+      </Card>
       {slides.length ? (
         <Card style={{ padding: 12, gap: 12 }}>
           <Image source={{ uri: slide.image_url }} style={{ width: w - 24, aspectRatio: 9 / 16, borderRadius: 14, backgroundColor: colors.surface2 }} contentFit="cover" accessibilityLabel={`Slide ${i + 1}`} />
@@ -156,7 +169,7 @@ function ContentStep({ pack, onToast, onNext }: { pack: ContentPack; onToast: (t
                 <T variant="body" style={{ flex: 1 }} selectable>{slide.overlay_text}</T>
                 <Button small kind="ghost" title="Copy" onPress={() => copyText(slide.overlay_text, 'Text')} />
               </View>
-              <T variant="small">Add this as a text overlay in TikTok</T>
+              <T variant="small">Put this text on slide {i + 1} in TikTok</T>
             </Card>
           ) : null}
           <View style={{ flexDirection: 'row', gap: 10 }}>
@@ -166,13 +179,14 @@ function ContentStep({ pack, onToast, onNext }: { pack: ContentPack; onToast: (t
         </Card>
       ) : null}
       {pack.title || pack.hashtags ? (
-        <Button kind="money" title="Copy caption (title + hashtags)"
+        <Button kind="money" title="Copy caption"
           onPress={() => copyText([pack.title, pack.description, pack.hashtags].filter(Boolean).join('\n\n'), 'Caption')} />
       ) : null}
-      {pack.title ? <CopyCard label="Title" text={pack.title} hint="Paste as the TikTok title." onCopy={() => copyText(pack.title, 'Title')} /> : null}
-      {pack.description ? <CopyCard label="Description" text={pack.description} hint="Paste as the description." onCopy={() => copyText(pack.description, 'Description')} /> : null}
-      {pack.hashtags ? <CopyCard label="Hashtags" text={pack.hashtags} hint="Paste these hashtags with the post." onCopy={() => copyText(pack.hashtags, 'Hashtags')} /> : null}
-      <Button title="I posted it: submit video" onPress={onNext} />
+      {pack.title ? <CopyCard label="Title" text={pack.title} hint="Part of the caption. Copy caption above takes everything at once." onCopy={() => copyText(pack.title, 'Title')} /> : null}
+      {pack.description ? <CopyCard label="Description" text={pack.description} hint="Part of the caption." onCopy={() => copyText(pack.description, 'Description')} /> : null}
+      {pack.hashtags ? <CopyCard label="Hashtags" text={pack.hashtags} hint="Goes at the end of the caption." onCopy={() => copyText(pack.hashtags, 'Hashtags')} /> : null}
+      <Button kind="ghost" title="Open TikTok" onPress={() => Linking.openURL('https://www.tiktok.com/').catch(() => {})} />
+      <Button title="I posted it, next step" onPress={onNext} />
     </>
   );
 }
@@ -192,7 +206,7 @@ function CopyCard({ label, text, hint, onCopy }: { label: string; text: string; 
 
 function SubmitStep({ campaign, account, packId, onToast }: { campaign: Campaign; account: TikTokAccount; packId: string | null; onToast: (t: string) => void }) {
   const { profile } = useAuth();
-  const checks = [`Posted from @${account.username}`, ...campaign.requirements];
+  const checks = [`Posted on @${account.username}`, ...campaign.requirements];
   const [ticked, setTicked] = useState<boolean[]>(checks.map(() => false));
   const [url, setUrl] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -208,17 +222,18 @@ function SubmitStep({ campaign, account, packId, onToast }: { campaign: Campaign
     });
     setBusy(false);
     if (e) return setError(friendlyError(e));
-    onToast('Sent in. You will see it under Your videos.');
+    onToast('Sent! You can follow it under Your videos.');
     setTimeout(() => router.replace('/(creator)/home'), 900);
   };
 
   return (
     <Card style={{ gap: 14 }}>
-      <Field label="TikTok video link" value={url} onChangeText={setUrl} autoCapitalize="none" autoCorrect={false} keyboardType="url"
-        placeholder="Paste TikTok video link" error={error}
-        hint="Copy the video link from TikTok and paste it here. New posts can be under review at TikTok for a few minutes before you can share the link." />
-      <T variant="bodyStrong">Before you submit</T>
-      <T variant="muted">Tick every requirement your post meets:</T>
+      <Field label="Link to your post" value={url} onChangeText={setUrl} autoCapitalize="none" autoCorrect={false} keyboardType="url"
+        placeholder="https://www.tiktok.com/@you/video/..." error={error}
+        hint="In TikTok: Share → Copy link. Just posted? TikTok can take a few minutes before the link works." />
+      <Button small kind="ghost" title="Paste link" onPress={async () => { const t = await Clipboard.getStringAsync().catch(() => ''); if (t) setUrl(t.trim()); }} />
+      <T variant="bodyStrong">Last check</T>
+      <T variant="muted">Tick what is true for your post:</T>
       {checks.map((c, k) => (
         <Pressable key={c} onPress={() => setTicked((t) => t.map((v, j) => (j === k ? !v : v)))} accessibilityRole="checkbox" accessibilityState={{ checked: ticked[k] }}
           style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 4 }}>
@@ -228,7 +243,8 @@ function SubmitStep({ campaign, account, packId, onToast }: { campaign: Campaign
           <T variant="body" style={{ flex: 1 }}>{c}</T>
         </Pressable>
       ))}
-      <Button title="Submit video" onPress={send} busy={busy} disabled={!all || !url.trim()} />
+      <Button title="Send for review" onPress={send} busy={busy} disabled={!all || !url.trim()} />
+      {!all && url.trim() ? <T variant="small" style={{ textAlign: 'center' }}>Tick every line to send it.</T> : null}
     </Card>
   );
 }

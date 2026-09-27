@@ -44,7 +44,7 @@ export default function Discover() {
       <Screen title="Discover" onRefresh={q.refresh} refreshing={q.refreshing}>
         <Field label="Search" value={search} onChangeText={setSearch} placeholder="Search campaigns" autoCorrect={false} />
         <Chips<Filter> value={filter} onChange={setFilter} options={[
-          { value: 'all', label: 'All' }, { value: 'ready_to_post', label: 'Ready-to-post' }, { value: 'create_your_own', label: 'Create your own' },
+          { value: 'all', label: 'All' }, { value: 'ready_to_post', label: 'Content included' }, { value: 'create_your_own', label: 'Film it yourself' },
         ]} />
         {q.error ? <ErrorNote text={q.error} onRetry={q.reload} /> : null}
         {!q.data ? (q.error ? null : <Loading />) : list.length ? list.map((c) => (

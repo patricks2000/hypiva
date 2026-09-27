@@ -46,20 +46,20 @@ function Invite() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Screen title="Creator code" right={<Button small kind="ghost" title="Done" onPress={() => (router.canGoBack() ? router.back() : router.replace('/(creator)/profile'))} />}
+      <Screen title="Invite & earn" right={<Button small kind="ghost" title="Done" onPress={() => (router.canGoBack() ? router.back() : router.replace('/(creator)/profile'))} />}
         onRefresh={q.refresh} refreshing={q.refreshing}>
         <Card style={{ gap: 12 }}>
-          <T variant="h2">Your creator code</T>
-          <T variant="body">Invite creators to Viewtra. When they sign up with your code and earn money, you earn too.</T>
-          {d ? <T variant="muted">{programLine(d.settings)} It comes on top: they keep everything they earn.</T> : null}
+          <T variant="h2">Your invite code</T>
+          <T variant="body">Know someone who would like to earn with TikTok? Give them your code. When they earn, you get a share on top.</T>
+          {d ? <T variant="muted">{programLine(d.settings)} They keep everything they earn.</T> : null}
           <Pressable onPress={copy} accessibilityRole="button" accessibilityLabel="Copy your code"
             style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: colors.surface2, borderRadius: 14, borderWidth: 1, borderColor: colors.line, paddingVertical: 14, paddingHorizontal: 16 }}>
             <T variant="title" style={{ flex: 1, fontSize: 24, letterSpacing: 3, fontFamily: fonts.bodyBold }} selectable>{myCode}</T>
             <T variant="bodyStrong" style={{ color: colors.accent }}>Copy</T>
           </Pressable>
           <Button title="Share my code" onPress={share} />
-          <T variant="bodyStrong">Who should I invite?</T>
-          <T variant="muted">Friends, family, or creators you find on TikTok and other platforms. Ask them to enter your code when they sign up.</T>
+          <T variant="bodyStrong">Good people to ask</T>
+          <T variant="muted">Friends who post on TikTok, gym buddies, or smaller creators you follow. They type your code when they create their account.</T>
         </Card>
 
         {q.error ? <ErrorNote text={q.error} onRetry={q.reload} /> : null}
@@ -67,7 +67,7 @@ function Invite() {
           <>
             <Section title="Your invites">
               <Tiles>
-                <Tile label="Sign-ups" value={String(d.invites.length)} sub="Creators who used your code" />
+                <Tile label="Joined" value={String(d.invites.length)} sub="With your code" />
                 <Tile highlight label="Earned from invites" value={usd(total)} color={colors.money} sub="Added to your wallet" />
               </Tiles>
               <List>
@@ -83,12 +83,12 @@ function Invite() {
                         {r.capped ? <Pill kind="paid" label="Max" /> : ended ? <Pill kind="ended" /> : <Pill kind="live" label="Active" />}
                       </>} />
                   );
-                }) : <Empty text="Share your code to invite your first creator." />}
+                }) : <Empty text="No one yet. Share your code and your first invite shows up here." />}
               </List>
             </Section>
 
             {canStillAddCode ? (
-              <Section title="Got a code from someone?">
+              <Section title="Did someone invite you?">
                 <Card style={{ gap: 12 }}>
                   <T variant="muted">If someone invited you, add their code. You can do this in the first {d.settings.signup_window_days} days after signing up. It costs you nothing.</T>
                   <Field label="Their code" value={code} onChangeText={setCode} autoCapitalize="characters" autoCorrect={false} placeholder="VT..." error={error} />

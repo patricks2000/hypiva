@@ -96,8 +96,8 @@ function Manage() {
 }
 
 function InstructionsSheet({ c, onClose, onSaved }: { c: Campaign; onClose: () => void; onSaved: () => void }) {
-  const [text, setText] = useState(c.instructions || '1. Tap Post now below.\n2. Pick the TikTok account you post from.\n3. Save the slides and copy the title and hashtags.\n4. Post on TikTok, then paste the link.');
-  const [reqs, setReqs] = useState((c.requirements.length ? c.requirements : ['Use the given title', 'Include all given hashtags', 'Submit within 30 minutes after posting']).join('\n'));
+  const [text, setText] = useState(c.instructions || '1. Tap Start posting.\n2. Choose the TikTok account you post from.\n3. Save the slides and copy the caption.\n4. Post it on TikTok and send us the link.');
+  const [reqs, setReqs] = useState((c.requirements.length ? c.requirements : ['The caption from the app is used', 'All hashtags are in the caption', 'Link sent within 30 minutes of posting']).join('\n'));
   const [error, setError] = useState<string | null>(null);
   const save = async () => {
     const requirements = reqs.split('\n').map((r) => r.trim()).filter(Boolean).slice(0, 12);
@@ -107,7 +107,7 @@ function InstructionsSheet({ c, onClose, onSaved }: { c: Campaign; onClose: () =
   };
   return (
     <Sheet visible onClose={onClose} title="Instructions and checklist">
-      <Field label="How to get started" value={text} onChangeText={setText} multiline />
+      <Field label="How it works" value={text} onChangeText={setText} multiline />
       <Field label="Checklist (one per line)" value={reqs} onChangeText={setReqs} multiline
         hint="Creators tick every line before they can submit." error={error} />
       <Button title="Save" onPress={save} />

@@ -57,8 +57,8 @@ export default function Profile() {
               <T variant="h2" style={{ color: colors.accent }}>+</T>
             </View>
             <View style={{ flex: 1 }}>
-              <T variant="bodyStrong">Your creator code</T>
-              <T variant="muted">{d && d.balance.invites ? `${d.balance.invites} invited · ${usd(d.balance.referral_earned_cents)} earned` : 'Earn by inviting creators'}</T>
+              <T variant="bodyStrong">Invite & earn</T>
+              <T variant="muted">{d && d.balance.invites ? `${d.balance.invites} invited · ${usd(d.balance.referral_earned_cents)} earned` : 'Get a share of what your invites earn'}</T>
             </View>
             <Icon name="chevron" color={colors.muted} size={20} />
           </Card>
@@ -67,13 +67,13 @@ export default function Profile() {
         {!d ? (q.error ? null : <Loading />) : (
           <>
             <Tiles>
-              <Tile label="Quality score" value={`${quality}%`} sub="Approved of reviewed videos" />
+              <Tile label="Approval rate" value={`${quality}%`} sub="Of your checked videos" />
               <Tile label="Videos" value={String(d.subs.length)} sub={`${d.balance.paid_videos} over the minimum`} />
             </Tiles>
-            <Section title="Posting activity" right={<T variant="muted">{d.subs.length} posts</T>}>
+            <Section title="Posts per day" right={<T variant="muted">{d.subs.length} posts</T>}>
               <Card><PostingActivity subs={d.subs} /></Card>
             </Section>
-            <Section title="Linked TikTok accounts" right={<Button small kind="ghost" title="Add" onPress={() => { setError(null); setAdding(true); }} />}>
+            <Section title="Your TikTok accounts" right={<Button small kind="ghost" title="Add" onPress={() => { setError(null); setAdding(true); }} />}>
               <List>
                 {d.accounts.length ? d.accounts.map((a, i) => (
                   <Row key={a.id} last={i === d.accounts.length - 1} left={<Avatar name={a.username} color={hueFor(a.id)} />}

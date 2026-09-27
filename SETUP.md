@@ -68,7 +68,7 @@ Nodig: **Apple Developer-account** (€99 per jaar). Met je KvK meld je je aan a
 - Admin of merk: **Campaigns → Content & checklist** bij een campagne.
   - **Edit**: schrijf de uitleg ("How to get started") en de checklist (één regel per eis). Creators moeten alles aanvinken voordat ze kunnen insturen.
   - **Add content**: kies afbeeldingen (of plak een link), zet bij elke slide de tekst die erop moet, en vul de titel, beschrijving en hashtags in.
-- Creator: tik op een campagne → **Post now** → kies het TikTok-account → slides **Save all** (naar de foto's) en titel/hashtags **Copy** → posten op TikTok → link plakken, checklist afvinken → **Submit video**.
+- Creator: tik op een campagne → **Start posting** → kies het TikTok-account → **Save all** (slides naar de foto's) en **Copy caption** → posten op TikTok → **Paste link**, checklist afvinken → **Send for review**.
 - Elk TikTok-account krijgt steeds content die het nog **niet** heeft gepost. Bij de content zie je hoe vaak die al gepost is. Zet genoeg content klaar zodat accounts niet opraken.
 - Afbeeldingen worden opgeslagen in Supabase Storage (bucket `content`, wordt vanzelf aangemaakt door de migratie).
 

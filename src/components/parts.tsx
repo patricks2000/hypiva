@@ -34,7 +34,7 @@ export function CampaignCard({ c, joined, onJoin, onSubmit, onOpen, busy, width,
             <T variant="small">per 1K views · min. {short(min)} views per video{rate?.custom ? ' · your rate' : ''}</T>
           </View>
           {joined
-            ? onSubmit ? <Button small title="Post now" onPress={onSubmit} /> : <Pill kind="linked" label="Joined" />
+            ? onSubmit ? <Button small title="Start posting" onPress={onSubmit} /> : <Pill kind="linked" label="Joined" />
             : onJoin ? <Button small title="Join" onPress={onJoin} busy={busy} /> : null}
         </View>
       </View>
@@ -154,7 +154,7 @@ export function PostingActivity({ subs }: { subs: Submission[] }) {
           </View>
         ))}
       </View>
-      <T variant="small">{picked ?? 'Tap a day to see its post count'}</T>
+      <T variant="small">{picked ?? 'Tap a square to see how many posts that day'}</T>
     </View>
   );
 }

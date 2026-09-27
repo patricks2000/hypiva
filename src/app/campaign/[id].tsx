@@ -70,7 +70,7 @@ function CampaignDetail() {
                     : <Button small title="Join" onPress={join} busy={busy} />}
                 </View>
                 <View style={{ flexDirection: 'row' }}>
-                  <T variant="body" style={{ flex: 1, color: '#fff' }}>Payout threshold</T>
+                  <T variant="body" style={{ flex: 1, color: '#fff' }}>Starts paying at</T>
                   <T variant="bodyStrong" style={{ color: '#fff' }}>{short(rate.min_views)} views per video</T>
                 </View>
               </View>
@@ -78,14 +78,14 @@ function CampaignDetail() {
 
             {d.c.instructions ? (
               <Card style={{ gap: 8 }}>
-                <T variant="h2">How to get started</T>
+                <T variant="h2">How it works</T>
                 <T variant="body">{d.c.instructions}</T>
               </Card>
             ) : null}
 
             {d.c.requirements.length ? (
               <Card style={{ gap: 8 }}>
-                <T variant="h2">Requirements</T>
+                <T variant="h2">Your post must</T>
                 {d.c.requirements.map((r) => <T key={r} variant="body">• {r}</T>)}
               </Card>
             ) : null}
@@ -94,9 +94,9 @@ function CampaignDetail() {
               <Pressable onPress={() => router.push({ pathname: '/post/[id]', params: { id } })} accessibilityRole="button"
                 style={{ backgroundColor: colors.accent, borderRadius: 20, padding: 18, flexDirection: 'row', alignItems: 'center' }}>
                 <View style={{ flex: 1 }}>
-                  <T variant="h2" style={{ color: colors.onAccent }}>Post now</T>
+                  <T variant="h2" style={{ color: colors.onAccent }}>Start posting</T>
                   <T variant="body" style={{ color: colors.onAccent }}>
-                    {d.packs ? 'Get your content, publish it, and earn from your views' : 'Publish your video and send in the link'}
+                    {d.packs ? 'Get your slides and caption, post them, get paid for your views' : 'Post your video and send us the link'}
                   </T>
                 </View>
                 <Icon name="chevron" color={colors.onAccent} size={26} />

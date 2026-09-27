@@ -55,7 +55,7 @@ export async function loadReferrals(userId: string) {
 
 /** "5% of their approved earnings for 6 months, up to $100 per creator" */
 export const programLine = (s: ReferralSettings) =>
-  `${s.percent_bp / 100}% of each invited creator's approved earnings for ${s.months} months, up to ${usd(s.cap_cents)} per creator.`;
+  `You get ${s.percent_bp / 100}% of what each person you invite earns, for ${s.months} months, up to ${usd(s.cap_cents)} per person.`;
 
 /** The rate a creator gets on a campaign: a rate for that campaign, else a rate for all campaigns, else the campaign's own. */
 export function rateFor(rates: CreatorRate[], creatorId: string, c: Pick<Campaign, 'id' | 'cpm_cents' | 'min_views'>) {

@@ -52,7 +52,7 @@ export function CampaignForm({ brandId, brands, onDone }: { brandId?: string | n
         placeholder="Faceless slideshows about hitting your protein goal. Show the app on the last slide." />
       <View style={{ gap: 8 }}>
         <T variant="label">Type</T>
-        <Chips value={kind} onChange={setKind} options={[{ value: 'ready_to_post', label: 'Ready-to-post' }, { value: 'create_your_own', label: 'Create your own' }]} />
+        <Chips value={kind} onChange={setKind} options={[{ value: 'ready_to_post', label: 'Content included' }, { value: 'create_your_own', label: 'Film it yourself' }]} />
       </View>
       <View style={{ flexDirection: 'row', gap: 12 }}>
         <View style={{ flex: 1 }}><Field label="Pay per 1K views ($)" value={cpm} onChangeText={setCpm} keyboardType="decimal-pad" /></View>

@@ -107,4 +107,4 @@ export interface ContentPack {
 
 export interface CampaignStats { campaign_id: string; videos: number; views: number; spent_cents: number }
 
-export const kindLabel = (k: Campaign['kind']) => (k === 'ready_to_post' ? 'Ready-to-post' : 'Create your own');
+export const kindLabel = (k: Campaign['kind']) => (k === 'ready_to_post' ? 'Content included' : 'Film it yourself');
