@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { Button, Card, Chips, Empty, ErrorNote, Field, LinkButton, Loading, Screen, T, useToast } from '../../components/ui';
 import { useAuth } from '../../lib/auth';
 import { isTikTokUrl, short, usd } from '../../lib/format';
-import { loadCreator } from '../../lib/queries';
+import { loadCreator, rateFor } from '../../lib/queries';
 import { friendlyError, supabase } from '../../lib/supabase';
 import { colors } from '../../lib/theme';
 import { useLoad } from '../../lib/useLoad';
@@ -25,7 +25,8 @@ export default function Submit() {
   const campaign = picked && picked.from === params.campaign ? picked.id : params.campaign ?? d?.joined[0]?.id ?? '';
   const setCampaign = (id: string) => setPicked({ from: params.campaign, id });
   const account = pickedAccount ?? d?.accounts[0]?.id ?? '';
-  const chosen = d?.joined.find((c) => c.id === campaign);
+  const chosenCampaign = d?.joined.find((c) => c.id === campaign);
+  const chosen = chosenCampaign && d ? rateFor(d.rates, profile!.id, chosenCampaign) : null;
 
   const send = async () => {
     setError(null);

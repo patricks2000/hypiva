@@ -10,7 +10,7 @@ Je hoeft niet te programmeren. Volg de stappen in deze volgorde.
    - Kies een sterk database-wachtwoord en bewaar het goed.
 2. Open in je project **SQL Editor** → **New query**.
 3. Open het bestand `supabase/migrations/0001_init.sql`, kopieer alles, plak het erin en klik op **Run**.
-   Doe daarna hetzelfde met `supabase/migrations/0002_referrals.sql` (het uitnodigingsprogramma).
+   Doe daarna hetzelfde met `0002_referrals.sql` (uitnodigingen) en `0003_rates_and_weeks.sql` (eigen tarieven en weekoverzicht), in die volgorde.
    Nu staan alle tabellen, beveiligingsregels en de berekening per video klaar.
 4. Ga naar **Project Settings → API** en kopieer:
    - **Project URL**
@@ -63,6 +63,16 @@ Nodig: **Apple Developer-account** (€99 per jaar). Met je KvK meld je je aan a
   - 1.500 views op één video → **$3,00**
 - Alleen **goedgekeurde** video's tellen mee.
 - **Money** laat per creator zien wat je nog moet betalen. Tik op iemand voor de berekening per video en het PayPal-adres of IBAN. Maak het geld over, tik op **Mark as paid** en het saldo gaat naar $0.
+
+## Eigen tarief per creator
+- Standaard krijgt iedereen het tarief van de campagne (bijvoorbeeld $2 per 1.000 views).
+- Wil je iemand $1 geven? **Money → tik op de creator → Set a special rate**. Kies **All campaigns** of één campagne, vul het bedrag in (en eventueel een ander minimum).
+- De creator ziet zijn eigen tarief op de campagnekaart ("your rate"). Alles wordt meteen opnieuw berekend.
+- Let op: het nieuwe tarief geldt ook voor video's die al gepost zijn. Stel het dus het liefst in voordat iemand begint.
+
+## Per week
+- **Money → Per week** laat per week (maandag t/m zondag) zien wat alle creators samen verdiend hebben. Tik op een week voor de lijst per creator, en kopieer die naar Excel.
+- Dit werkt doordat de app elke keer onthoudt hoeveel views een video had. Groeit een video van 800 naar 3.000 views, dan telt de groei mee in die week.
 
 ## Uitnodigingen (creator code)
 - Elke creator heeft een eigen code (bijvoorbeeld `VTCJZWPB`) onder **Profile → Your creator code**, met een knop om te kopiëren en te delen.

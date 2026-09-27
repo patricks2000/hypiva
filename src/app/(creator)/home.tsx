@@ -4,7 +4,7 @@ import { CampaignCard, Explainer, VideoRow, ViewsChart } from '../../components/
 import { Avatar, Card, Empty, ErrorNote, LinkButton, List, Loading, Screen, Section, T, Tile, Tiles } from '../../components/ui';
 import { useAuth } from '../../lib/auth';
 import { num, usd } from '../../lib/format';
-import { loadCreator } from '../../lib/queries';
+import { loadCreator, rateFor } from '../../lib/queries';
 import { colors } from '../../lib/theme';
 import { useLoad } from '../../lib/useLoad';
 
@@ -43,7 +43,7 @@ export default function CreatorHome() {
               <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -16 }}
                 contentContainerStyle={{ gap: 12, paddingHorizontal: 16 }}>
                 {d.joined.map((c) => (
-                  <CampaignCard key={c.id} c={c} joined width={Math.min(width, 480) * 0.82}
+                  <CampaignCard key={c.id} c={c} joined width={Math.min(width, 480) * 0.82} rate={rateFor(d.rates, profile!.id, c)}
                     onSubmit={() => router.push({ pathname: '/(creator)/submit', params: { campaign: c.id } })} />
                 ))}
               </ScrollView>

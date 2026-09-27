@@ -4,10 +4,10 @@ import { earningLine } from '../../components/parts';
 import { ReviewList } from '../../components/ReviewList';
 import { Chips, Empty, ErrorNote, Field, List, Loading, Row, Screen, T, hueFor, useToast } from '../../components/ui';
 import { day, usd } from '../../lib/format';
-import { SUB_FIELDS_WITH_CREATOR } from '../../lib/queries';
+import { SUB_FIELDS_WITH_CREATOR, withRates } from '../../lib/queries';
 import { friendlyError, supabase } from '../../lib/supabase';
 import { colors, fonts } from '../../lib/theme';
-import type { Submission } from '../../lib/types';
+import type { CreatorRate, Submission } from '../../lib/types';
 import { must, useLoad } from '../../lib/useLoad';
 
 type Tab = 'views' | 'review';
@@ -16,8 +16,13 @@ export default function Videos() {
   const [tab, setTab] = useState<Tab>('views');
   const [search, setSearch] = useState('');
   const { toast, show } = useToast();
-  const q = useLoad(async () =>
-    must(await supabase.from('submissions').select(SUB_FIELDS_WITH_CREATOR).order('created_at', { ascending: false }).limit(500)) as Submission[]);
+  const q = useLoad(async () => {
+    const [s, r] = await Promise.all([
+      supabase.from('submissions').select(SUB_FIELDS_WITH_CREATOR).order('created_at', { ascending: false }).limit(500),
+      supabase.from('creator_rates').select('*'),
+    ]);
+    return withRates(must(s) as Submission[], must(r) as CreatorRate[]);
+  });
 
   const all = q.data ?? [];
   const pending = all.filter((s) => s.status === 'pending');

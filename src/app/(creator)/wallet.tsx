@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { Button, Card, Chips, Empty, ErrorNote, Field, List, Loading, Pill, Row, Screen, Section, Sheet, T, Tile, Tiles, useToast } from '../../components/ui';
 import { useAuth } from '../../lib/auth';
 import { day, usd } from '../../lib/format';
-import { loadCreator } from '../../lib/queries';
+import { loadCreator, weekLabel } from '../../lib/queries';
 import { friendlyError, supabase } from '../../lib/supabase';
 import { colors } from '../../lib/theme';
 import { useLoad } from '../../lib/useLoad';
@@ -62,6 +62,18 @@ export default function Wallet() {
               <Tile label="Earned" value={usd(d.balance.earned_cents)} sub={d.balance.referral_earned_cents ? `${usd(d.balance.video_earned_cents)} videos + ${usd(d.balance.referral_earned_cents)} invites` : undefined} />
               <Tile label="Paid out" value={usd(d.balance.paid_cents)} />
             </Tiles>
+            <Section title="Per week" hint="What your videos earned each week, as their views grew.">
+              <List>
+                {(() => {
+                  const weeks = [...new Set(d.weeks.map((w) => w.week_start))];
+                  return weeks.length ? weeks.map((w, i) => {
+                    const cents = d.weeks.filter((x) => x.week_start === w).reduce((a, x) => a + x.video_cents, 0);
+                    return <Row key={w} last={i === weeks.length - 1} title={weekLabel(w)} subtitle={i === 0 && w === d.weeks[0]?.week_start ? 'Most recent week' : undefined}
+                      right={<T variant="bodyStrong" style={{ color: cents > 0 ? colors.money : colors.muted }}>{usd(cents)}</T>} />;
+                  }) : <Empty text="Your weekly earnings show up here once your videos pass the minimum." />;
+                })()}
+              </List>
+            </Section>
             <Section title="Paid to" right={<Button small kind="ghost" title={hasMethod ? 'Change' : 'Add'} onPress={() => setEditing(true)} />}>
               <Card>
                 {hasMethod

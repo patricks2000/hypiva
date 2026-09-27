@@ -84,6 +84,10 @@ export interface Referral { referred_id: string; referrer_id: string; created_at
 
 export interface ReferralBonus { referrer_id: string; referred_id: string; created_at: string; ends_at: string; invited_earned_cents: number; bonus_cents: number; capped: boolean }
 
+export interface CreatorRate { id: string; creator_id: string; campaign_id: string | null; cpm_cents: number; min_views: number | null; note: string | null }
+
+export interface WeekRow { week_start: string; creator_id: string; name: string; video_cents: number; videos_counted: number }
+
 export interface CampaignStats { campaign_id: string; videos: number; views: number; spent_cents: number }
 
 export const kindLabel = (k: Campaign['kind']) => (k === 'ready_to_post' ? 'Ready-to-post' : 'Create your own');

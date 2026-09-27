@@ -7,10 +7,12 @@ import { kindLabel, type Campaign, type Submission } from '../lib/types';
 import { Button, Card, Pill, Row, T, hueFor } from './ui';
 
 /** A campaign as creators see it. */
-export function CampaignCard({ c, joined, onJoin, onSubmit, busy, width }: {
+export function CampaignCard({ c, joined, onJoin, onSubmit, busy, width, rate }: {
   c: Campaign; joined: boolean; onJoin?: () => void; onSubmit?: () => void; busy?: boolean; width?: number;
+  rate?: { cpm_cents: number; min_views: number; custom: boolean };
 }) {
   const color = hueFor(c.brand_id);
+  const cpm = rate?.cpm_cents ?? c.cpm_cents, min = rate?.min_views ?? c.min_views;
   return (
     <View style={{ width, borderRadius: 22, overflow: 'hidden', backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
       <View style={{ height: 110, backgroundColor: color, padding: 16, justifyContent: 'space-between' }}>
@@ -24,8 +26,8 @@ export function CampaignCard({ c, joined, onJoin, onSubmit, busy, width }: {
         {c.description ? <T variant="muted" numberOfLines={3}>{c.description}</T> : null}
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, borderTopWidth: 1, borderTopColor: colors.line, paddingTop: 12 }}>
           <View style={{ flex: 1 }}>
-            <T variant="h2" style={{ color: colors.money }}>{usd(c.cpm_cents)}</T>
-            <T variant="small">per 1K views · min. {short(c.min_views)} views per video</T>
+            <T variant="h2" style={{ color: colors.money }}>{usd(cpm)}</T>
+            <T variant="small">per 1K views · min. {short(min)} views per video{rate?.custom ? ' · your rate' : ''}</T>
           </View>
           {joined
             ? onSubmit ? <Button small kind="ghost" title="Submit video" onPress={onSubmit} /> : <Pill kind="linked" label="Joined" />
