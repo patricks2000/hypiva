@@ -17,21 +17,42 @@ Je hoeft niet te programmeren. Volg de stappen in deze volgorde.
    - **anon public** key
 5. Maak in de projectmap een bestand `.env` (kopieer `.env.example`) en vul die twee waarden in.
 
-## 2. Jezelf eigenaar maken
+## 2. De website online zetten (gratis, ongeveer 15 minuten)
 
-1. Start de app (zie stap 3) en maak een account aan met je eigen e-mailadres.
+Dit is dezelfde app, als website. Creators openen hem in de browser op hun telefoon; jij beheert alles via dezelfde site. Geen App Store nodig, dus geen €99.
+
+1. Zet de code op **GitHub** (maak een leeg project `viewtra` en upload de map, of laat Claude dat doen).
+2. Maak een gratis account op **vercel.com** en log in met GitHub.
+3. Klik **Add New → Project** en kies `viewtra`. Vercel leest `vercel.json` en weet dan zelf hoe hij moet bouwen.
+4. Open **Environment Variables** en vul in:
+   - `EXPO_PUBLIC_SUPABASE_URL` = je Project URL uit Supabase
+   - `EXPO_PUBLIC_SUPABASE_ANON_KEY` = je anon public key uit Supabase
+5. Klik **Deploy**. Na een paar minuten staat de site op iets als `viewtra.vercel.app`.
+6. Ga in Supabase naar **Authentication → URL Configuration** en zet je websiteadres bij **Site URL**, zodat links in e-mails (wachtwoord vergeten) goed werken.
+7. Eigen domein (bijvoorbeeld `viewtra.app`)? Voeg het toe in Vercel onder **Settings → Domains**.
+
+Elke keer dat de code op GitHub verandert, zet Vercel de nieuwe versie vanzelf online.
+
+**Op de telefoon als app:** creators openen de site in Safari, tikken op **Delen → Zet op beginscherm**. Dan staat Viewtra als icoon tussen hun apps.
+**Slides opslaan op de website:** "Alles opslaan" opent het deelmenu van de telefoon, met **Bewaar afbeelding** (iPhone) om ze in Foto's te zetten.
+
+Netlify werkt ook (het bestand `netlify.toml` staat klaar), op dezelfde manier.
+
+## 3. Jezelf eigenaar maken (admin-toegang)
+
+1. Open de website (of de app) en maak een account aan met je eigen e-mailadres.
 2. Ga in Supabase naar **SQL Editor**, plak `supabase/owner.sql`, vervang het e-mailadres door dat van jou en klik op **Run**.
 3. Log opnieuw in. Je ziet nu de admin-schermen: **Money, Videos, Campaigns en People**.
 
 Alleen jij kunt nu iemand de rol **Brand** of **Admin** geven, via **People**. Iedereen die zich aanmeldt is eerst **Creator**.
 
-## 3. De app testen op je iPhone
+## 4. De app testen op je iPhone (later, voor de App Store)
 
 1. Installeer **Expo Go** uit de App Store.
 2. Op een computer met de code: `npm install` en daarna `npx expo start`.
 3. Scan de QR-code met je camera. De app opent in Expo Go.
 
-## 4. In de App Store
+## 5. In de App Store (later)
 
 Nodig: **Apple Developer-account** (€99 per jaar). Met je KvK meld je je aan als **organisatie**, zodat er "Viewtra" als maker staat. Apple vraagt daarvoor een gratis **D-U-N-S-nummer**, dat je aanvraagt via de Apple-aanmeldpagina. Reken op een paar dagen.
 

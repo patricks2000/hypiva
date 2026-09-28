@@ -24,7 +24,15 @@
       "package": "app.viewtra"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "output": "single",
+      "name": "Viewtra",
+      "shortName": "Viewtra",
+      "description": "Post for brands. Get paid for your views.",
+      "themeColor": "#0D0E13",
+      "backgroundColor": "#0D0E13",
+      "display": "standalone",
+      "lang": "en"
     },
     "plugins": [
       "expo-router",
