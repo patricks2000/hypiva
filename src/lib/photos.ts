@@ -4,7 +4,7 @@ import { Asset, requestPermissionsAsync } from 'expo-media-library';
 /** Saves slide images to the phone's photos. Returns how many were saved. */
 export async function saveToPhotos(urls: string[]): Promise<number> {
   const perm = await requestPermissionsAsync(true);
-  if (!perm.granted) throw new Error('Allow Viewtra to add photos in Settings to save the slides.');
+  if (!perm.granted) throw new Error('Allow Clipwage to add photos in Settings to save the slides.');
   const dir = new Directory(Paths.cache, 'slides');
   if (!dir.exists) dir.create();
   let saved = 0;

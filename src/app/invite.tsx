@@ -33,7 +33,7 @@ function Invite() {
     d.now - new Date(profile.created_at).getTime() < d.settings.signup_window_days * 864e5;
 
   const copy = async () => { await Clipboard.setStringAsync(myCode); show(t('Code copied')); };
-  const share = () => Share.share({ message: t('Get paid for your TikTok views on Viewtra. Sign up with my code {code}', { code: myCode }) }).catch(() => {});
+  const share = () => Share.share({ message: t('Get paid for your TikTok views on Clipwage. Sign up with my code {code}', { code: myCode }) }).catch(() => {});
 
   const useCode = async () => {
     setError(null); setBusy(true);

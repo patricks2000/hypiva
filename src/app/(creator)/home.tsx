@@ -19,7 +19,7 @@ export default function CreatorHome() {
     <Screen onRefresh={q.refresh} refreshing={q.refreshing}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 6 }}>
         <View style={{ width: 12, height: 12, borderRadius: 4, backgroundColor: colors.accent, transform: [{ rotate: '45deg' }] }} />
-        <T variant="title" style={{ flex: 1, fontSize: 28 }}>{t("Viewtra")}</T>
+        <T variant="title" style={{ flex: 1, fontSize: 28 }}>{t("Clipwage")}</T>
         {d ? (
           <View style={{ backgroundColor: colors.moneySoft, paddingHorizontal: 14, paddingVertical: 7, borderRadius: 999 }}>
             <T variant="bodyStrong" style={{ color: colors.money }}>{usd(d.balance.available_cents)}</T>

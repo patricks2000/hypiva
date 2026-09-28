@@ -65,7 +65,7 @@ export const nl: Record<string, string> = {
   'Friends who post on TikTok, gym buddies, or smaller creators you follow. They type your code when they create their account.':
     'Vrienden die op TikTok posten, sportmaatjes of kleinere creators die je volgt. Ze vullen je code in als ze een account maken.',
   'Get a share of what your invites earn': 'Verdien mee met wie je uitnodigt',
-  'Get paid for your TikTok views on Viewtra. Sign up with my code {code}': 'Krijg betaald voor je TikTok-views met Viewtra. Meld je aan met mijn code {code}',
+  'Get paid for your TikTok views on Clipwage. Sign up with my code {code}': 'Krijg betaald voor je TikTok-views met Clipwage. Meld je aan met mijn code {code}',
   'Get your slides and caption, post them, get paid for your views': 'Pak je slides en caption, post ze en krijg betaald voor je views',
   'Goes at the end of the caption.': 'Komt aan het eind van de caption.',
   'Good people to ask': 'Wie kun je vragen?',
@@ -212,7 +212,7 @@ export const nl: Record<string, string> = {
   'Videos you send in show up here with their views and what they earn.': 'Video’s die je instuurt zie je hier, met hun views en wat ze opleveren.',
   'Views': 'Views',
   'Views by posting day': 'Views per postdag',
-  'Viewtra': 'Viewtra',
+  'Clipwage': 'Clipwage',
   'Waiting for review': 'Wacht op beoordeling',
   'Wallet': 'Wallet',
   'We sent you an email to set a new password.': 'We hebben je een e-mail gestuurd om een nieuw wachtwoord te kiezen.',
