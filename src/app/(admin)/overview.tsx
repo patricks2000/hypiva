@@ -8,7 +8,7 @@ import { day, eur, num, parseDollars, short, usd } from '../../lib/format';
 import { SUB_FIELDS, monthLabel, weekLabel, withRates } from '../../lib/queries';
 import { friendlyError, supabase } from '../../lib/supabase';
 import { colors } from '../../lib/theme';
-import type { Bonus, Campaign, CreatorBalance, CreatorRate, LeaderRow, LeaderboardSettings, Payout, Profile, ReferralBonus, Submission, WeekRow } from '../../lib/types';
+import type { Bonus, Campaign, CreatorBalance, CreatorRate, LeaderRow, LeaderboardSettings, Payout, PayoutAccount, ReferralBonus, Submission, WeekRow } from '../../lib/types';
 import { useAuth } from '../../lib/auth';
 import { must, useLoad } from '../../lib/useLoad';
 
@@ -206,14 +206,14 @@ function PaySheet({ b, rate, onClose, onPaid }: { b: CreatorBalance; rate: numbe
   const [error, setError] = useState<string | null>(null);
   const q = useLoad(async () => {
     const [p, s, r, c, bo] = await Promise.all([
-      supabase.from('profiles').select('*').eq('id', b.creator_id).single(),
+      supabase.from('payout_accounts').select('*').eq('creator_id', b.creator_id).maybeSingle(),
       supabase.from('submissions').select(SUB_FIELDS).eq('creator_id', b.creator_id).order('created_at', { ascending: false }),
       supabase.from('creator_rates').select('*').eq('creator_id', b.creator_id),
       supabase.from('campaigns').select('*').order('created_at', { ascending: false }),
       supabase.from('bonuses').select('*').eq('creator_id', b.creator_id).order('created_at', { ascending: false }),
     ]);
     const rates = must(r) as CreatorRate[];
-    return { profile: must(p) as Profile, subs: withRates(must(s) as Submission[], rates), rates, campaigns: must(c) as Campaign[], bonuses: must(bo) as Bonus[] };
+    return { account: must(p) as PayoutAccount | null, subs: withRates(must(s) as Submission[], rates), rates, campaigns: must(c) as Campaign[], bonuses: must(bo) as Bonus[] };
   });
   const pay = async () => {
     setBusy(true); setError(null);
@@ -222,7 +222,7 @@ function PaySheet({ b, rate, onClose, onPaid }: { b: CreatorBalance; rate: numbe
     if (e) return setError(friendlyError(e));
     onPaid(`${b.name || 'Creator'} marked as paid: ${usd(b.owed_cents)}`);
   };
-  const details = q.data?.profile.payout_details;
+  const details = q.data?.account?.details;
   return (
     <Sheet visible onClose={onClose} title={b.name || 'Creator'}>
       <Card style={{ gap: 6 }}>
@@ -234,7 +234,7 @@ function PaySheet({ b, rate, onClose, onPaid }: { b: CreatorBalance; rate: numbe
       <Card style={{ gap: 6 }}>
         <T variant="label">Send to</T>
         {q.data ? (details
-          ? <><T variant="bodyStrong" selectable>{q.data.profile.payout_method === 'bank' ? 'Bank: ' : 'PayPal: '}{details}</T>
+          ? <><T variant="bodyStrong" selectable>{q.data.account?.method === 'bank' ? 'Bank: ' : 'PayPal: '}{details}</T>
               <LinkButton title="Copy" onPress={() => Clipboard.setStringAsync(details)} /></>
           : <T variant="muted">This creator has not added payout details yet.</T>) : <Loading />}
       </Card>

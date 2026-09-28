@@ -10,7 +10,7 @@ Je hoeft niet te programmeren. Volg de stappen in deze volgorde.
    - Kies een sterk database-wachtwoord en bewaar het goed.
 2. Open in je project **SQL Editor** → **New query**.
 3. Open het bestand `supabase/migrations/0001_init.sql`, kopieer alles, plak het erin en klik op **Run**.
-   Doe daarna hetzelfde met `0002_referrals.sql` (uitnodigingen) en `0003_rates_and_weeks.sql` (eigen tarieven en weekoverzicht) `0004_bonuses_and_leaderboard.sql` (bonussen en ranglijst) `0005_exchange_rate.sql` (euro-bedragen) en `0006_content.sql` (kant-en-klare content), in die volgorde.
+   Doe daarna hetzelfde met `0002_referrals.sql` (uitnodigingen) en `0003_rates_and_weeks.sql` (eigen tarieven en weekoverzicht) `0004_bonuses_and_leaderboard.sql` (bonussen en ranglijst) `0005_exchange_rate.sql` (euro-bedragen), `0006_content.sql` (kant-en-klare content) en `0007_privacy_hardening.sql` (extra beveiliging), in die volgorde.
    Nu staan alle tabellen, beveiligingsregels en de berekening per video klaar.
 4. Ga naar **Project Settings → API** en kopieer:
    - **Project URL**
@@ -130,3 +130,13 @@ Nodig: **Apple Developer-account** (€99 per jaar). Met je KvK meld je je aan a
 ## Views bijwerken
 Tot TikTok de koppeling goedkeurt, vul je de views in bij **Videos → Update views**. Het bedrag onder elk getal verandert meteen.
 Automatisch views ophalen via de TikTok-API kan later worden toegevoegd.
+
+## Beveiliging (zit er al in)
+- **Bankgegevens zijn privé.** IBAN en PayPal staan in een aparte, afgeschermde tabel. Alleen de creator zelf en jij (admin) kunnen ze zien. Merken zien alleen de naam van creators die voor hen posten, nooit hoe ze betaald worden. Zelfs een admin kan iemands rekeningnummer niet aanpassen.
+- **Zonder inloggen kan niemand iets** uit de database lezen of aanroepen.
+- **Elke regel wordt door de database zelf gecontroleerd** (row level security), niet alleen door de app. Iemand die de app omzeilt, komt dus ook niet verder.
+- **Alleen jij** kunt rollen geven (brand/admin), tarieven, bonussen, koers en uitnodigingsregels aanpassen.
+- **Website-headers** (`vercel.json`): de site mag niet in een andere site ingebed worden (tegen klikfraude), laadt alleen eigen scripts, praat alleen met jouw Supabase en dwingt HTTPS af.
+- **Uploads**: alleen afbeeldingen (jpg, png, webp, heic), maximaal 10 MB per stuk.
+- Aanrader in Supabase onder **Authentication → Providers → Email**: zet **Confirm email** aan, en onder **Authentication → Policies/Password**: minimaal 8 tekens. Klik daarna op **Advisors → Security Advisor**; die hoort leeg te zijn.
+- Tests: `npm run test:db` controleert 94 regels, waaronder dat merken geen bankgegevens kunnen zien.

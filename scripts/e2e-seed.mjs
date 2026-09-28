@@ -62,7 +62,7 @@ const a = must(await alex.c.from('creator_balances').select('*').single());
 ok(a.earned_cents === 1040 && a.paid_videos === 2, 'Alex: 500, 800, 1,000 and 4,200 views approved -> only 1,000 ($2.00) and 4,200 ($8.40) earn = $10.40');
 const all = must(await owner.c.from('creator_balances').select('*'));
 console.table(all.map((r) => ({ name: r.name, videos: r.videos, over_min: r.paid_videos, views: r.views, earned: r.earned_cents / 100, owed: r.owed_cents / 100 })));
-must(await nina.c.from('profiles').update({ payout_method: 'paypal', payout_details: 'nina@example.com' }).eq('id', nina.id));
+must(await nina.c.from('payout_accounts').upsert({ creator_id: nina.id, method: 'paypal', details: 'nina@example.com' }));
 const req = must(await nina.c.rpc('request_payout'));
 ok(req.amount_cents > 0, `Nina requested ${req.amount_cents / 100}`);
 ok((await owner.c.rpc('mark_creator_paid', { p_creator: liam.id })).error, 'Liam has nothing owed (no approved video reached 1,000)');

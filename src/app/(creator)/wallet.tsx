@@ -12,18 +12,24 @@ import { t } from '../../lib/i18n';
 const MIN_PAYOUT = 1000;
 
 export default function Wallet() {
-  const { profile, refreshProfile } = useAuth();
+  const { profile } = useAuth();
   const q = useLoad(() => loadCreator(profile!.id));
   const [busy, setBusy] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [method, setMethod] = useState<'paypal' | 'bank'>(profile?.payout_method ?? 'paypal');
-  const [details, setDetails] = useState(profile?.payout_details ?? '');
+  const [method, setMethod] = useState<'paypal' | 'bank'>('paypal');
+  const [details, setDetails] = useState('');
   const { toast, show } = useToast();
   const d = q.data;
-  const hasMethod = !!profile?.payout_method && !!profile?.payout_details;
+  const account = d?.payoutAccount ?? null;
+  const hasMethod = !!account;
+  const edit = () => {
+    setMethod(account?.method ?? 'paypal');
+    setDetails(account?.details ?? '');
+    setEditing(true);
+  };
 
   const request = async () => {
-    if (!hasMethod) { setEditing(true); return; }
+    if (!hasMethod) { edit(); return; }
     setBusy(true);
     const { error } = await supabase.rpc('request_payout');
     setBusy(false);
@@ -33,10 +39,10 @@ export default function Wallet() {
   };
 
   const saveMethod = async () => {
-    if (!details.trim()) return;
-    const { error } = await supabase.from('profiles').update({ payout_method: method, payout_details: details.trim() }).eq('id', profile!.id);
+    if (details.trim().length < 3) return;
+    const { error } = await supabase.from('payout_accounts').upsert({ creator_id: profile!.id, method, details: details.trim() });
     if (error) return show(friendlyError(error));
-    await refreshProfile();
+    q.reload();
     setEditing(false);
     show(t('Payout details saved'));
   };
@@ -85,10 +91,10 @@ export default function Wallet() {
                 </List>
               </Section>
             ) : null}
-            <Section title={t("Paid to")} right={<Button small kind="ghost" title={hasMethod ? 'Change' : 'Add'} onPress={() => setEditing(true)} />}>
+            <Section title={t("Paid to")} right={<Button small kind="ghost" title={hasMethod ? 'Change' : 'Add'} onPress={edit} />}>
               <Card>
                 {hasMethod
-                  ? <T variant="body">{profile!.payout_method === 'paypal' ? 'PayPal' : 'Bank'} · {profile!.payout_details}</T>
+                  ? <T variant="body">{account!.method === 'paypal' ? 'PayPal' : 'Bank'} · {account!.details}</T>
                   : <T variant="muted">{t("Add your PayPal email or IBAN so we can pay you.")}</T>}
               </Card>
             </Section>

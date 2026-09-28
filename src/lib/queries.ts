@@ -2,13 +2,13 @@ import { must } from './useLoad';
 import { supabase } from './supabase';
 import { usd } from './format';
 import { dateLocale, t } from './i18n';
-import type { Bonus, Campaign, CreatorBalance, CreatorRate, LeaderRow, LeaderboardSettings, MyReferral, Payout, Referral, ReferralSettings, Submission, TikTokAccount, WeekRow } from './types';
+import type { Bonus, Campaign, CreatorBalance, CreatorRate, LeaderRow, LeaderboardSettings, MyReferral, Payout, PayoutAccount, Referral, ReferralSettings, Submission, TikTokAccount, WeekRow } from './types';
 
 export const SUB_FIELDS = '*, campaigns(name, cpm_cents, min_views), tiktok_accounts(username)';
 export const SUB_FIELDS_WITH_CREATOR = '*, campaigns(name, cpm_cents, min_views), tiktok_accounts(username), profiles!submissions_creator_id_fkey(name, handle)';
 
 export async function loadCreator(userId: string) {
-  const [balance, subs, members, accounts, payouts, rates, weeks, bonuses, board, boardSettings] = await Promise.all([
+  const [balance, subs, members, accounts, payouts, rates, weeks, bonuses, board, boardSettings, payoutAccount] = await Promise.all([
     supabase.from('creator_balances').select('*').eq('creator_id', userId).maybeSingle(),
     supabase.from('submissions').select(SUB_FIELDS).eq('creator_id', userId).order('created_at', { ascending: false }),
     supabase.from('campaign_members').select('campaigns(*, brands(name))').eq('creator_id', userId),
@@ -19,6 +19,7 @@ export async function loadCreator(userId: string) {
     supabase.from('bonuses').select('*').eq('creator_id', userId).order('created_at', { ascending: false }),
     supabase.rpc('leaderboard', { p_limit: 5 }),
     supabase.from('leaderboard_settings').select('*').single(),
+    supabase.from('payout_accounts').select('*').eq('creator_id', userId).maybeSingle(),
   ]);
   const joined = must(members as { data: { campaigns: Campaign | null }[] | null; error: unknown })
     .map((m) => m.campaigns).filter((c): c is Campaign => !!c);
@@ -33,6 +34,7 @@ export async function loadCreator(userId: string) {
     boardSettings: must(boardSettings) as LeaderboardSettings,
     accounts: must(accounts) as TikTokAccount[],
     payouts: must(payouts) as Payout[],
+    payoutAccount: must(payoutAccount) as PayoutAccount | null,
   };
 }
 

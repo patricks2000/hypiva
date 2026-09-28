@@ -10,10 +10,16 @@ export interface Profile {
   role: Role;
   is_owner: boolean;
   brand_id: string | null;
-  payout_method: 'paypal' | 'bank' | null;
-  payout_details: string | null;
   referral_code: string;
   created_at: string;
+}
+
+/** How a creator gets paid. Only the creator and admins can read it. */
+export interface PayoutAccount {
+  creator_id: string;
+  method: 'paypal' | 'bank';
+  details: string;
+  updated_at: string;
 }
 
 export interface Brand { id: string; name: string }
@@ -61,7 +67,7 @@ export interface Payout {
   requested_at: string;
   paid_at: string | null;
   note: string | null;
-  profiles?: { name: string; handle: string | null; payout_method: string | null; payout_details: string | null } | null;
+  profiles?: { name: string; handle: string | null } | null;
 }
 
 export interface CreatorBalance {
