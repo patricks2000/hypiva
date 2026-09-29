@@ -10,7 +10,7 @@ Je hoeft niet te programmeren. Volg de stappen in deze volgorde.
    - Kies een sterk database-wachtwoord en bewaar het goed.
 2. Open in je project **SQL Editor** → **New query**.
 3. Open het bestand `supabase/migrations/0001_init.sql`, kopieer alles, plak het erin en klik op **Run**.
-   Doe daarna hetzelfde met `0002_referrals.sql` (uitnodigingen) en `0003_rates_and_weeks.sql` (eigen tarieven en weekoverzicht) `0004_bonuses_and_leaderboard.sql` (bonussen en ranglijst) `0005_exchange_rate.sql` (euro-bedragen), `0006_content.sql` (kant-en-klare content) en `0007_privacy_hardening.sql` (extra beveiliging), in die volgorde.
+   Doe daarna hetzelfde met `0002_referrals.sql` (uitnodigingen) en `0003_rates_and_weeks.sql` (eigen tarieven en weekoverzicht) `0004_bonuses_and_leaderboard.sql` (bonussen en ranglijst) `0005_exchange_rate.sql` (euro-bedragen), `0006_content.sql` (kant-en-klare content) en `0007_privacy_hardening.sql` (extra beveiliging) en `0008_lock_functions.sql`, in die volgorde.
    Nu staan alle tabellen, beveiligingsregels en de berekening per video klaar.
 4. Ga naar **Project Settings → API** en kopieer:
    - **Project URL**
@@ -139,4 +139,4 @@ Automatisch views ophalen via de TikTok-API kan later worden toegevoegd.
 - **Website-headers** (`vercel.json`): de site mag niet in een andere site ingebed worden (tegen klikfraude), laadt alleen eigen scripts, praat alleen met jouw Supabase en dwingt HTTPS af.
 - **Uploads**: alleen afbeeldingen (jpg, png, webp, heic), maximaal 10 MB per stuk.
 - Aanrader in Supabase onder **Authentication → Providers → Email**: zet **Confirm email** aan, en onder **Authentication → Policies/Password**: minimaal 8 tekens. Klik daarna op **Advisors → Security Advisor**; die hoort leeg te zijn.
-- Tests: `npm run test:db` controleert 94 regels, waaronder dat merken geen bankgegevens kunnen zien.
+- Tests: `npm run test:db` controleert 95 regels, waaronder dat merken geen bankgegevens kunnen zien.

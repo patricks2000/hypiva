@@ -17,7 +17,7 @@ where payout_method is not null and payout_details is not null and length(trim(p
 alter table public.profiles drop column payout_method, drop column payout_details;
 
 create function public.stamp_payout_account() returns trigger
-language plpgsql as $$ begin new.updated_at := now(); return new; end $$;
+language plpgsql set search_path = public as $$ begin new.updated_at := now(); return new; end $$;
 create trigger stamp_payout_account before insert or update on public.payout_accounts
   for each row execute function public.stamp_payout_account();
 

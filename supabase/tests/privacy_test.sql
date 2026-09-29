@@ -44,5 +44,13 @@ do $$ begin perform 1 from profiles; raise exception 'FAILED: anon could read pr
 reset role;
 select pg_temp.check(true, 'signed-out visitors cannot read profiles or payout details');
 
+-- Internal functions cannot be called by signed-in users
+set role authenticated;
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000c');
+do $$ begin perform link_referral('00000000-0000-0000-0000-00000000000b', 'HYAAAAAA'); raise exception 'FAILED: link_referral was callable'; exception when insufficient_privilege then null; end $$;
+do $$ begin perform new_referral_code(); raise exception 'FAILED: new_referral_code was callable'; exception when insufficient_privilege then null; end $$;
+reset role;
+select pg_temp.check(true, 'signed-in users cannot call internal functions like link_referral');
+
 \o
 \echo ALL PRIVACY CHECKS PASSED
