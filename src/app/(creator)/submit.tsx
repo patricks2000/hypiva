@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { Button, Card, Chips, Empty, ErrorNote, Field, LinkButton, Loading, Screen, T, useToast } from '../../components/ui';
 import { useAuth } from '../../lib/auth';
-import { isTikTokUrl, short, usd } from '../../lib/format';
-import { loadCreator, rateFor } from '../../lib/queries';
+import { isTikTokUrl, short } from '../../lib/format';
+import { loadCreator, payLabel, rateFor } from '../../lib/queries';
 import { friendlyError, supabase } from '../../lib/supabase';
 import { colors } from '../../lib/theme';
 import { useLoad } from '../../lib/useLoad';
@@ -57,7 +57,7 @@ export default function Submit() {
             <View style={{ gap: 8 }}>
               <T variant="label">{t("Campaign")}</T>
               <Chips value={campaign} onChange={setCampaign} options={d.joined.map((c) => ({ value: c.id, label: c.name }))} />
-              {chosen ? <T variant="small">{usd(chosen.cpm_cents)} per 1K views. The video needs {short(chosen.min_views)} views on its own to start earning.</T> : null}
+              {chosen ? <T variant="small">{payLabel(chosen)}. {chosen.min_views > 0 ? t('The video needs {n} views on its own to start earning.', { n: short(chosen.min_views) }) : ''} {t('Views are checked automatically.')}</T> : null}
             </View>
             <View style={{ gap: 8 }}>
               <T variant="label">{t("TikTok account")}</T>

@@ -11,13 +11,16 @@ export function CampaignForm({ brandId, brands, onDone }: { brandId?: string | n
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
   const [kind, setKind] = useState<Campaign['kind']>('ready_to_post');
+  const [payType, setPayType] = useState<PayType>('views');
   const [cpm, setCpm] = useState('2.00');
+  const [fixed, setFixed] = useState('5.00');
   const [budget, setBudget] = useState('1000');
   const [minViews, setMinViews] = useState('1000');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   const cpmCents = parseDollars(cpm);
+  const fixedCents = parseDollars(fixed);
   const budgetCents = parseDollars(budget);
   const min = Number(minViews.replace(/\D/g, ''));
 
@@ -25,12 +28,14 @@ export function CampaignForm({ brandId, brands, onDone }: { brandId?: string | n
     setError(null);
     if (!brand) return setError('Pick a brand first.');
     if (!name.trim() || !desc.trim()) return setError('Add a name and tell creators what to post.');
-    if (!cpmCents) return setError('Enter what you pay per 1,000 views, for example 2.00.');
+    if (payType === 'views' && !cpmCents) return setError('Enter what you pay per 1,000 views, for example 2.00.');
+    if (payType === 'video' && !fixedCents) return setError('Enter what you pay per video, for example 5.00.');
     if (!budgetCents || budgetCents < 5000) return setError('The budget has to be at least $50.');
     setBusy(true);
     const { error: e } = await supabase.from('campaigns').insert({
       brand_id: brand, name: name.trim(), description: desc.trim(), kind,
-      cpm_cents: cpmCents, budget_cents: budgetCents, min_views: Number.isFinite(min) ? min : 1000,
+      cpm_cents: cpmCents ?? 200, fixed_cents: payType === 'video' ? fixedCents : null,
+      budget_cents: budgetCents, min_views: Number.isFinite(min) ? min : 1000,
     });
     setBusy(false);
     if (e) return setError(friendlyError(e));
@@ -54,17 +59,75 @@ export function CampaignForm({ brandId, brands, onDone }: { brandId?: string | n
         <T variant="label">Type</T>
         <Chips value={kind} onChange={setKind} options={[{ value: 'ready_to_post', label: 'Content included' }, { value: 'create_your_own', label: 'Film it yourself' }]} />
       </View>
-      <View style={{ flexDirection: 'row', gap: 12 }}>
-        <View style={{ flex: 1 }}><Field label="Pay per 1K views ($)" value={cpm} onChangeText={setCpm} keyboardType="decimal-pad" /></View>
-        <View style={{ flex: 1 }}><Field label="Budget ($)" value={budget} onChangeText={setBudget} keyboardType="decimal-pad" /></View>
-      </View>
-      <Field label="Minimum views per video" value={minViews} onChangeText={setMinViews} keyboardType="number-pad"
-        hint="A video below this earns nothing. Views count per video, never added up." />
-      {cpmCents && budgetCents ? (
-        <T variant="small">{usd(budgetCents)} pays for about {num((budgetCents / cpmCents) * 1000)} views.</T>
-      ) : null}
+      <PayFields payType={payType} setPayType={setPayType} cpm={cpm} setCpm={setCpm} fixed={fixed} setFixed={setFixed}
+        budget={budget} setBudget={setBudget} minViews={minViews} setMinViews={setMinViews} />
       {error ? <T variant="muted" style={{ color: '#FF5C7A' }}>{error}</T> : null}
       <Button title="Launch campaign" onPress={create} busy={busy} />
     </Card>
+  );
+}
+
+type PayType = 'views' | 'video';
+
+/** Pay model, amount, minimum and budget. Shared by "New campaign" and "Pay & budget". */
+function PayFields(p: {
+  payType: PayType; setPayType: (v: PayType) => void; cpm: string; setCpm: (v: string) => void; fixed: string; setFixed: (v: string) => void;
+  budget: string; setBudget: (v: string) => void; minViews: string; setMinViews: (v: string) => void;
+}) {
+  const cpmCents = parseDollars(p.cpm), fixedCents = parseDollars(p.fixed), budgetCents = parseDollars(p.budget);
+  return (
+    <>
+      <View style={{ gap: 8 }}>
+        <T variant="label">How creators are paid</T>
+        <Chips value={p.payType} onChange={p.setPayType} options={[{ value: 'views', label: 'Per 1K views' }, { value: 'video', label: 'Fixed per video' }]} />
+      </View>
+      <View style={{ flexDirection: 'row', gap: 12 }}>
+        <View style={{ flex: 1 }}>
+          {p.payType === 'views'
+            ? <Field label="Pay per 1K views ($)" value={p.cpm} onChangeText={p.setCpm} keyboardType="decimal-pad" />
+            : <Field label="Pay per video ($)" value={p.fixed} onChangeText={p.setFixed} keyboardType="decimal-pad" />}
+        </View>
+        <View style={{ flex: 1 }}><Field label="Budget ($)" value={p.budget} onChangeText={p.setBudget} keyboardType="decimal-pad" /></View>
+      </View>
+      <Field label="Minimum views per video" value={p.minViews} onChangeText={p.setMinViews} keyboardType="number-pad"
+        hint={p.payType === 'views' ? 'A video below this earns nothing. Views count per video, never added up.' : 'Use 0 to pay for every approved video, whatever its views.'} />
+      {budgetCents && p.payType === 'views' && cpmCents ? <T variant="small">{usd(budgetCents)} pays for about {num((budgetCents / cpmCents) * 1000)} views.</T> : null}
+      {budgetCents && p.payType === 'video' && fixedCents ? <T variant="small">{usd(budgetCents)} pays for about {num(Math.floor(budgetCents / fixedCents))} videos.</T> : null}
+    </>
+  );
+}
+
+/** Admin: change how a live campaign pays. The new terms count for all its videos, including earlier ones. */
+export function PayForm({ c, onDone }: { c: Campaign; onDone: (msg: string) => void }) {
+  const [payType, setPayType] = useState<PayType>(c.fixed_cents != null ? 'video' : 'views');
+  const [cpm, setCpm] = useState((c.cpm_cents / 100).toFixed(2));
+  const [fixed, setFixed] = useState(((c.fixed_cents ?? 500) / 100).toFixed(2));
+  const [budget, setBudget] = useState(String(c.budget_cents / 100));
+  const [minViews, setMinViews] = useState(String(c.min_views));
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const save = async () => {
+    const cpmCents = parseDollars(cpm), fixedCents = parseDollars(fixed), budgetCents = parseDollars(budget);
+    const min = Number(minViews.replace(/\D/g, ''));
+    if (payType === 'views' && !cpmCents) return setError('Enter what you pay per 1,000 views.');
+    if (payType === 'video' && !fixedCents) return setError('Enter what you pay per video.');
+    if (!budgetCents) return setError('Enter a budget.');
+    setBusy(true); setError(null);
+    const { error: e } = await supabase.from('campaigns').update({
+      cpm_cents: payType === 'views' ? cpmCents : c.cpm_cents, fixed_cents: payType === 'video' ? fixedCents : null,
+      budget_cents: budgetCents, min_views: Number.isFinite(min) ? min : c.min_views,
+    }).eq('id', c.id);
+    setBusy(false);
+    if (e) return setError(friendlyError(e));
+    onDone('Pay updated');
+  };
+  return (
+    <>
+      <PayFields payType={payType} setPayType={setPayType} cpm={cpm} setCpm={setCpm} fixed={fixed} setFixed={setFixed}
+        budget={budget} setBudget={setBudget} minViews={minViews} setMinViews={setMinViews} />
+      <T variant="small">The new pay counts for every video in this campaign, also ones already posted. Tell your creators before you change it.</T>
+      {error ? <T variant="muted" style={{ color: '#FF5C7A' }}>{error}</T> : null}
+      <Button title="Save pay" onPress={save} busy={busy} />
+    </>
   );
 }

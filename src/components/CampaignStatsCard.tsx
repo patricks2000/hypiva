@@ -4,7 +4,7 @@ import { num, short, usd } from '../lib/format';
 import { colors } from '../lib/theme';
 import { kindLabel, type Campaign, type CampaignStats } from '../lib/types';
 
-export function CampaignStatsCard({ c, stats, onToggle, onOpen }: { c: Campaign; stats?: CampaignStats; onToggle?: () => void; onOpen?: () => void }) {
+export function CampaignStatsCard({ c, stats, onToggle, onOpen, onEditPay }: { c: Campaign; stats?: CampaignStats; onToggle?: () => void; onOpen?: () => void; onEditPay?: () => void }) {
   const spent = stats?.spent_cents ?? 0;
   const pct = Math.min(100, (spent / c.budget_cents) * 100);
   return (
@@ -13,7 +13,7 @@ export function CampaignStatsCard({ c, stats, onToggle, onOpen }: { c: Campaign;
         <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: hueFor(c.brand_id) }} />
         <View style={{ flex: 1 }}>
           <T variant="bodyStrong">{c.name}</T>
-          <T variant="muted">{usd(c.cpm_cents)} per 1K · min. {short(c.min_views)} · {kindLabel(c.kind)}</T>
+          <T variant="muted">{c.fixed_cents != null ? `${usd(c.fixed_cents)} per video` : `${usd(c.cpm_cents)} per 1K`} · min. {short(c.min_views)} · {kindLabel(c.kind)}</T>
         </View>
         <Pill kind={c.status} />
       </Pressable>
@@ -27,6 +27,7 @@ export function CampaignStatsCard({ c, stats, onToggle, onOpen }: { c: Campaign;
       <T variant="small">{usd(spent)} of {usd(c.budget_cents)} budget used</T>
       <View style={{ flexDirection: 'row', gap: 8 }}>
         {onOpen ? <Button small style={{ flex: 1 }} title="Content & checklist" onPress={onOpen} /> : null}
+        {onEditPay ? <Button small style={{ flex: 1 }} kind="ghost" title="Pay & budget" onPress={onEditPay} /> : null}
         {onToggle ? <Button small style={{ flex: 1 }} kind="ghost" title={c.status === 'live' ? 'Pause' : 'Make live'} onPress={onToggle} /> : null}
       </View>
     </Card>

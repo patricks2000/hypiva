@@ -22,8 +22,8 @@ export const initials = (name: string) =>
  * Same rule as the database (video_earnings_cents): views count per video, never added up.
  * Below the minimum a video earns nothing; from the minimum on every view counts.
  */
-export const videoEarningsCents = (views: number, minViews: number, cpmCents: number) =>
-  views >= minViews ? Math.floor((views * cpmCents) / 1000) : 0;
+export const videoEarningsCents = (views: number, minViews: number, cpmCents: number, fixedCents?: number | null) =>
+  views < minViews ? 0 : fixedCents != null ? fixedCents : Math.floor((views * cpmCents) / 1000);
 
 export const isTikTokUrl = (url: string) => /^https:\/\/(www\.|vm\.|m\.)?tiktok\.com\//i.test(url.trim());
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { earningLine } from '../../components/parts';
 import { ReviewList } from '../../components/ReviewList';
-import { Chips, Empty, ErrorNote, Field, List, Loading, Row, Screen, T, hueFor, useToast } from '../../components/ui';
+import { Button, Chips, Empty, ErrorNote, Field, List, Loading, Row, Screen, T, hueFor, useToast } from '../../components/ui';
 import { day, usd } from '../../lib/format';
 import { SUB_FIELDS_WITH_CREATOR, withRates } from '../../lib/queries';
 import { friendlyError, supabase } from '../../lib/supabase';
@@ -16,6 +16,17 @@ export default function Videos() {
   const [tab, setTab] = useState<Tab>('views');
   const [search, setSearch] = useState('');
   const { toast, show } = useToast();
+  const [refreshing, setRefreshing] = useState(false);
+  const refreshViews = async () => {
+    setRefreshing(true);
+    const { error: e1 } = await supabase.rpc('request_views_refresh');
+    const { data, error: e2 } = e1 ? { data: null, error: e1 } : await supabase.functions.invoke('refresh-views', { body: {} });
+    setRefreshing(false);
+    if (e2) return show(friendlyError(e2));
+    const r = data as { checked: number; updated: number; failed: number };
+    show(`Checked ${r.checked} videos: ${r.updated} updated${r.failed ? `, ${r.failed} need a look` : ''}. The rest follow within 3 hours.`);
+    q.reload();
+  };
   const q = useLoad(async () => {
     const [s, r] = await Promise.all([
       supabase.from('submissions').select(SUB_FIELDS_WITH_CREATOR).order('created_at', { ascending: false }).limit(500),
@@ -41,7 +52,11 @@ export default function Videos() {
           <ReviewList subs={pending} onChanged={q.reload} onToast={show} />
         ) : (
           <>
-            <T variant="muted">Type the latest view count from TikTok. The amount under each number updates right away.</T>
+            <T variant="muted">Views update automatically every 3 hours from each TikTok link. You can still type a number to correct it; the amount updates right away.</T>
+            <Button kind="ghost" title="Refresh views now" onPress={refreshViews} busy={refreshing} />
+            {list.some((s) => s.views_error) ? (
+              <T variant="small" style={{ color: colors.warn }}>{list.filter((s) => s.views_error).length} videos could not be checked. Look for the ⚠ below: often the video is private, removed, or posted from another account.</T>
+            ) : null}
             <Field label="Search" value={search} onChangeText={setSearch} placeholder="Creator, @account or campaign" autoCapitalize="none" />
             <List>
               {list.length ? list.map((s, i) => <ViewsRow key={s.id} s={s} last={i === list.length - 1} onSaved={show} />)
@@ -73,7 +88,8 @@ function ViewsRow({ s, last, onSaved }: { s: Submission; last: boolean; onSaved:
     <Row last={last}
       left={<View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: hueFor(s.campaign_id) }} />}
       title={'@' + (s.tiktok_accounts?.username ?? '')}
-      subtitle={`${s.profiles?.name ?? ''} · ${s.campaigns?.name ?? ''} · ${day(s.created_at)}`}
+      lines={3}
+      subtitle={`${s.profiles?.name ?? ''} · ${s.campaigns?.name ?? ''} · ${day(s.created_at)}${s.views_error ? `\n⚠ ${s.views_error}` : s.views_checked_at ? `\nAuto-checked ${day(s.views_checked_at)}` : ''}`}
       right={<>
         <TextInput value={text} onChangeText={setText} onBlur={save} onSubmitEditing={save} keyboardType="number-pad" returnKeyType="done"
           accessibilityLabel={`Views for @${s.tiktok_accounts?.username}`}

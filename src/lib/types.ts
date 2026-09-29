@@ -32,6 +32,8 @@ export interface Campaign {
   kind: 'ready_to_post' | 'create_your_own';
   cpm_cents: number;
   min_views: number;
+  /** Set = a fixed amount per video instead of pay per 1K views. */
+  fixed_cents: number | null;
   budget_cents: number;
   status: 'live' | 'paused' | 'ended';
   instructions: string;
@@ -51,10 +53,12 @@ export interface Submission {
   status: SubmissionStatus;
   views: number;
   views_updated_at: string | null;
+  views_checked_at?: string | null;
+  views_error?: string | null;
   reject_reason: string | null;
   content_pack_id?: string | null;
   created_at: string;
-  campaigns?: Pick<Campaign, 'name' | 'cpm_cents' | 'min_views'> | null;
+  campaigns?: Pick<Campaign, 'name' | 'cpm_cents' | 'min_views' | 'fixed_cents'> | null;
   tiktok_accounts?: { username: string } | null;
   profiles?: { name: string; handle: string | null } | null;
 }
@@ -110,6 +114,8 @@ export interface ContentSlide { id: string; pack_id: string; position: number; i
 
 export interface ContentPack {
   id: string; campaign_id: string; title: string; description: string; hashtags: string; active: boolean; created_at: string;
+  /** Two-letter language code, e.g. "en" or "nl". */
+  language: string;
   content_slides?: ContentSlide[];
 }
 

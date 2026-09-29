@@ -10,7 +10,7 @@ Je hoeft niet te programmeren. Volg de stappen in deze volgorde.
    - Kies een sterk database-wachtwoord en bewaar het goed.
 2. Open in je project **SQL Editor** → **New query**.
 3. Open het bestand `supabase/migrations/0001_init.sql`, kopieer alles, plak het erin en klik op **Run**.
-   Doe daarna hetzelfde met `0002_referrals.sql` (uitnodigingen) en `0003_rates_and_weeks.sql` (eigen tarieven en weekoverzicht) `0004_bonuses_and_leaderboard.sql` (bonussen en ranglijst) `0005_exchange_rate.sql` (euro-bedragen), `0006_content.sql` (kant-en-klare content) en `0007_privacy_hardening.sql` (extra beveiliging) en `0008_lock_functions.sql`, in die volgorde.
+   Doe daarna hetzelfde met `0002_referrals.sql` (uitnodigingen) en `0003_rates_and_weeks.sql` (eigen tarieven en weekoverzicht) `0004_bonuses_and_leaderboard.sql` (bonussen en ranglijst) `0005_exchange_rate.sql` (euro-bedragen), `0006_content.sql` (kant-en-klare content) en `0007_privacy_hardening.sql` (extra beveiliging), `0008_lock_functions.sql`, `0009_auto_views.sql` (automatische views) en `0010_pay_models_and_languages.sql` (betaalvorm en taal), in die volgorde.
    Nu staan alle tabellen, beveiligingsregels en de berekening per video klaar.
 4. Ga naar **Project Settings → API** en kopieer:
    - **Project URL**
@@ -127,16 +127,21 @@ Nodig: **Apple Developer-account** (€99 per jaar). Met je KvK meld je je aan a
 - De bonus telt automatisch mee in **Money**. Onder **Invites** zie je per uitnodiger wie ze hebben binnengebracht en wat het oplevert.
 - De regels (percentage, maanden, maximum, dagen) pas je aan onder **People → Invite program**. Alleen jij als eigenaar kunt dat.
 
-## Views bijwerken
-Tot TikTok de koppeling goedkeurt, vul je de views in bij **Videos → Update views**. Het bedrag onder elk getal verandert meteen.
-Automatisch views ophalen via de TikTok-API kan later worden toegevoegd.
+## Views: gaan vanzelf
+- Een creator plakt de TikTok-link. Elke 3 uur haalt de server (Supabase-functie `refresh-views`) van alle video's van de laatste 60 dagen de nieuwe views op.
+- Hij controleert ook of de video echt van het gekoppelde TikTok-account van die creator is. Zo niet, dan telt hij niet mee en zie je bij **Video's** een ⚠ met de reden.
+- Views gaan nooit omlaag door een leesfout. Klopt er iets niet, typ dan zelf het juiste getal bij **Video's**.
+- **Refresh views now** bij Video's haalt meteen nieuwe views op.
+- Staat een video op privé of is hij verwijderd, dan zie je dat ook bij de ⚠.
 
-## Beveiliging (zit er al in)
-- **Bankgegevens zijn privé.** IBAN en PayPal staan in een aparte, afgeschermde tabel. Alleen de creator zelf en jij (admin) kunnen ze zien. Merken zien alleen de naam van creators die voor hen posten, nooit hoe ze betaald worden. Zelfs een admin kan iemands rekeningnummer niet aanpassen.
-- **Zonder inloggen kan niemand iets** uit de database lezen of aanroepen.
-- **Elke regel wordt door de database zelf gecontroleerd** (row level security), niet alleen door de app. Iemand die de app omzeilt, komt dus ook niet verder.
-- **Alleen jij** kunt rollen geven (brand/admin), tarieven, bonussen, koers en uitnodigingsregels aanpassen.
-- **Website-headers** (`vercel.json`): de site mag niet in een andere site ingebed worden (tegen klikfraude), laadt alleen eigen scripts, praat alleen met jouw Supabase en dwingt HTTPS af.
-- **Uploads**: alleen afbeeldingen (jpg, png, webp, heic), maximaal 10 MB per stuk.
-- Aanrader in Supabase onder **Authentication → Providers → Email**: zet **Confirm email** aan, en onder **Authentication → Policies/Password**: minimaal 8 tekens. Klik daarna op **Advisors → Security Advisor**; die hoort leeg te zijn.
-- Tests: `npm run test:db` controleert 95 regels, waaronder dat merken geen bankgegevens kunnen zien.
+## Betaalvorm per campagne
+- Bij **Campaigns → New** of **Pay & budget** kies je per campagne:
+  - **Per 1K views**: bijvoorbeeld $2 per 1.000 views, pas vanaf het minimum per video.
+  - **Fixed per video**: bijvoorbeeld $5 per goedgekeurde video. Zet het minimum op 0 om elke goedgekeurde video te betalen, of op bijvoorbeeld 1.000 om alleen video's met genoeg views te betalen.
+- Je kunt dit altijd aanpassen, per klant en budget. Het nieuwe bedrag geldt voor alle video's in die campagne, ook eerdere. Laat het je creators dus weten.
+- Een vast bedrag per maand geef je met een **bonus** (Money → creator → Give a bonus).
+- Alleen jij (admin) kunt het tarief, minimum en budget van een campagne wijzigen. Merken kunnen hun campagne wel pauzeren.
+
+## Content in meerdere talen
+- Bij **Add content** kies je de taal van die post (Engels, Nederlands, Duits, Frans, Spaans, en meer).
+- Maak dezelfde post in meerdere talen. Creators kiezen bij het posten **Post in** hun taal en krijgen dan alleen content in die taal.

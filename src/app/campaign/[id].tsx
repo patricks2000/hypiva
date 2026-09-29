@@ -64,8 +64,8 @@ function CampaignDetail() {
               <View style={{ backgroundColor: 'rgba(0,0,0,0.25)', padding: 18, gap: 10 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <View style={{ flex: 1 }}>
-                    <T variant="h2" style={{ color: '#fff' }}>{usd(rate.cpm_cents)}</T>
-                    <T variant="small" style={{ color: 'rgba(255,255,255,0.8)' }}>{t('per 1K views')}{rate.custom ? ' · ' + t('your rate') : ''}</T>
+                    <T variant="h2" style={{ color: '#fff' }}>{usd(rate.fixed_cents ?? rate.cpm_cents)}</T>
+                    <T variant="small" style={{ color: 'rgba(255,255,255,0.8)' }}>{rate.fixed_cents != null ? t('per video') : t('per 1K views')}{rate.custom ? ' · ' + t('your rate') : ''}</T>
                   </View>
                   {d.joined ? <View style={{ backgroundColor: 'rgba(255,255,255,0.2)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999 }}><T variant="bodyStrong" style={{ color: '#fff' }}>{t("Joined")}</T></View>
                     : <Button small title={t("Join")} onPress={join} busy={busy} />}

@@ -4,8 +4,8 @@ import { usd } from './format';
 import { dateLocale, t } from './i18n';
 import type { Bonus, Campaign, CreatorBalance, CreatorRate, LeaderRow, LeaderboardSettings, MyReferral, Payout, PayoutAccount, Referral, ReferralSettings, Submission, TikTokAccount, WeekRow } from './types';
 
-export const SUB_FIELDS = '*, campaigns(name, cpm_cents, min_views), tiktok_accounts(username)';
-export const SUB_FIELDS_WITH_CREATOR = '*, campaigns(name, cpm_cents, min_views), tiktok_accounts(username), profiles!submissions_creator_id_fkey(name, handle)';
+export const SUB_FIELDS = '*, campaigns(name, cpm_cents, min_views, fixed_cents), tiktok_accounts(username)';
+export const SUB_FIELDS_WITH_CREATOR = '*, campaigns(name, cpm_cents, min_views, fixed_cents), tiktok_accounts(username), profiles!submissions_creator_id_fkey(name, handle)';
 
 export async function loadCreator(userId: string) {
   const [balance, subs, members, accounts, payouts, rates, weeks, bonuses, board, boardSettings, payoutAccount] = await Promise.all([
@@ -61,18 +61,27 @@ export const programLine = (s: ReferralSettings) =>
   t('You get {p}% of what each person you invite earns, for {m} months, up to {cap} per person.', { p: s.percent_bp / 100, m: s.months, cap: usd(s.cap_cents) });
 
 /** The rate a creator gets on a campaign: a rate for that campaign, else a rate for all campaigns, else the campaign's own. */
-export function rateFor(rates: CreatorRate[], creatorId: string, c: Pick<Campaign, 'id' | 'cpm_cents' | 'min_views'>) {
+export function rateFor(rates: CreatorRate[], creatorId: string, c: Pick<Campaign, 'id' | 'cpm_cents' | 'min_views'> & { fixed_cents?: number | null }) {
   const own = rates.find((r) => r.creator_id === creatorId && r.campaign_id === c.id)
     ?? rates.find((r) => r.creator_id === creatorId && r.campaign_id === null);
-  return { cpm_cents: own?.cpm_cents ?? c.cpm_cents, min_views: own?.min_views ?? c.min_views, custom: !!own };
+  const fixed = c.fixed_cents ?? null;
+  // A special rate per 1K means nothing in a fixed-per-video campaign; only its minimum still applies.
+  return { cpm_cents: own?.cpm_cents ?? c.cpm_cents, min_views: own?.min_views ?? c.min_views, fixed_cents: fixed,
+    custom: !!own && (fixed == null || own.min_views != null) };
 }
+
+export type Rate = ReturnType<typeof rateFor>;
+
+/** "$2.00 per 1K views" or "$5.00 per video". */
+export const payLabel = (r: { cpm_cents: number; fixed_cents?: number | null }) =>
+  r.fixed_cents != null ? t('{x} per video', { x: usd(r.fixed_cents) }) : t('{x} per 1K views', { x: usd(r.cpm_cents) });
 
 /** Puts each creator's own rate on their videos so every screen shows the right amount. Same rule as the database. */
 export function withRates(subs: Submission[], rates: CreatorRate[]): Submission[] {
   if (!rates.length) return subs;
   return subs.map((s) => {
     if (!s.campaigns) return s;
-    const r = rateFor(rates, s.creator_id, { id: s.campaign_id, cpm_cents: s.campaigns.cpm_cents, min_views: s.campaigns.min_views });
+    const r = rateFor(rates, s.creator_id, { id: s.campaign_id, cpm_cents: s.campaigns.cpm_cents, min_views: s.campaigns.min_views, fixed_cents: s.campaigns.fixed_cents });
     return { ...s, campaigns: { ...s.campaigns, cpm_cents: r.cpm_cents, min_views: r.min_views } };
   });
 }

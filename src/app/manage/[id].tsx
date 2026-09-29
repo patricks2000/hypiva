@@ -2,7 +2,8 @@ import { Image } from 'expo-image';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
-import { Button, Card, Empty, ErrorNote, Field, LinkButton, Loading, Pill, Screen, Section, Sheet, T, useToast } from '../../components/ui';
+import { Button, Card, Chips, Empty, ErrorNote, Field, LinkButton, Loading, Pill, Screen, Section, Sheet, T, useToast } from '../../components/ui';
+import { CONTENT_LANGUAGES, languageLabel } from '../../lib/languages';
 import { homeFor, useAuth } from '../../lib/auth';
 import { pickAndUploadImages } from '../../lib/content';
 import { friendlyError, supabase } from '../../lib/supabase';
@@ -78,7 +79,7 @@ function Manage() {
                   {p.hashtags ? <T variant="muted" numberOfLines={1}>{p.hashtags}</T> : null}
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                     <Pill kind={p.active ? 'live' : 'paused'} label={p.active ? 'Active' : 'Hidden'} />
-                    <T variant="small" style={{ flex: 1 }}>{p.content_slides?.length ?? 0} slides · posted {d.used.get(p.id) ?? 0}×</T>
+                    <T variant="small" style={{ flex: 1 }}>{languageLabel(p.language)} · {p.content_slides?.length ?? 0} slides · posted {d.used.get(p.id) ?? 0}×</T>
                     <LinkButton title={p.active ? 'Hide' : 'Show'} onPress={() => toggle(p)} />
                     <LinkButton title="Delete" onPress={() => remove(p)} />
                   </View>
@@ -121,6 +122,7 @@ function AddContentSheet({ campaignId, onClose, onSaved }: { campaignId: string;
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [hashtags, setHashtags] = useState('');
+  const [language, setLanguage] = useState<string>('en');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -140,7 +142,7 @@ function AddContentSheet({ campaignId, onClose, onSaved }: { campaignId: string;
     if (!slides.length && !title.trim()) return setError('Add at least one slide or a title.');
     setBusy(true);
     const { data, error: e } = await supabase.from('content_packs')
-      .insert({ campaign_id: campaignId, title: title.trim(), description: description.trim(), hashtags: hashtags.trim() }).select('id').single();
+      .insert({ campaign_id: campaignId, title: title.trim(), description: description.trim(), hashtags: hashtags.trim(), language }).select('id').single();
     if (e || !data) { setBusy(false); return setError(friendlyError(e)); }
     if (slides.length) {
       const { error: e2 } = await supabase.from('content_slides')
@@ -153,6 +155,11 @@ function AddContentSheet({ campaignId, onClose, onSaved }: { campaignId: string;
 
   return (
     <Sheet visible onClose={onClose} title="Add content">
+      <View style={{ gap: 8 }}>
+        <T variant="label">Language of this post</T>
+        <Chips value={language} onChange={setLanguage} options={CONTENT_LANGUAGES.map((l) => ({ value: l.value, label: l.label }))} />
+        <T variant="small">Creators who pick this language get this post. Add the same post in more languages for foreign creators.</T>
+      </View>
       <View style={{ flexDirection: 'row', gap: 10 }}>
         <Button style={{ flex: 1 }} title="Pick images" onPress={upload} busy={busy} />
       </View>

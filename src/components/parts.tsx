@@ -2,18 +2,26 @@ import Svg, { Circle, Defs, Line, LinearGradient, Path, Stop, Text as SvgText } 
 import { useState } from 'react';
 import { Linking, Pressable, View, useWindowDimensions } from 'react-native';
 import { day, short, usd, videoEarningsCents } from '../lib/format';
+
 import { colors, fonts } from '../lib/theme';
 import { kindLabel, type Campaign, type Submission } from '../lib/types';
 import { Button, Card, Pill, Row, T, hueFor } from './ui';
 import { dateLocale, t } from '../lib/i18n';
+import type { Rate } from '../lib/queries';
+
+/** "3h ago" style time for the automatic view checks. */
+const ago = (iso: string) => {
+  const m = Math.max(1, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
+  return m < 60 ? t('{n} min ago', { n: m }) : m < 48 * 60 ? t('{n}h ago', { n: Math.round(m / 60) }) : day(iso);
+};
 
 /** A campaign as creators see it. */
 export function CampaignCard({ c, joined, onJoin, onSubmit, onOpen, busy, width, rate }: {
   c: Campaign; joined: boolean; onJoin?: () => void; onSubmit?: () => void; onOpen?: () => void; busy?: boolean; width?: number;
-  rate?: { cpm_cents: number; min_views: number; custom: boolean };
+  rate?: Rate;
 }) {
   const color = hueFor(c.brand_id);
-  const cpm = rate?.cpm_cents ?? c.cpm_cents, min = rate?.min_views ?? c.min_views;
+  const cpm = rate?.cpm_cents ?? c.cpm_cents, min = rate?.min_views ?? c.min_views, fixed = c.fixed_cents;
   return (
     <View style={{ width, borderRadius: 22, overflow: 'hidden', backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
       <Pressable onPress={onOpen} disabled={!onOpen} accessibilityRole="button" accessibilityLabel={`Open ${c.name}`}>
@@ -31,8 +39,13 @@ export function CampaignCard({ c, joined, onJoin, onSubmit, onOpen, busy, width,
       <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, borderTopWidth: 1, borderTopColor: colors.line, paddingTop: 12 }}>
           <View style={{ flex: 1 }}>
-            <T variant="h2" style={{ color: colors.money }}>{usd(cpm)}</T>
-            <T variant="small">{t('per 1K views · min. {n} views per video', { n: short(min) })}{rate?.custom ? ' · ' + t('your rate') : ''}</T>
+            <T variant="h2" style={{ color: colors.money }}>{usd(fixed ?? cpm)}</T>
+            <T variant="small">
+              {fixed != null
+                ? (min > 0 ? t('per video · from {n} views', { n: short(min) }) : t('per approved video'))
+                : t('per 1K views · min. {n} views per video', { n: short(min) })}
+              {rate?.custom ? ' · ' + t('your rate') : ''}
+            </T>
           </View>
           {joined
             ? onSubmit ? <Button small title={t("Start posting")} onPress={onSubmit} /> : <Pill kind="linked" label={t("Joined")} />
@@ -47,10 +60,11 @@ export function CampaignCard({ c, joined, onJoin, onSubmit, onOpen, busy, width,
 export function earningLine(s: Submission) {
   const min = s.campaigns?.min_views ?? 1000;
   const cpm = s.campaigns?.cpm_cents ?? 0;
+  const fixed = s.campaigns?.fixed_cents ?? null;
   if (s.status === 'rejected') return { text: s.reject_reason ? t('Rejected: {why}', { why: s.reject_reason }) : t('Rejected'), cents: 0 };
   if (s.status === 'pending') return { text: t('Waiting for review'), cents: 0 };
   if (s.views < min) return { text: t('Needs {n} more views to start earning', { n: short(min - s.views) }), cents: 0 };
-  return { text: t('{x} per 1K views', { x: usd(cpm) }), cents: videoEarningsCents(s.views, min, cpm) };
+  return { text: fixed != null ? t('{x} per video', { x: usd(fixed) }) : t('{x} per 1K views', { x: usd(cpm) }), cents: videoEarningsCents(s.views, min, cpm, fixed) };
 }
 
 export function VideoRow({ s, last, showCreator }: { s: Submission; last?: boolean; showCreator?: boolean }) {
@@ -63,7 +77,7 @@ export function VideoRow({ s, last, showCreator }: { s: Submission; last?: boole
       left={<View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: hueFor(s.campaign_id) }} />}
       title={showCreator && s.profiles ? s.profiles.name : '@' + (s.tiktok_accounts?.username ?? 'tiktok')}
       lines={4}
-      subtitle={`${s.campaigns?.name ?? ''} · ${day(s.created_at)}\n${e.text}`}
+      subtitle={`${s.campaigns?.name ?? ''} · ${day(s.created_at)}\n${e.text}${s.views_error ? `\n⚠ ${s.views_error}` : s.views_checked_at ? `\n${t('Views updated {when}', { when: ago(s.views_checked_at) })}` : ''}`}
       right={<>
         <T variant="bodyStrong" style={{ fontVariant: ['tabular-nums'] }}>{t('{n} views', { n: short(s.views) })}</T>
         {s.status === 'approved' && !under
@@ -160,12 +174,16 @@ export function PostingActivity({ subs }: { subs: Submission[] }) {
   );
 }
 
-export function Explainer({ minViews = 1000, cpmCents = 200 }: { minViews?: number; cpmCents?: number }) {
+export function Explainer({ minViews = 1000, cpmCents = 200, fixedCents = null }: { minViews?: number; cpmCents?: number; fixedCents?: number | null }) {
   return (
     <Card style={{ gap: 6, backgroundColor: colors.surface2 }}>
       <T variant="bodyStrong">{t("How you earn")}</T>
       <T variant="muted">
-        {t('Each video counts on its own. A video starts earning once it reaches {min} views, then every view pays. At {rate} per 1K: 900 views = $0, {min} views = {a}, 5K views = {b}.', { min: short(minViews), rate: usd(cpmCents), a: usd(videoEarningsCents(minViews, minViews, cpmCents)), b: usd(videoEarningsCents(5000, minViews, cpmCents)) })}
+        {fixedCents != null
+          ? (minViews > 0
+            ? t('You get {x} for every approved video that reaches {min} views. Your views are checked automatically.', { x: usd(fixedCents), min: short(minViews) })
+            : t('You get {x} for every approved video.', { x: usd(fixedCents) }))
+          : t('Each video counts on its own. A video starts earning once it reaches {min} views, then every view pays. At {rate} per 1K: 900 views = $0, {min} views = {a}, 5K views = {b}.', { min: short(minViews), rate: usd(cpmCents), a: usd(videoEarningsCents(minViews, minViews, cpmCents)), b: usd(videoEarningsCents(5000, minViews, cpmCents)) })}
       </T>
     </Card>
   );

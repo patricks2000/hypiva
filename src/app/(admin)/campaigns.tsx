@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { CampaignForm } from '../../components/CampaignForm';
+import { CampaignForm, PayForm } from '../../components/CampaignForm';
 import { CampaignStatsCard } from '../../components/CampaignStatsCard';
 import { Button, Card, Empty, ErrorNote, Field, List, Loading, Row, Screen, Section, Sheet, T, useToast } from '../../components/ui';
 import { friendlyError, supabase } from '../../lib/supabase';
@@ -11,6 +11,7 @@ import { must, useLoad } from '../../lib/useLoad';
 export default function AdminCampaigns() {
   const { toast, show } = useToast();
   const [creating, setCreating] = useState(false);
+  const [paying, setPaying] = useState<Campaign | null>(null);
   const [addingBrand, setAddingBrand] = useState(false);
   const [brandName, setBrandName] = useState('');
   const q = useLoad(async () => {
@@ -48,7 +49,7 @@ export default function AdminCampaigns() {
         {!q.data ? (q.error ? null : <Loading />) : (
           <>
             {q.data.campaigns.length ? q.data.campaigns.map((c) => (
-              <CampaignStatsCard key={c.id} c={c} stats={q.data!.stats.get(c.id)} onToggle={() => toggle(c)}
+              <CampaignStatsCard key={c.id} c={c} stats={q.data!.stats.get(c.id)} onToggle={() => toggle(c)} onEditPay={() => setPaying(c)}
             onOpen={() => router.push({ pathname: '/manage/[id]', params: { id: c.id } })} />
             )) : <Card><Empty text="No campaigns yet. Add a brand, then create a campaign." /></Card>}
             <Section title="Brands" right={<Button small kind="ghost" title="Add brand" onPress={() => setAddingBrand(true)} />}>
@@ -65,6 +66,9 @@ export default function AdminCampaigns() {
       </Screen>
       <Sheet visible={creating} onClose={() => setCreating(false)} title="New campaign">
         <CampaignForm brands={q.data?.brands ?? []} onDone={(m) => { setCreating(false); show(m); q.reload(); }} />
+      </Sheet>
+      <Sheet visible={!!paying} onClose={() => setPaying(null)} title={paying ? `Pay: ${paying.name}` : 'Pay'}>
+        {paying ? <PayForm c={paying} onDone={(m) => { setPaying(null); show(m); q.reload(); }} /> : null}
       </Sheet>
       <Sheet visible={addingBrand} onClose={() => setAddingBrand(false)} title="Add a brand">
         <Field label="Brand name" value={brandName} onChangeText={setBrandName} placeholder="Macro Snap" />

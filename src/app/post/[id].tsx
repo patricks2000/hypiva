@@ -3,7 +3,7 @@ import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Linking, Pressable, View, useWindowDimensions } from 'react-native';
 import { Icon } from '../../components/Icon';
-import { Avatar, Button, Card, Empty, ErrorNote, Field, LinkButton, List, Loading, Row, Screen, T, hueFor, useToast } from '../../components/ui';
+import { Avatar, Button, Card, Chips, Empty, ErrorNote, Field, LinkButton, List, Loading, Row, Screen, T, hueFor, useToast } from '../../components/ui';
 import { homeFor, useAuth } from '../../lib/auth';
 import * as Clipboard from 'expo-clipboard';
 import { copy, saveToPhotos } from '../../lib/content';
@@ -12,7 +12,8 @@ import { friendlyError, supabase } from '../../lib/supabase';
 import { colors } from '../../lib/theme';
 import type { Campaign, ContentPack, TikTokAccount } from '../../lib/types';
 import { must, useLoad } from '../../lib/useLoad';
-import { t } from '../../lib/i18n';
+import { currentLang, t } from '../../lib/i18n';
+import { languageLabel } from '../../lib/languages';
 
 type Step = 'account' | 'content' | 'submit';
 
@@ -33,16 +34,20 @@ function PostFlow() {
   const [pack, setPack] = useState<ContentPack | null>(null);
   const [noNewContent, setNoNewContent] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [chosenLang, setChosenLang] = useState<string | null>(null);
 
   const q = useLoad(async () => {
     const [c, a, p] = await Promise.all([
       supabase.from('campaigns').select('*').eq('id', id).single(),
       supabase.from('tiktok_accounts').select('*').eq('creator_id', profile!.id).order('created_at'),
-      supabase.from('content_packs').select('id', { count: 'exact', head: true }).eq('campaign_id', id).eq('active', true),
+      supabase.from('content_packs').select('language').eq('campaign_id', id).eq('active', true),
     ]);
-    return { c: must(c) as Campaign, accounts: must(a) as TikTokAccount[], hasContent: (p.count ?? 0) > 0 };
+    const languages = [...new Set((must(p) as { language: string }[]).map((x) => x.language))];
+    return { c: must(c) as Campaign, accounts: must(a) as TikTokAccount[], hasContent: languages.length > 0, languages };
   });
   const d = q.data;
+  // Content language: what the creator picked, else the app language when there is content in it, else the first one.
+  const lang = d ? (chosenLang && d.languages.includes(chosenLang) ? chosenLang : d.languages.includes(currentLang()) ? currentLang() : d.languages[0] ?? null) : null;
 
   const back = () => {
     if (step === 'submit') setStep(pack ? 'content' : 'account');
@@ -56,7 +61,7 @@ function PostFlow() {
     setNoNewContent(false);
     if (!d?.hasContent) { setPack(null); setStep('submit'); return; }
     setBusy(true);
-    const { data: packId, error } = await supabase.rpc('next_content', { p_campaign: id, p_account: a.id });
+    const { data: packId, error } = await supabase.rpc('next_content', { p_campaign: id, p_account: a.id, p_language: lang });
     if (error) { setBusy(false); return show(friendlyError(error)); }
     if (!packId) { setBusy(false); setPack(null); setNoNewContent(true); setStep('content'); return; }
     const { data, error: e2 } = await supabase.from('content_packs').select('*, content_slides(*)').eq('id', packId as string).single();
@@ -90,7 +95,15 @@ function PostFlow() {
         </View>
         {q.error ? <ErrorNote text={q.error} onRetry={q.reload} /> : null}
         {!d ? (q.error ? null : <Loading />) : step === 'account' ? (
-          <AccountStep accounts={d.accounts} busy={busy} onPick={pickAccount} />
+          <>
+            {d.languages.length > 1 ? (
+              <View style={{ gap: 8, marginTop: 8 }}>
+                <T variant="label">{t('Post in')}</T>
+                <Chips value={lang ?? ''} onChange={setChosenLang} options={d.languages.map((l) => ({ value: l, label: languageLabel(l) }))} />
+              </View>
+            ) : null}
+            <AccountStep accounts={d.accounts} busy={busy} onPick={pickAccount} />
+          </>
         ) : step === 'content' ? (
           noNewContent || !pack
             ? <Card><Empty text={t('@{u} already posted all content for this campaign. Try another account, or check back later for new content.', { u: account?.username ?? '' })}
