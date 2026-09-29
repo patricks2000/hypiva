@@ -4,6 +4,7 @@ import { useAuth } from '../lib/auth';
 import { friendlyError, supabase } from '../lib/supabase';
 import { colors } from '../lib/theme';
 import { LANGS, t, useLanguage } from '../lib/i18n';
+import { CONTENT_LANGUAGES } from '../lib/languages';
 
 /** Name, username, sign out and delete account. Shared by every role. */
 export function AccountSection({ onToast }: { onToast: (t: string) => void }) {
@@ -27,6 +28,13 @@ export function AccountSection({ onToast }: { onToast: (t: string) => void }) {
     onToast(t('Profile saved'));
   };
 
+  const setPostLang = async (l: string) => {
+    const { error: e } = await supabase.from('profiles').update({ content_language: l }).eq('id', profile!.id);
+    if (e) return onToast(friendlyError(e));
+    await refreshProfile();
+    onToast(t('Language saved'));
+  };
+
   const remove = async () => {
     setBusy(true);
     const { error: e } = await supabase.rpc('delete_my_account');
@@ -41,6 +49,14 @@ export function AccountSection({ onToast }: { onToast: (t: string) => void }) {
         <T variant="muted">{t('Signed in as {name}', { name: (profile?.name || '') + (profile?.handle ? ` (@${profile.handle})` : '') })}</T>
         <T variant="label">{t('Language')}</T>
         <Chips value={lang} onChange={setLang} options={LANGS} />
+        {profile?.role === 'creator' ? (
+          <>
+            <T variant="label">{t('Language you post in')}</T>
+            <Chips value={profile.content_language ?? lang} onChange={setPostLang}
+              options={CONTENT_LANGUAGES.map((l) => ({ value: l.value as string, label: l.label }))} />
+            <T variant="small">{t('You get ready-made posts in this language.')}</T>
+          </>
+        ) : null}
         <Button kind="ghost" title={t("Edit name and username")} onPress={() => { setName(profile?.name ?? ''); setHandle(profile?.handle ?? ''); setEditing(true); }} />
         <Button kind="ghost" title={t("Sign out")} onPress={signOut} />
         <Button kind="danger" title={t("Delete account")} onPress={() => { setConfirm(''); setError(null); setDeleting(true); }} />

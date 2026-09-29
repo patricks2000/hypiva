@@ -275,4 +275,11 @@ export const nl: Record<string, string> = {
   'Views updated {when}': 'Views bijgewerkt {when}',
   'You get {x} for every approved video that reaches {min} views. Your views are checked automatically.': 'Je krijgt {x} voor elke goedgekeurde video die {min} views haalt. Je views worden automatisch bijgehouden.',
   'You get {x} for every approved video.': 'Je krijgt {x} voor elke goedgekeurde video.',
+  'Posting in {lang}. Change it in your profile.': 'Je post in het {lang}. Aanpassen kan in je profiel.',
+  'There is no content in {lang} for this campaign yet. Check back later, or change your posting language in your profile.': 'Er is nog geen content in het {lang} voor deze campagne. Kijk later nog eens, of pas je taal aan in je profiel.',
+  'Which language do you post in?': 'In welke taal post je?',
+  'You get ready-made posts in this language. You can change it later in your profile.': 'Je krijgt kant-en-klare posts in deze taal. Je kunt dit later aanpassen in je profiel.',
+  'Language saved': 'Taal opgeslagen',
+  'Language you post in': 'Taal waarin je post',
+  'You get ready-made posts in this language.': 'Je krijgt kant-en-klare posts in deze taal.',
 };

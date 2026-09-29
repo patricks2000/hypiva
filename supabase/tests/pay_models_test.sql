@@ -52,5 +52,17 @@ select pg_temp.check(next_content('20000000-0000-0000-0000-0000000000f1', '30000
 select pg_temp.check(next_content('20000000-0000-0000-0000-0000000000f1', '30000000-0000-0000-0000-000000000001', 'de') is null, 'no German content means nothing is handed out in the wrong language');
 reset role;
 
+-- Language set once at sign-up, changeable by the creator only
+insert into auth.users (id, email, raw_user_meta_data) values
+ ('00000000-0000-0000-0000-0000000000d7', 'daan@example.com', '{"name":"Daan","content_language":"nl"}'),
+ ('00000000-0000-0000-0000-0000000000d8', 'bad@example.com', '{"name":"X","content_language":"<script>"}');
+select pg_temp.check((select content_language = 'nl' from profiles where id = '00000000-0000-0000-0000-0000000000d7'), 'the language chosen at sign-up is saved');
+select pg_temp.check((select content_language is null from profiles where id = '00000000-0000-0000-0000-0000000000d8'), 'a nonsense language is ignored and sign-up still works');
+set role authenticated;
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000d7');
+update profiles set content_language = 'de' where id = '00000000-0000-0000-0000-0000000000d7';
+select pg_temp.check((select content_language = 'de' from profiles where id = '00000000-0000-0000-0000-0000000000d7'), 'a creator can change their own posting language');
+reset role;
+
 \o
 \echo ALL PAY MODEL AND LANGUAGE CHECKS PASSED

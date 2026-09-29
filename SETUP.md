@@ -10,7 +10,7 @@ Je hoeft niet te programmeren. Volg de stappen in deze volgorde.
    - Kies een sterk database-wachtwoord en bewaar het goed.
 2. Open in je project **SQL Editor** → **New query**.
 3. Open het bestand `supabase/migrations/0001_init.sql`, kopieer alles, plak het erin en klik op **Run**.
-   Doe daarna hetzelfde met `0002_referrals.sql` (uitnodigingen) en `0003_rates_and_weeks.sql` (eigen tarieven en weekoverzicht) `0004_bonuses_and_leaderboard.sql` (bonussen en ranglijst) `0005_exchange_rate.sql` (euro-bedragen), `0006_content.sql` (kant-en-klare content) en `0007_privacy_hardening.sql` (extra beveiliging), `0008_lock_functions.sql`, `0009_auto_views.sql` (automatische views) en `0010_pay_models_and_languages.sql` (betaalvorm en taal), in die volgorde.
+   Doe daarna hetzelfde met `0002_referrals.sql` (uitnodigingen) en `0003_rates_and_weeks.sql` (eigen tarieven en weekoverzicht) `0004_bonuses_and_leaderboard.sql` (bonussen en ranglijst) `0005_exchange_rate.sql` (euro-bedragen), `0006_content.sql` (kant-en-klare content) en `0007_privacy_hardening.sql` (extra beveiliging), `0008_lock_functions.sql`, `0009_auto_views.sql` (automatische views), `0010_pay_models_and_languages.sql` (betaalvorm en taal) en `0011_creator_language.sql` (taal per creator), in die volgorde.
    Nu staan alle tabellen, beveiligingsregels en de berekening per video klaar.
 4. Ga naar **Project Settings → API** en kopieer:
    - **Project URL**
@@ -143,5 +143,16 @@ Nodig: **Apple Developer-account** (€99 per jaar). Met je KvK meld je je aan a
 - Alleen jij (admin) kunt het tarief, minimum en budget van een campagne wijzigen. Merken kunnen hun campagne wel pauzeren.
 
 ## Content in meerdere talen
-- Bij **Add content** kies je de taal van die post (Engels, Nederlands, Duits, Frans, Spaans, en meer).
-- Maak dezelfde post in meerdere talen. Creators kiezen bij het posten **Post in** hun taal en krijgen dan alleen content in die taal.
+- **Creators kiezen één keer hun taal**: bij het aanmelden ("In welke taal post je?") en later aan te passen onder **Profiel**. Daarna krijgen ze altijd content in die taal, zonder bij elke post te kiezen. Een Nederlandse creator krijgt Nederlandse posts, een Duitse creator Duitse.
+- **Jij voegt content in één keer toe voor alle talen** (Campaigns → Content & checklist → Add content):
+  1. Kies de afbeeldingen (die zijn in elke taal hetzelfde).
+  2. Vink de talen aan. De eerste is de taal waarin je schrijft.
+  3. Schrijf titel, beschrijving en tekst per slide, en tik op **Translate** om de andere talen automatisch te laten invullen. Lees ze even na.
+  4. Hashtags gelden voor alle talen. Tik op **Save in X languages**.
+- Is er voor een campagne nog geen content in de taal van een creator, dan ziet die creator dat netjes en krijgt hij geen post in een andere taal.
+
+### Automatisch vertalen aanzetten (DeepL, gratis)
+1. Maak een gratis account op **deepl.com/pro-api** (kies **DeepL API Free**, 500.000 tekens per maand).
+2. Kopieer je **Authentication Key** (eindigt op `:fx`).
+3. In Supabase: **Edge Functions → Secrets → Add new secret**: naam `DEEPL_API_KEY`, waarde je sleutel.
+Klaar. De knop **Translate** werkt dan meteen. Zonder sleutel kun je de talen gewoon zelf invullen.

@@ -11,6 +11,8 @@ export interface Profile {
   is_owner: boolean;
   brand_id: string | null;
   referral_code: string;
+  /** Language this creator posts in (two letters); null = not chosen yet. */
+  content_language: string | null;
   created_at: string;
 }
 

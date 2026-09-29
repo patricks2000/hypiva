@@ -6,7 +6,8 @@ import { Logo } from '../components/Logo';
 import { homeFor, useAuth } from '../lib/auth';
 import { friendlyError, isConfigured, supabase } from '../lib/supabase';
 import { colors } from '../lib/theme';
-import { t } from '../lib/i18n';
+import { currentLang, t } from '../lib/i18n';
+import { CONTENT_LANGUAGES } from '../lib/languages';
 
 type Mode = 'signin' | 'signup';
 
@@ -19,6 +20,7 @@ export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
+  const [postLang, setPostLang] = useState<string>(currentLang());
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
 
@@ -35,7 +37,7 @@ export default function SignIn() {
         const { error: e } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
         if (e) throw e;
       } else {
-        const { data, error: e } = await supabase.auth.signUp({ email: email.trim(), password, options: { data: { name: name.trim(), referral_code: invite.trim().toUpperCase() } } });
+        const { data, error: e } = await supabase.auth.signUp({ email: email.trim(), password, options: { data: { name: name.trim(), referral_code: invite.trim().toUpperCase(), content_language: postLang } } });
         if (e) throw e;
         if (!data.session) setInfo(t('Check your email and tap the link to confirm your account, then sign in.'));
       }
@@ -73,6 +75,13 @@ export default function SignIn() {
             options={[{ value: 'signin', label: t('Sign in') }, { value: 'signup', label: t('Create account') }]} />
           {mode === 'signup' ? (
             <Field label={t("Your name")} value={name} onChangeText={setName} autoComplete="name" textContentType="name" placeholder={t("Alex Rivera")} />
+          ) : null}
+          {mode === 'signup' ? (
+            <View style={{ gap: 8 }}>
+              <T variant="label" style={{ letterSpacing: 0, textTransform: 'none', fontSize: 13 }}>{t('Which language do you post in?')}</T>
+              <Chips value={postLang} onChange={setPostLang} options={CONTENT_LANGUAGES.map((l) => ({ value: l.value as string, label: l.label }))} />
+              <T variant="small">{t('You get ready-made posts in this language. You can change it later in your profile.')}</T>
+            </View>
           ) : null}
           {mode === 'signup' ? (
             <Field label={t("Invite code (optional)")} value={invite} onChangeText={setInvite} autoCapitalize="characters" autoCorrect={false}

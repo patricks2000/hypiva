@@ -116,71 +116,146 @@ function InstructionsSheet({ c, onClose, onSaved }: { c: Campaign; onClose: () =
   );
 }
 
+type LangText = { title: string; description: string; overlays: string[] };
+const emptyText = (n: number): LangText => ({ title: '', description: '', overlays: Array(n).fill('') });
+
+/**
+ * Add one post in one or more languages at once. The slides (images) and hashtags are shared;
+ * title, description and slide texts are per language. "Translate" fills the other languages from the first.
+ */
 function AddContentSheet({ campaignId, onClose, onSaved }: { campaignId: string; onClose: () => void; onSaved: () => void }) {
-  const [slides, setSlides] = useState<{ url: string; text: string }[]>([]);
+  const [images, setImages] = useState<string[]>([]);
   const [link, setLink] = useState('');
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
   const [hashtags, setHashtags] = useState('');
-  const [language, setLanguage] = useState<string>('en');
+  const [langs, setLangs] = useState<string[]>(['en']);
+  const [texts, setTexts] = useState<Record<string, LangText>>({ en: emptyText(0) });
+  const [open, setOpen] = useState('en');
   const [busy, setBusy] = useState(false);
+  const [translating, setTranslating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const source = langs[0];
+
+  const setText = (l: string, patch: Partial<LangText>) => setTexts((all) => ({ ...all, [l]: { ...(all[l] ?? emptyText(images.length)), ...patch } }));
+  const addImages = (urls: string[]) => {
+    setImages((im) => [...im, ...urls]);
+    setTexts((all) => Object.fromEntries(Object.entries(all).map(([l, x]) => [l, { ...x, overlays: [...x.overlays, ...urls.map(() => '')] }])));
+  };
+  const removeImage = (i: number) => {
+    setImages((im) => im.filter((_, j) => j !== i));
+    setTexts((all) => Object.fromEntries(Object.entries(all).map(([l, x]) => [l, { ...x, overlays: x.overlays.filter((_, j) => j !== i) }])));
+  };
+  const toggleLang = (l: string) => {
+    if (langs.includes(l)) {
+      if (langs.length === 1) return;
+      const next = langs.filter((x) => x !== l);
+      setLangs(next);
+      if (open === l) setOpen(next[0]);
+    } else {
+      setLangs([...langs, l]);
+      setTexts((all) => (all[l] ? all : { ...all, [l]: emptyText(images.length) }));
+    }
+  };
 
   const upload = async () => {
     setError(null); setBusy(true);
-    try {
-      const urls = await pickAndUploadImages(campaignId);
-      setSlides((s) => [...s, ...urls.map((url) => ({ url, text: '' }))]);
-    } catch (e) { setError(friendlyError(e)); } finally { setBusy(false); }
+    try { addImages(await pickAndUploadImages(campaignId)); } catch (e) { setError(friendlyError(e)); } finally { setBusy(false); }
   };
   const addLink = () => {
     if (!/^https?:\/\//i.test(link.trim())) return setError('Paste an image link that starts with https://');
-    setSlides((s) => [...s, { url: link.trim(), text: '' }]); setLink(''); setError(null);
+    addImages([link.trim()]); setLink(''); setError(null);
   };
+
+  const translate = async () => {
+    const from = texts[source] ?? emptyText(images.length);
+    const targets = langs.filter((l) => l !== source);
+    if (!targets.length) return setError('Tick at least one more language to translate to.');
+    if (!from.title.trim() && !from.overlays.some((o) => o.trim())) return setError(`Write the ${languageLabel(source)} text first.`);
+    setError(null); setTranslating(true);
+    const { data, error: e } = await supabase.functions.invoke('translate-content', {
+      body: { source, targets, texts: [from.title, from.description, ...from.overlays] },
+    });
+    setTranslating(false);
+    if (e) {
+      const msg = await (e as { context?: Response }).context?.json?.().then((j: { error?: string }) => j.error).catch(() => null);
+      return setError(msg ?? friendlyError(e));
+    }
+    const out = (data as { translations: Record<string, string[]> }).translations;
+    setTexts((all) => {
+      const next = { ...all };
+      for (const [l, arr] of Object.entries(out)) next[l] = { title: arr[0] ?? '', description: arr[1] ?? '', overlays: arr.slice(2) };
+      return next;
+    });
+    setOpen(targets[0]);
+  };
+
   const save = async () => {
     setError(null);
-    if (!slides.length && !title.trim()) return setError('Add at least one slide or a title.');
+    const missing = langs.find((l) => !(texts[l]?.title.trim()) && !images.length);
+    if (missing) return setError(`Add images or a ${languageLabel(missing)} title.`);
     setBusy(true);
-    const { data, error: e } = await supabase.from('content_packs')
-      .insert({ campaign_id: campaignId, title: title.trim(), description: description.trim(), hashtags: hashtags.trim(), language }).select('id').single();
-    if (e || !data) { setBusy(false); return setError(friendlyError(e)); }
-    if (slides.length) {
-      const { error: e2 } = await supabase.from('content_slides')
-        .insert(slides.map((s, i) => ({ pack_id: (data as { id: string }).id, position: i, image_url: s.url, overlay_text: s.text.trim() })));
-      if (e2) { setBusy(false); return setError(friendlyError(e2)); }
+    for (const l of langs) {
+      const x = texts[l] ?? emptyText(images.length);
+      const { data, error: e } = await supabase.from('content_packs')
+        .insert({ campaign_id: campaignId, title: x.title.trim(), description: x.description.trim(), hashtags: hashtags.trim(), language: l }).select('id').single();
+      if (e || !data) { setBusy(false); return setError(friendlyError(e)); }
+      if (images.length) {
+        const { error: e2 } = await supabase.from('content_slides')
+          .insert(images.map((url, i) => ({ pack_id: (data as { id: string }).id, position: i, image_url: url, overlay_text: (x.overlays[i] ?? '').trim() })));
+        if (e2) { setBusy(false); return setError(friendlyError(e2)); }
+      }
     }
     setBusy(false);
     onSaved();
   };
 
+  const cur = texts[open] ?? emptyText(images.length);
   return (
     <Sheet visible onClose={onClose} title="Add content">
-      <View style={{ gap: 8 }}>
-        <T variant="label">Language of this post</T>
-        <Chips value={language} onChange={setLanguage} options={CONTENT_LANGUAGES.map((l) => ({ value: l.value, label: l.label }))} />
-        <T variant="small">Creators who pick this language get this post. Add the same post in more languages for foreign creators.</T>
-      </View>
-      <View style={{ flexDirection: 'row', gap: 10 }}>
-        <Button style={{ flex: 1 }} title="Pick images" onPress={upload} busy={busy} />
-      </View>
+      <T variant="label">1. Images (the same in every language)</T>
+      <Button title="Pick images" onPress={upload} busy={busy} />
       <View style={{ flexDirection: 'row', gap: 10, alignItems: 'flex-end' }}>
         <View style={{ flex: 1 }}><Field label="Or add an image by link" value={link} onChangeText={setLink} autoCapitalize="none" placeholder="https://..." /></View>
         <Button small kind="ghost" title="Add" onPress={addLink} disabled={!link.trim()} />
       </View>
-      {slides.map((s, i) => (
-        <Card key={s.url + i} style={{ flexDirection: 'row', gap: 12, padding: 12 }}>
-          <Image source={{ uri: s.url }} style={{ width: 54, height: 96, borderRadius: 8, backgroundColor: colors.surface2 }} contentFit="cover" />
-          <View style={{ flex: 1, gap: 6 }}>
-            <Field label={`Slide ${i + 1} text overlay`} value={s.text} onChangeText={(t) => setSlides((all) => all.map((x, j) => (j === i ? { ...x, text: t } : x)))} multiline />
-            <LinkButton title="Remove" onPress={() => setSlides((all) => all.filter((_, j) => j !== i))} />
-          </View>
-        </Card>
+      {images.length ? (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
+          {images.map((url, i) => (
+            <View key={url + i} style={{ gap: 4, alignItems: 'center' }}>
+              <Image source={{ uri: url }} style={{ width: 64, height: 114, borderRadius: 8, backgroundColor: colors.surface2 }} contentFit="cover" />
+              <LinkButton title="Remove" onPress={() => removeImage(i)} />
+            </View>
+          ))}
+        </ScrollView>
+      ) : null}
+
+      <T variant="label">2. Languages (the first one is where you write)</T>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+        {CONTENT_LANGUAGES.map((l) => {
+          const on = langs.includes(l.value);
+          return (
+            <Pressable key={l.value} onPress={() => toggleLang(l.value)} accessibilityRole="checkbox" accessibilityState={{ checked: on }}
+              style={{ paddingHorizontal: 14, paddingVertical: 9, borderRadius: 999, borderWidth: 1, borderColor: on ? colors.accent : colors.line, backgroundColor: on ? colors.accentSoft : 'transparent' }}>
+              <T variant="bodyStrong" style={{ color: on ? colors.text : colors.muted, fontSize: 14 }}>{on ? '✓ ' : ''}{l.label}</T>
+            </Pressable>
+          );
+        })}
+      </View>
+      {langs.length > 1 ? (
+        <Button kind="ghost" title={`Translate ${languageLabel(source)} to ${langs.length - 1} other language${langs.length > 2 ? 's' : ''}`} onPress={translate} busy={translating} />
+      ) : null}
+
+      <T variant="label">3. Text</T>
+      {langs.length > 1 ? <Chips value={open} onChange={setOpen} options={langs.map((l) => ({ value: l, label: languageLabel(l) }))} /> : null}
+      <Field label={`TikTok title (${languageLabel(open)})`} value={cur.title} onChangeText={(v) => setText(open, { title: v })} multiline
+        placeholder="5 exercises for strong abs (the last one is the best)" />
+      <Field label="Description (optional)" value={cur.description} onChangeText={(v) => setText(open, { description: v })} multiline />
+      {images.map((url, i) => (
+        <Field key={url + i} label={`Slide ${i + 1} text overlay`} value={cur.overlays[i] ?? ''} multiline
+          onChangeText={(v) => setText(open, { overlays: images.map((_, j) => (j === i ? v : cur.overlays[j] ?? '')) })} />
       ))}
-      <Field label="TikTok title" value={title} onChangeText={setTitle} placeholder="5 TOP-OEFENINGEN VOOR BUIKSPIEREN (de laatste is de beste)" multiline />
-      <Field label="Description (optional)" value={description} onChangeText={setDescription} multiline />
-      <Field label="Hashtags" value={hashtags} onChangeText={setHashtags} autoCapitalize="none" placeholder="#training #fit #core" />
+      <Field label="Hashtags (all languages)" value={hashtags} onChangeText={setHashtags} autoCapitalize="none" placeholder="#training #fit #core" />
       {error ? <T variant="muted" style={{ color: colors.bad }}>{error}</T> : null}
-      <Button title="Save content" onPress={save} busy={busy} />
+      <Button title={langs.length > 1 ? `Save in ${langs.length} languages` : 'Save content'} onPress={save} busy={busy} />
     </Sheet>
   );
 }

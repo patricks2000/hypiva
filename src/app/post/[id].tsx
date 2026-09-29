@@ -3,7 +3,7 @@ import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Linking, Pressable, View, useWindowDimensions } from 'react-native';
 import { Icon } from '../../components/Icon';
-import { Avatar, Button, Card, Chips, Empty, ErrorNote, Field, LinkButton, List, Loading, Row, Screen, T, hueFor, useToast } from '../../components/ui';
+import { Avatar, Button, Card, Empty, ErrorNote, Field, LinkButton, List, Loading, Row, Screen, T, hueFor, useToast } from '../../components/ui';
 import { homeFor, useAuth } from '../../lib/auth';
 import * as Clipboard from 'expo-clipboard';
 import { copy, saveToPhotos } from '../../lib/content';
@@ -34,7 +34,6 @@ function PostFlow() {
   const [pack, setPack] = useState<ContentPack | null>(null);
   const [noNewContent, setNoNewContent] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [chosenLang, setChosenLang] = useState<string | null>(null);
 
   const q = useLoad(async () => {
     const [c, a, p] = await Promise.all([
@@ -46,8 +45,9 @@ function PostFlow() {
     return { c: must(c) as Campaign, accounts: must(a) as TikTokAccount[], hasContent: languages.length > 0, languages };
   });
   const d = q.data;
-  // Content language: what the creator picked, else the app language when there is content in it, else the first one.
-  const lang = d ? (chosenLang && d.languages.includes(chosenLang) ? chosenLang : d.languages.includes(currentLang()) ? currentLang() : d.languages[0] ?? null) : null;
+  // The creator's posting language, set once at sign-up or in their profile.
+  const lang = profile!.content_language ?? currentLang();
+  const noContentInLang = !!d && d.hasContent && !d.languages.includes(lang);
 
   const back = () => {
     if (step === 'submit') setStep(pack ? 'content' : 'account');
@@ -60,6 +60,7 @@ function PostFlow() {
     setAccount(a);
     setNoNewContent(false);
     if (!d?.hasContent) { setPack(null); setStep('submit'); return; }
+    if (noContentInLang) { setPack(null); setNoNewContent(true); setStep('content'); return; }
     setBusy(true);
     const { data: packId, error } = await supabase.rpc('next_content', { p_campaign: id, p_account: a.id, p_language: lang });
     if (error) { setBusy(false); return show(friendlyError(error)); }
@@ -96,17 +97,14 @@ function PostFlow() {
         {q.error ? <ErrorNote text={q.error} onRetry={q.reload} /> : null}
         {!d ? (q.error ? null : <Loading />) : step === 'account' ? (
           <>
-            {d.languages.length > 1 ? (
-              <View style={{ gap: 8, marginTop: 8 }}>
-                <T variant="label">{t('Post in')}</T>
-                <Chips value={lang ?? ''} onChange={setChosenLang} options={d.languages.map((l) => ({ value: l, label: languageLabel(l) }))} />
-              </View>
-            ) : null}
+            {d.hasContent ? <T variant="small" style={{ marginTop: 8 }}>{t('Posting in {lang}. Change it in your profile.', { lang: languageLabel(lang) })}</T> : null}
             <AccountStep accounts={d.accounts} busy={busy} onPick={pickAccount} />
           </>
         ) : step === 'content' ? (
           noNewContent || !pack
-            ? <Card><Empty text={t('@{u} already posted all content for this campaign. Try another account, or check back later for new content.', { u: account?.username ?? '' })}
+            ? <Card><Empty text={noContentInLang
+                ? t('There is no content in {lang} for this campaign yet. Check back later, or change your posting language in your profile.', { lang: languageLabel(lang) })
+                : t('@{u} already posted all content for this campaign. Try another account, or check back later for new content.', { u: account?.username ?? '' })}
                 action={<LinkButton title={t("Choose another account")} onPress={() => setStep('account')} />} /></Card>
             : <ContentStep pack={pack} onToast={show} onNext={() => setStep('submit')} />
         ) : account ? (
