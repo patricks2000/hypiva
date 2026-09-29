@@ -15,7 +15,7 @@ const login = async (email) => {
 
 const alex = await login('alex@viewtra.test');
 const code = must(await alex.c.from('profiles').select('referral_code').eq('id', alex.id).single()).referral_code;
-ok(/^VT/.test(code), `Alex has code ${code}`);
+ok(/^HY/.test(code), `Alex has code ${code}`);
 
 const sam = client();
 must(await sam.auth.signUp({ email: 'sam@viewtra.test', password: 'password123', options: { data: { name: 'Sam de Vries', referral_code: code.toLowerCase() } } }));

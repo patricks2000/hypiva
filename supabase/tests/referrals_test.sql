@@ -17,7 +17,7 @@ end $$;
 
 -- Inviter signs up and gets a code
 insert into auth.users (id, email, raw_user_meta_data) values ('00000000-0000-0000-0000-0000000000f1', 'inviter@example.com', '{"name":"Ivy Inviter"}');
-select pg_temp.check((select referral_code ~ '^VT[A-Z2-9]{6}$' from profiles where id = '00000000-0000-0000-0000-0000000000f1'), 'every new account gets an invite code like VTX7K2QA');
+select pg_temp.check((select referral_code ~ '^HY[A-Z2-9]{6}$' from profiles where id = '00000000-0000-0000-0000-0000000000f1'), 'every new account gets an invite code like HYX7K2QA');
 
 -- Friend signs up with that code
 insert into auth.users (id, email, raw_user_meta_data)
@@ -30,8 +30,8 @@ select pg_temp.check((select count(*) = 1 from profiles where id = '00000000-000
 
 set role authenticated;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000f3');
-select pg_temp.fails($$select use_referral_code((select 'VT' || 'XXXXXX'))$$, 'an unknown code is refused');
-select pg_temp.fails($$update profiles set referral_code = 'VTMYOWN1' where id = '00000000-0000-0000-0000-0000000000f3'$$, 'nobody can change their own code');
+select pg_temp.fails($$select use_referral_code((select 'HY' || 'XXXXXX'))$$, 'an unknown code is refused');
+select pg_temp.fails($$update profiles set referral_code = 'HYMYOWN1' where id = '00000000-0000-0000-0000-0000000000f3'$$, 'nobody can change their own code');
 reset role;
 select set_config('viewtra.code', (select referral_code from profiles where id = '00000000-0000-0000-0000-0000000000f3'), false);
 set role authenticated;

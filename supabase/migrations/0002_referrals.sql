@@ -25,7 +25,7 @@ as $$
 declare v text; alphabet constant text := 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 begin
   loop
-    v := 'VT';
+    v := 'HY';
     for i in 1..6 loop v := v || substr(alphabet, 1 + floor(random() * length(alphabet))::int, 1); end loop;
     exit when not exists (select 1 from profiles where referral_code = v);
   end loop;

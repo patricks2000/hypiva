@@ -1,4 +1,4 @@
-# Viewtra
+# Hypiva
 
 Brands run pay-per-view TikTok campaigns; creators post, see their views and get paid.
 

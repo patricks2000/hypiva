@@ -1,11 +1,11 @@
-# Viewtra live zetten: stap voor stap
+# Hypiva live zetten: stap voor stap
 
 Je hoeft niet te programmeren. Volg de stappen in deze volgorde.
 
 ## 1. Database (Supabase), ongeveer 10 minuten
 
 1. Maak een gratis account op **supabase.com** en klik op **New project**.
-   - Naam: `viewtra`
+   - Naam: `hypiva`
    - Regio: **West EU (Ireland)** of **Central EU (Frankfurt)**
    - Kies een sterk database-wachtwoord en bewaar het goed.
 2. Open in je project **SQL Editor** → **New query**.
@@ -21,19 +21,19 @@ Je hoeft niet te programmeren. Volg de stappen in deze volgorde.
 
 Dit is dezelfde app, als website. Creators openen hem in de browser op hun telefoon; jij beheert alles via dezelfde site. Geen App Store nodig, dus geen €99.
 
-1. Zet de code op **GitHub** (maak een leeg project `viewtra` en upload de map, of laat Claude dat doen).
+1. Zet de code op **GitHub** (maak een leeg project `hypiva` en upload de map, of laat Claude dat doen).
 2. Maak een gratis account op **vercel.com** en log in met GitHub.
-3. Klik **Add New → Project** en kies `viewtra`. Vercel leest `vercel.json` en weet dan zelf hoe hij moet bouwen.
+3. Klik **Add New → Project** en kies `hypiva`. Vercel leest `vercel.json` en weet dan zelf hoe hij moet bouwen.
 4. Open **Environment Variables** en vul in:
    - `EXPO_PUBLIC_SUPABASE_URL` = je Project URL uit Supabase
    - `EXPO_PUBLIC_SUPABASE_ANON_KEY` = je anon public key uit Supabase
-5. Klik **Deploy**. Na een paar minuten staat de site op iets als `viewtra.vercel.app`.
+5. Klik **Deploy**. Na een paar minuten staat de site op iets als `hypiva.vercel.app`.
 6. Ga in Supabase naar **Authentication → URL Configuration** en zet je websiteadres bij **Site URL**, zodat links in e-mails (wachtwoord vergeten) goed werken.
-7. Eigen domein (bijvoorbeeld `viewtra.app`)? Voeg het toe in Vercel onder **Settings → Domains**.
+7. Eigen domein (bijvoorbeeld `hypiva.com`)? Voeg het toe in Vercel onder **Settings → Domains**.
 
 Elke keer dat de code op GitHub verandert, zet Vercel de nieuwe versie vanzelf online.
 
-**Op de telefoon als app:** creators openen de site in Safari, tikken op **Delen → Zet op beginscherm**. Dan staat Viewtra als icoon tussen hun apps.
+**Op de telefoon als app:** creators openen de site in Safari, tikken op **Delen → Zet op beginscherm**. Dan staat Hypiva als icoon tussen hun apps.
 **Slides opslaan op de website:** "Alles opslaan" opent het deelmenu van de telefoon, met **Bewaar afbeelding** (iPhone) om ze in Foto's te zetten.
 
 Netlify werkt ook (het bestand `netlify.toml` staat klaar), op dezelfde manier.
@@ -54,7 +54,7 @@ Alleen jij kunt nu iemand de rol **Brand** of **Admin** geven, via **People**. I
 
 ## 5. In de App Store (later)
 
-Nodig: **Apple Developer-account** (€99 per jaar). Met je KvK meld je je aan als **organisatie**, zodat er "Viewtra" als maker staat. Apple vraagt daarvoor een gratis **D-U-N-S-nummer**, dat je aanvraagt via de Apple-aanmeldpagina. Reken op een paar dagen.
+Nodig: **Apple Developer-account** (€99 per jaar). Met je KvK meld je je aan als **organisatie**, zodat er "Hypiva" als maker staat. Apple vraagt daarvoor een gratis **D-U-N-S-nummer**, dat je aanvraagt via de Apple-aanmeldpagina. Reken op een paar dagen.
 
 1. Maak een gratis account op **expo.dev**.
 2. In de projectmap:
@@ -121,7 +121,7 @@ Nodig: **Apple Developer-account** (€99 per jaar). Met je KvK meld je je aan a
 - De ranglijst staat standaard **alleen voor jou** aan. Wil je creators motiveren? Tik op **Show leaderboard to creators** en vul een prijs in, bijvoorbeeld "$50 for the #1 creator of the month". Creators zien dan alleen voornamen en views, nooit geld.
 
 ## Uitnodigingen (creator code)
-- Elke creator heeft een eigen code (bijvoorbeeld `VTCJZWPB`) onder **Profile → Your creator code**, met een knop om te kopiëren en te delen.
+- Elke creator heeft een eigen code (bijvoorbeeld `HYCJZWPB`) onder **Profile → Your creator code**, met een knop om te kopiëren en te delen.
 - Wie zich aanmeldt met die code, levert de uitnodiger een bonus op: standaard **5% van hun goedgekeurde verdiensten, 6 maanden lang, tot maximaal $100 per persoon**. De nieuwe creator levert daar zelf niets voor in.
 - Iemand kan de code ook later nog toevoegen, tot 14 dagen na het aanmelden. Eigen codes en dubbel gebruik worden geweigerd.
 - De bonus telt automatisch mee in **Money**. Onder **Invites** zie je per uitnodiger wie ze hebben binnengebracht en wat het oplevert.

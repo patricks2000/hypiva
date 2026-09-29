@@ -33,7 +33,7 @@ function Invite() {
     d.now - new Date(profile.created_at).getTime() < d.settings.signup_window_days * 864e5;
 
   const copy = async () => { await Clipboard.setStringAsync(myCode); show(t('Code copied')); };
-  const share = () => Share.share({ message: t('Get paid for your TikTok views on Clipwage. Sign up with my code {code}', { code: myCode }) }).catch(() => {});
+  const share = () => Share.share({ message: t('Get paid for your TikTok views on Hypiva. Sign up with my code {code}', { code: myCode }) }).catch(() => {});
 
   const useCode = async () => {
     setError(null); setBusy(true);
@@ -92,7 +92,7 @@ function Invite() {
               <Section title={t("Did someone invite you?")}>
                 <Card style={{ gap: 12 }}>
                   <T variant="muted">If someone invited you, add their code. You can do this in the first {d.settings.signup_window_days} days after signing up. It costs you nothing.</T>
-                  <Field label={t("Their code")} value={code} onChangeText={setCode} autoCapitalize="characters" autoCorrect={false} placeholder="VT..." error={error} />
+                  <Field label={t("Their code")} value={code} onChangeText={setCode} autoCapitalize="characters" autoCorrect={false} placeholder="HY..." error={error} />
                   <Button kind="ghost" title={t("Add code")} onPress={useCode} busy={busy} disabled={code.trim().length < 4} />
                 </Card>
               </Section>
