@@ -61,6 +61,10 @@ function Invite() {
           <Button title={t("Share my code")} onPress={share} />
           <T variant="bodyStrong">{t("Good people to ask")}</T>
           <T variant="muted">{t("Friends who post on TikTok, gym buddies, or smaller creators you follow. They type your code when they create their account.")}</T>
+          <View style={{ gap: 4, backgroundColor: colors.surface2, borderRadius: 14, padding: 12 }}>
+            <T variant="bodyStrong">{t("Not allowed")}</T>
+            <T variant="muted">{t("Promoting your code with ads, spam, comments or DMs to strangers, or on coupon and giveaway sites, is not accepted. The same goes for inviting yourself or fake accounts. Those invites do not count and we can take back the bonus.")}</T>
+          </View>
         </Card>
 
         {q.error ? <ErrorNote text={q.error} onRetry={q.reload} /> : null}

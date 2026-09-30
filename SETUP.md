@@ -122,8 +122,9 @@ Nodig: **Apple Developer-account** (€99 per jaar). Met je KvK meld je je aan a
 
 ## Uitnodigingen (creator code)
 - Elke creator heeft een eigen code (bijvoorbeeld `HYCJZWPB`) onder **Profile → Your creator code**, met een knop om te kopiëren en te delen.
-- Wie zich aanmeldt met die code, levert de uitnodiger een bonus op: standaard **5% van hun goedgekeurde verdiensten, 6 maanden lang, tot maximaal $100 per persoon**. De nieuwe creator levert daar zelf niets voor in.
+- Wie zich aanmeldt met die code, levert de uitnodiger een bonus op: standaard **5% van hun goedgekeurde verdiensten, 6 maanden lang, tot maximaal $93 (ongeveer €80) per persoon**. De nieuwe creator levert daar zelf niets voor in.
 - Iemand kan de code ook later nog toevoegen, tot 14 dagen na het aanmelden. Eigen codes en dubbel gebruik worden geweigerd.
+- Promotie van codes via advertenties, spam, reacties of DM's naar onbekenden, of op kortings- en winactiesites, is niet toegestaan (staat op het uitnodigingsscherm). Zie je misbruik, verwijder dan de uitnodiging of geef een min-bonus.
 - De bonus telt automatisch mee in **Money**. Onder **Invites** zie je per uitnodiger wie ze hebben binnengebracht en wat het oplevert.
 - De regels (percentage, maanden, maximum, dagen) pas je aan onder **People → Invite program**. Alleen jij als eigenaar kunt dat.
 

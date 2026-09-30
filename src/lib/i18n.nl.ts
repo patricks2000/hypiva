@@ -296,4 +296,5 @@ export const nl: Record<string, string> = {
   'Choose a new password': 'Kies een nieuw wachtwoord',
   'New password': 'Nieuw wachtwoord',
   'Save password': 'Wachtwoord opslaan',
+  'Promoting your code with ads, spam, comments or DMs to strangers, or on coupon and giveaway sites, is not accepted. The same goes for inviting yourself or fake accounts. Those invites do not count and we can take back the bonus.': "Je code promoten met advertenties, spam, reacties of DM's naar onbekenden, of op kortings- en winactiesites, wordt niet geaccepteerd. Dat geldt ook voor jezelf of nepaccounts uitnodigen. Die uitnodigingen tellen niet mee en we kunnen de bonus terugdraaien.",
 };
