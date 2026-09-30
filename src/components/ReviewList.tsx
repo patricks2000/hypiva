@@ -25,7 +25,8 @@ export function ReviewList({ subs, onChanged, onToast }: { subs: Submission[]; o
           <Row key={s.id} last={i === subs.length - 1}
             left={<Avatar name={s.profiles?.name || s.tiktok_accounts?.username || '?'} color={hueFor(s.creator_id)} />}
             title={'@' + (s.tiktok_accounts?.username ?? '')}
-            subtitle={`${s.campaigns?.name ?? ''} · ${day(s.created_at)}`}
+            lines={3}
+            subtitle={`${s.campaigns?.name ?? ''} · ${day(s.created_at)}\n${s.tiktok_accounts?.verified ? '✓ Account verified' : '⚠ Account not verified yet: check the video is really theirs'}`}
             onPress={() => Linking.openURL(s.url)}
             right={<View style={{ flexDirection: 'row', gap: 6 }}>
               <Button small kind="danger" title="Reject" onPress={() => { setReason(''); setRejecting(s); }} />

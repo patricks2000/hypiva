@@ -28,6 +28,8 @@ select pg_temp.check((select sum(earned_cents) = 1000 from submission_earnings w
   'two approved videos in a $5-per-video campaign earn $10; the one waiting for review earns nothing yet');
 select pg_temp.check((select earned_cents >= 1000 from creator_balances), 'the fixed amounts count in what the creator is owed');
 
+select pg_temp.check((select coalesce(sum(video_cents), 0) >= 1000 from weekly_earnings(1)), 'fixed pay per video shows up in this week''s money');
+select pg_temp.check((select earned_cents is null from leaderboard() where is_me), 'creators never see money on the leaderboard');
 -- The brand cannot change pay terms, only things like pausing
 select pg_temp.as_user('00000000-0000-0000-0000-00000000000d');
 do $$ begin update campaigns set cpm_cents = 1 where id = '20000000-0000-0000-0000-000000000001'; raise exception 'FAILED: brand lowered the rate'; exception when raise_exception then if sqlerrm like 'FAILED%' then raise; end if; end $$;
@@ -40,6 +42,8 @@ select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
 update campaigns set fixed_cents = 800, status = 'live' where id = '20000000-0000-0000-0000-0000000000f1';
 update campaigns set fixed_cents = null, cpm_cents = 300 where id = '20000000-0000-0000-0000-0000000000f1';
 select pg_temp.check((select fixed_cents is null and cpm_cents = 300 from campaigns where id = '20000000-0000-0000-0000-0000000000f1'), 'the owner can switch a campaign between per video and per views');
+update campaigns set fixed_cents = 500, cpm_cents = 100 where id = '20000000-0000-0000-0000-0000000000f1';
+select pg_temp.check((select earned_cents >= 1000 from leaderboard() where creator_id = '00000000-0000-0000-0000-00000000000b'), 'the leaderboard counts fixed pay per video for this month');
 update campaigns set fixed_cents = 500, cpm_cents = 100 where id = '20000000-0000-0000-0000-0000000000f1';
 
 -- Content in the creator's language

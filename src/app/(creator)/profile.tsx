@@ -12,6 +12,8 @@ import { friendlyError, supabase } from '../../lib/supabase';
 import { loadCreator } from '../../lib/queries';
 import { useLoad } from '../../lib/useLoad';
 import { t } from '../../lib/i18n';
+import * as Clipboard from 'expo-clipboard';
+import type { TikTokAccount } from '../../lib/types';
 
 export default function Profile() {
   const { profile } = useAuth();
@@ -19,6 +21,7 @@ export default function Profile() {
   const [adding, setAdding] = useState(false);
   const [username, setUsername] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [verifying, setVerifying] = useState<TikTokAccount | null>(null);
   const { toast, show } = useToast();
   const d = q.data;
 
@@ -32,7 +35,9 @@ export default function Profile() {
     if (e) return setError(friendlyError(e));
     setAdding(false); setUsername('');
     show(t('@{u} linked', { u }));
-    q.reload();
+    await q.reload();
+    const { data: added } = await supabase.from('tiktok_accounts').select('*').eq('username', u).maybeSingle();
+    if (added) setVerifying(added as TikTokAccount);
   };
 
   const removeAccount = async (id: string, name: string) => {
@@ -80,7 +85,7 @@ export default function Profile() {
                   <Row key={a.id} last={i === d.accounts.length - 1} left={<Avatar name={a.username} color={hueFor(a.id)} />}
                     title={'@' + a.username} subtitle={t('{n} videos', { n: d.subs.filter((s) => s.tiktok_account_id === a.id).length })}
                     right={<View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
-                      <Pill kind="linked" />
+                      {a.verified ? <Pill kind="live" label={t('Verified')} /> : <Button small title={t('Verify')} onPress={() => setVerifying(a)} />}
                       <LinkButton title={t('Remove')} onPress={() => removeAccount(a.id, a.username)} />
                     </View>} />
                 )) : <Empty text={t("Link the TikTok accounts you post from.")} />}
@@ -95,7 +100,36 @@ export default function Profile() {
           placeholder={t("yourname")} error={error} hint={t("Only link accounts you own. We check this before paying out.")} />
         <Button title={t("Link account")} onPress={addAccount} disabled={!username.trim()} />
       </Sheet>
+      {verifying ? <VerifySheet account={verifying} onClose={() => setVerifying(null)} onVerified={() => { setVerifying(null); show(t('@{u} is verified', { u: verifying.username })); q.reload(); }} /> : null}
       {toast}
     </View>
+  );
+}
+
+/** Prove you own a TikTok account: put your code in its bio, then we check it. */
+function VerifySheet({ account, onClose, onVerified }: { account: TikTokAccount; onClose: () => void; onVerified: () => void }) {
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+  const check = async () => {
+    setBusy(true); setMsg(null);
+    const { data, error } = await supabase.functions.invoke('verify-account', { body: { account: account.id } });
+    setBusy(false);
+    if (error) return setMsg(friendlyError(error));
+    const r = data as { verified: boolean; reason?: string };
+    if (r.verified) onVerified(); else setMsg(r.reason ?? t('Not found yet. Try again in a minute.'));
+  };
+  return (
+    <Sheet visible onClose={onClose} title={t('Verify @{u}', { u: account.username })}>
+      <T variant="muted">{t('So we know this account is yours, put this code in your TikTok bio. You can remove it again once you are verified.')}</T>
+      <Card style={{ alignItems: 'center', gap: 8, backgroundColor: colors.surface2 }}>
+        <T variant="title" selectable style={{ fontSize: 30, letterSpacing: 2 }}>{account.verify_code}</T>
+        <LinkButton title={t('Copy code')} onPress={() => Clipboard.setStringAsync(account.verify_code)} />
+      </Card>
+      <T variant="body">{t('1. Open TikTok → Profile → Edit profile → Bio.')}</T>
+      <T variant="body">{t('2. Paste the code anywhere in your bio and save.')}</T>
+      <T variant="body">{t('3. Come back here and tap Check.')}</T>
+      {msg ? <T variant="muted" style={{ color: colors.warn }}>{msg}</T> : null}
+      <Button title={t('Check')} onPress={check} busy={busy} />
+    </Sheet>
   );
 }

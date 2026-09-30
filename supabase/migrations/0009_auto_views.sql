@@ -109,7 +109,7 @@ begin
   if exists (select 1 from pg_available_extensions where name = 'pg_cron')
      and exists (select 1 from pg_available_extensions where name = 'pg_net')
      and exists (select 1 from information_schema.schemata where schema_name = 'vault') then
-    create extension if not exists pg_net;
+    create extension if not exists pg_net with schema extensions;
     create extension if not exists pg_cron;
     if not exists (select 1 from vault.secrets where name = 'refresh_views_secret') then
       perform vault.create_secret(encode(extensions.gen_random_bytes(24), 'hex'), 'refresh_views_secret');

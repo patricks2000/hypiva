@@ -11,10 +11,13 @@ import { CONTENT_LANGUAGES } from '../lib/languages';
 
 type Mode = 'signin' | 'signup';
 
+/** Full link to a page of this website (for email links); undefined in the phone app. */
+const webUrl = (path: string) => (Platform.OS === 'web' && typeof window !== 'undefined' ? window.location.origin + path : undefined);
+
 export default function SignIn() {
   const { session, profile } = useAuth();
-  const params = useLocalSearchParams<{ code?: string }>();
-  const [mode, setMode] = useState<Mode>(params.code ? 'signup' : 'signin');
+  const params = useLocalSearchParams<{ code?: string; signup?: string }>();
+  const [mode, setMode] = useState<Mode>(params.code || params.signup ? 'signup' : 'signin');
   const [invite, setInvite] = useState(params.code ?? '');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -37,7 +40,7 @@ export default function SignIn() {
         const { error: e } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
         if (e) throw e;
       } else {
-        const { data, error: e } = await supabase.auth.signUp({ email: email.trim(), password, options: { data: { name: name.trim(), referral_code: invite.trim().toUpperCase(), content_language: postLang } } });
+        const { data, error: e } = await supabase.auth.signUp({ email: email.trim(), password, options: { emailRedirectTo: webUrl('/sign-in'), data: { name: name.trim(), referral_code: invite.trim().toUpperCase(), content_language: postLang } } });
         if (e) throw e;
         if (!data.session) setInfo(t('Check your email and tap the link to confirm your account, then sign in.'));
       }
@@ -51,7 +54,7 @@ export default function SignIn() {
   const resetPassword = async () => {
     setError(null);
     if (!/^\S+@\S+\.\S+$/.test(email.trim())) return setError(t('Enter your email first, then tap "Forgot password".'));
-    const { error: e } = await supabase.auth.resetPasswordForEmail(email.trim());
+    const { error: e } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: webUrl('/reset-password') });
     if (e) setError(friendlyError(e)); else setInfo(t('We sent you an email to set a new password.'));
   };
 

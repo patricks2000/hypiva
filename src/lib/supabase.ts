@@ -14,7 +14,8 @@ export const supabase = createClient(url || 'https://not-configured.supabase.co'
     storage: Platform.OS === 'web' ? undefined : AsyncStorage,
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: false,
+    // On the website, links from emails (confirm account, reset password) carry the login in the URL.
+    detectSessionInUrl: Platform.OS === 'web',
   },
 });
 

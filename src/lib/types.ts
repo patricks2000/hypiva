@@ -44,7 +44,7 @@ export interface Campaign {
   brands?: { name: string } | null;
 }
 
-export interface TikTokAccount { id: string; creator_id: string; username: string; verified: boolean }
+export interface TikTokAccount { id: string; creator_id: string; username: string; verified: boolean; verify_code: string; verified_at: string | null }
 
 export interface Submission {
   id: string;
@@ -61,7 +61,7 @@ export interface Submission {
   content_pack_id?: string | null;
   created_at: string;
   campaigns?: Pick<Campaign, 'name' | 'cpm_cents' | 'min_views' | 'fixed_cents'> | null;
-  tiktok_accounts?: { username: string } | null;
+  tiktok_accounts?: { username: string; verified?: boolean } | null;
   profiles?: { name: string; handle: string | null } | null;
 }
 

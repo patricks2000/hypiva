@@ -5,7 +5,7 @@ import { dateLocale, t } from './i18n';
 import type { Bonus, Campaign, CreatorBalance, CreatorRate, LeaderRow, LeaderboardSettings, MyReferral, Payout, PayoutAccount, Referral, ReferralSettings, Submission, TikTokAccount, WeekRow } from './types';
 
 export const SUB_FIELDS = '*, campaigns(name, cpm_cents, min_views, fixed_cents), tiktok_accounts(username)';
-export const SUB_FIELDS_WITH_CREATOR = '*, campaigns(name, cpm_cents, min_views, fixed_cents), tiktok_accounts(username), profiles!submissions_creator_id_fkey(name, handle)';
+export const SUB_FIELDS_WITH_CREATOR = '*, campaigns(name, cpm_cents, min_views, fixed_cents), tiktok_accounts(username, verified), profiles!submissions_creator_id_fkey(name, handle)';
 
 export async function loadCreator(userId: string) {
   const [balance, subs, members, accounts, payouts, rates, weeks, bonuses, board, boardSettings, payoutAccount] = await Promise.all([

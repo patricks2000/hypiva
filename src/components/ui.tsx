@@ -17,6 +17,9 @@ export function T({ children, style, variant = 'body', numberOfLines, selectable
 }
 
 /* ---------- screen ---------- */
+/** On a computer screens stay a comfortable reading width, centered; on a phone they use the full width. */
+const MAX_WIDTH = 820;
+
 export function Screen({ title, right, children, onRefresh, refreshing = false }: {
   title?: string; right?: ReactNode; children: ReactNode; onRefresh?: () => void; refreshing?: boolean;
 }) {
@@ -24,7 +27,7 @@ export function Screen({ title, right, children, onRefresh, refreshing = false }
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.bg }}
-      contentContainerStyle={{ paddingTop: insets.top + 12, paddingBottom: 120, paddingHorizontal: 16, gap: 12 }}
+      contentContainerStyle={{ paddingTop: insets.top + 12, paddingBottom: 120, paddingHorizontal: 16, gap: 12, width: '100%', maxWidth: MAX_WIDTH, alignSelf: 'center' }}
       keyboardShouldPersistTaps="handled"
       refreshControl={onRefresh ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.muted} /> : undefined}
     >
@@ -271,7 +274,7 @@ const s = StyleSheet.create({
   chip: { paddingVertical: 8, paddingHorizontal: 14, borderRadius: radius.pill, borderWidth: 1, borderColor: colors.line },
   input: { backgroundColor: colors.surface2, borderWidth: 1, borderColor: colors.line, borderRadius: radius.input, padding: 12, color: colors.text, fontFamily: fonts.body, fontSize: 15 },
   scrim: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)' },
-  sheet: { backgroundColor: colors.surface, borderTopLeftRadius: 24, borderTopRightRadius: 24, borderWidth: 1, borderColor: colors.line, paddingTop: 12, paddingHorizontal: 16, maxHeight: '90%' },
+  sheet: { backgroundColor: colors.surface, borderTopLeftRadius: 24, borderTopRightRadius: 24, borderWidth: 1, borderColor: colors.line, paddingTop: 12, paddingHorizontal: 16, maxHeight: '90%', width: '100%', maxWidth: 640, alignSelf: 'center' },
   grab: { width: 40, height: 4, borderRadius: 4, backgroundColor: colors.line, alignSelf: 'center', marginBottom: 14 },
   toast: { position: 'absolute', bottom: 110, alignSelf: 'center', backgroundColor: colors.text, paddingHorizontal: 16, paddingVertical: 10, borderRadius: radius.pill },
 });

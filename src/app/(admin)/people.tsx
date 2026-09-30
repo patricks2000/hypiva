@@ -10,6 +10,9 @@ import type { Brand, Profile, Referral, ReferralSettings, Role } from '../../lib
 import { must, useLoad } from '../../lib/useLoad';
 
 const ROLE_LABEL: Record<Role, string> = { creator: 'Creator', brand: 'Brand', admin: 'Admin' };
+const WEEK = 7 * 864e5;
+/** Signed up in the last 7 days. */
+const isNew = (p: Profile) => new Date(p.created_at).getTime() > Date.now() - WEEK;
 
 export default function People() {
   const { profile: me } = useAuth();
@@ -48,6 +51,15 @@ export default function People() {
             ? 'Everyone starts as a creator. Tap a person to make them a brand user or give them admin access. Only you can do this.'
             : 'You can see everyone, but giving or taking away access is done by the owner.'}</T>
         </Card>
+        {q.data ? (() => {
+          const fresh = q.data.people.filter(isNew);
+          return (
+            <Card style={{ gap: 4, borderColor: fresh.length ? colors.accent : colors.line }}>
+              <T variant="bodyStrong">{fresh.length ? `${fresh.length} new ${fresh.length === 1 ? 'sign-up' : 'sign-ups'} this week` : 'No new sign-ups this week'}</T>
+              <T variant="muted">{fresh.length ? fresh.slice(0, 5).map((p) => `${p.name || 'No name'}${p.content_language ? ` (${p.content_language.toUpperCase()})` : ''}`).join(', ') : 'New people show up at the top of the list with a "New" label.'}</T>
+            </Card>
+          );
+        })() : null}
         <Field label="Search" value={search} onChangeText={setSearch} placeholder="Name or @username" autoCapitalize="none" />
         <Chips value={filter} onChange={setFilter} options={[
           { value: 'all', label: 'Everyone' }, { value: 'creator', label: 'Creators' }, { value: 'brand', label: 'Brands' }, { value: 'admin', label: 'Admins' },
@@ -60,7 +72,10 @@ export default function People() {
                 title={p.name || 'No name'}
                 subtitle={`${p.handle ? '@' + p.handle + ' · ' : ''}joined ${day(p.created_at)}${p.role === 'brand' ? ' · ' + (q.data!.brands.find((b) => b.id === p.brand_id)?.name ?? 'no brand') : ''}${invitedBy(p.id)}`}
                 onPress={me?.is_owner && p.id !== me.id ? () => setEditing(p) : undefined}
-                right={p.is_owner ? <Pill kind="live" label="Owner" /> : <Pill kind={p.role === 'admin' ? 'live' : p.role === 'brand' ? 'requested' : 'linked'} label={ROLE_LABEL[p.role]} />} />
+                right={<View style={{ flexDirection: 'row', gap: 6 }}>
+                  {isNew(p) ? <Pill kind="requested" label="New" /> : null}
+                  {p.is_owner ? <Pill kind="live" label="Owner" /> : <Pill kind={p.role === 'admin' ? 'live' : p.role === 'brand' ? 'requested' : 'linked'} label={ROLE_LABEL[p.role]} />}
+                </View>} />
             )) : <Empty text="Nobody matches." />}
           </List>
         )}

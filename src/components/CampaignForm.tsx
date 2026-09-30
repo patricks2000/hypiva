@@ -33,6 +33,7 @@ export function CampaignForm({ brandId, brands, onDone }: { brandId?: string | n
     if (!budgetCents || budgetCents < 5000) return setError('The budget has to be at least $50.');
     setBusy(true);
     const { error: e } = await supabase.from('campaigns').insert({
+      status: brands ? 'live' : 'paused',
       brand_id: brand, name: name.trim(), description: desc.trim(), kind,
       cpm_cents: cpmCents ?? 200, fixed_cents: payType === 'video' ? fixedCents : null,
       budget_cents: budgetCents, min_views: Number.isFinite(min) ? min : 1000,
@@ -40,7 +41,7 @@ export function CampaignForm({ brandId, brands, onDone }: { brandId?: string | n
     setBusy(false);
     if (e) return setError(friendlyError(e));
     setName(''); setDesc('');
-    onDone('Campaign is live');
+    onDone(brands ? 'Campaign is live' : 'Campaign sent. The Hypiva team checks it and makes it live.');
   };
 
   return (
