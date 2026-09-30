@@ -4,7 +4,8 @@ import { num, short, usd } from '../lib/format';
 import { colors } from '../lib/theme';
 import { kindLabel, type Campaign, type CampaignStats } from '../lib/types';
 
-export function CampaignStatsCard({ c, stats, onToggle, onOpen, onEditPay }: { c: Campaign; stats?: CampaignStats; onToggle?: () => void; onOpen?: () => void; onEditPay?: () => void }) {
+/** A campaign with its numbers. forBrand hides what creators are paid: clients see reach, not our costs. */
+export function CampaignStatsCard({ c, stats, onToggle, onOpen, onEditPay, forBrand }: { c: Campaign; stats?: CampaignStats; onToggle?: () => void; onOpen?: () => void; onEditPay?: () => void; forBrand?: boolean }) {
   const spent = stats?.spent_cents ?? 0;
   const pct = Math.min(100, (spent / c.budget_cents) * 100);
   return (
@@ -13,7 +14,7 @@ export function CampaignStatsCard({ c, stats, onToggle, onOpen, onEditPay }: { c
         <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: hueFor(c.brand_id) }} />
         <View style={{ flex: 1 }}>
           <T variant="bodyStrong">{c.name}</T>
-          <T variant="muted">{c.fixed_cents != null ? `${usd(c.fixed_cents)} per video` : `${usd(c.cpm_cents)} per 1K`} · min. {short(c.min_views)} · {kindLabel(c.kind)}</T>
+          <T variant="muted">{forBrand ? `Budget ${usd(c.budget_cents)} · ${kindLabel(c.kind)}` : `${c.fixed_cents != null ? `${usd(c.fixed_cents)} per video` : `${usd(c.cpm_cents)} per 1K`} · min. ${short(c.min_views)} · ${kindLabel(c.kind)}`}</T>
         </View>
         <Pill kind={c.status} />
       </Pressable>
@@ -21,14 +22,19 @@ export function CampaignStatsCard({ c, stats, onToggle, onOpen, onEditPay }: { c
         <View style={{ flex: 1 }}><T variant="small">Views</T><T variant="h2">{num(stats?.views ?? 0)}</T></View>
         <View style={{ flex: 1 }}><T variant="small">Videos</T><T variant="h2">{stats?.videos ?? 0}</T></View>
       </View>
+      {forBrand ? null : (
+        <>
       <View style={{ height: 6, backgroundColor: colors.surface2, borderRadius: 6, overflow: 'hidden' }}>
         <View style={{ width: `${pct}%`, height: '100%', backgroundColor: colors.accent }} />
       </View>
       <T variant="small">{usd(spent)} of {usd(c.budget_cents)} budget used</T>
+        </>
+      )}
       <View style={{ flexDirection: 'row', gap: 8 }}>
         {onOpen ? <Button small style={{ flex: 1 }} title="Content & checklist" onPress={onOpen} /> : null}
         {onEditPay ? <Button small style={{ flex: 1 }} kind="ghost" title="Pay & budget" onPress={onEditPay} /> : null}
-        {onToggle ? <Button small style={{ flex: 1 }} kind="ghost" title={c.status === 'live' ? 'Pause' : 'Make live'} onPress={onToggle} /> : null}
+        {onToggle && (!forBrand || c.status === 'live') ? <Button small style={{ flex: 1 }} kind="ghost" title={c.status === 'live' ? 'Pause' : 'Make live'} onPress={onToggle} /> : null}
+        {forBrand && c.status !== 'live' ? <T variant="small" style={{ flex: 1, alignSelf: 'center' }}>The Hypiva team makes it live.</T> : null}
       </View>
     </Card>
   );

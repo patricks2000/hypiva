@@ -27,7 +27,7 @@ export default function BrandCampaigns() {
       <Screen title="Your campaigns" onRefresh={q.refresh} refreshing={q.refreshing}>
         {q.error ? <ErrorNote text={q.error} onRetry={q.reload} /> : null}
         {!q.data ? (q.error ? null : <Loading />) : q.data.campaigns.length ? q.data.campaigns.map((c) => (
-          <CampaignStatsCard key={c.id} c={c} stats={q.data!.stats.get(c.id)} onToggle={() => toggle(c)}
+          <CampaignStatsCard forBrand key={c.id} c={c} stats={q.data!.stats.get(c.id)} onToggle={() => toggle(c)}
             onOpen={() => router.push({ pathname: '/manage/[id]', params: { id: c.id } })} />
         )) : <Card><Empty text="No campaigns yet." action={<LinkButton title="Create your first campaign" onPress={() => router.push('/(brand)/new')} />} /></Card>}
       </Screen>

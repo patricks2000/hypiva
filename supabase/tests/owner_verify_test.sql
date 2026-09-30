@@ -54,5 +54,13 @@ select pg_temp.check((select not verified from tiktok_accounts where username = 
 select mark_account_verified((select id from tiktok_accounts where username = 'nina.second'));
 select pg_temp.check((select verified and verified_at is not null from tiktok_accounts where username = 'nina.second'), 'the server check marks it verified');
 
+-- Brands see reach, not what creators are paid
+set role authenticated;
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000d');
+select pg_temp.check((select count(*) > 0 and bool_and(spent_cents is null) from campaign_stats), 'a brand sees views and videos but not what creators cost');
+select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
+select pg_temp.check((select bool_and(spent_cents is not null) from campaign_stats), 'the owner sees the creator costs');
+reset role;
+
 \o
 \echo ALL OWNER AND VERIFY CHECKS PASSED

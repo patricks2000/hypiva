@@ -28,14 +28,14 @@ export function CampaignForm({ brandId, brands, onDone }: { brandId?: string | n
     setError(null);
     if (!brand) return setError('Pick a brand first.');
     if (!name.trim() || !desc.trim()) return setError('Add a name and tell creators what to post.');
-    if (payType === 'views' && !cpmCents) return setError('Enter what you pay per 1,000 views, for example 2.00.');
-    if (payType === 'video' && !fixedCents) return setError('Enter what you pay per video, for example 5.00.');
+    if (brands && payType === 'views' && !cpmCents) return setError('Enter what you pay per 1,000 views, for example 2.00.');
+    if (brands && payType === 'video' && !fixedCents) return setError('Enter what you pay per video, for example 5.00.');
     if (!budgetCents || budgetCents < 5000) return setError('The budget has to be at least $50.');
     setBusy(true);
     const { error: e } = await supabase.from('campaigns').insert({
       status: brands ? 'live' : 'paused',
       brand_id: brand, name: name.trim(), description: desc.trim(), kind,
-      cpm_cents: cpmCents ?? 200, fixed_cents: payType === 'video' ? fixedCents : null,
+      cpm_cents: (brands ? cpmCents : null) ?? 200, fixed_cents: brands && payType === 'video' ? fixedCents : null,
       budget_cents: budgetCents, min_views: Number.isFinite(min) ? min : 1000,
     });
     setBusy(false);
@@ -60,8 +60,15 @@ export function CampaignForm({ brandId, brands, onDone }: { brandId?: string | n
         <T variant="label">Type</T>
         <Chips value={kind} onChange={setKind} options={[{ value: 'ready_to_post', label: 'Content included' }, { value: 'create_your_own', label: 'Film it yourself' }]} />
       </View>
-      <PayFields payType={payType} setPayType={setPayType} cpm={cpm} setCpm={setCpm} fixed={fixed} setFixed={setFixed}
-        budget={budget} setBudget={setBudget} minViews={minViews} setMinViews={setMinViews} />
+      {brands ? (
+        <PayFields payType={payType} setPayType={setPayType} cpm={cpm} setCpm={setCpm} fixed={fixed} setFixed={setFixed}
+          budget={budget} setBudget={setBudget} minViews={minViews} setMinViews={setMinViews} />
+      ) : (
+        <>
+          <Field label="Budget ($)" value={budget} onChangeText={setBudget} keyboardType="decimal-pad" hint="What you want to spend on this campaign. We plan the creators and posts around it." />
+          <T variant="small">After you send it, the Hypiva team checks the campaign and makes it live.</T>
+        </>
+      )}
       {error ? <T variant="muted" style={{ color: '#FF5C7A' }}>{error}</T> : null}
       <Button title="Launch campaign" onPress={create} busy={busy} />
     </Card>

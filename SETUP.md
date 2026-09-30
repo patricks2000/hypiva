@@ -10,7 +10,7 @@ Je hoeft niet te programmeren. Volg de stappen in deze volgorde.
    - Kies een sterk database-wachtwoord en bewaar het goed.
 2. Open in je project **SQL Editor** → **New query**.
 3. Open het bestand `supabase/migrations/0001_init.sql`, kopieer alles, plak het erin en klik op **Run**.
-   Doe daarna hetzelfde met `0002_referrals.sql` (uitnodigingen) en `0003_rates_and_weeks.sql` (eigen tarieven en weekoverzicht) `0004_bonuses_and_leaderboard.sql` (bonussen en ranglijst) `0005_exchange_rate.sql` (euro-bedragen), `0006_content.sql` (kant-en-klare content) en `0007_privacy_hardening.sql` (extra beveiliging), `0008_lock_functions.sql`, `0009_auto_views.sql` (automatische views), `0010_pay_models_and_languages.sql` (betaalvorm en taal), `0011_creator_language.sql` (taal per creator), `0012_owner_verify_signups.sql` (eigenaar, verificatie, meldingen) en `0013_fix_period_start.sql`, in die volgorde.
+   Doe daarna hetzelfde met `0002_referrals.sql` (uitnodigingen) en `0003_rates_and_weeks.sql` (eigen tarieven en weekoverzicht) `0004_bonuses_and_leaderboard.sql` (bonussen en ranglijst) `0005_exchange_rate.sql` (euro-bedragen), `0006_content.sql` (kant-en-klare content) en `0007_privacy_hardening.sql` (extra beveiliging), `0008_lock_functions.sql`, `0009_auto_views.sql` (automatische views), `0010_pay_models_and_languages.sql` (betaalvorm en taal), `0011_creator_language.sql` (taal per creator), `0012_owner_verify_signups.sql` (eigenaar, verificatie, meldingen) `0013_fix_period_start.sql` en `0014_hide_costs_from_brands.sql`, in die volgorde.
    Nu staan alle tabellen, beveiligingsregels en de berekening per video klaar.
 4. Ga naar **Project Settings → API** en kopieer:
    - **Project URL**
@@ -182,3 +182,8 @@ Klaar. De knop **Translate** werkt dan meteen. Zonder sleutel kun je de talen ge
 - **hypiva.com** is de homepage voor klanten (merken), met een knop die je mailt op patrick@hypiva.com. Tekst en plaatjes staan in `public/home.html` en `public/landing/`. Vraag Claude om ze aan te passen.
 - De app zit op **hypiva.com/sign-in**. Creators melden zich aan via **Start earning**.
 - Supabase: zet onder **Authentication → URL Configuration** de **Site URL** op `https://hypiva.com` en voeg bij **Redirect URLs** `https://hypiva.com/**` toe. Dan werken de links in de mails voor account bevestigen en wachtwoord vergeten.
+
+## Klanten betalen een budget
+- Klanten (merken) spreken met jou één budget per campagne af, bijvoorbeeld $40.000. Daaruit betaal jij de creators.
+- Klanten zien in de app alleen hun **budget, views en video's**. Ze zien niet wat creators per video of per 1.000 views krijgen, en ook niet hoeveel daarvan al naar creators is gegaan. Dat is jouw marge.
+- Vraagt een klant zelf een campagne aan, dan vult hij alleen naam, uitleg en budget in. Jij stelt daarna onder **Campaigns → Pay & budget** in wat creators krijgen, en zet de campagne live.
