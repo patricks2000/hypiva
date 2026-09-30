@@ -9,7 +9,7 @@ create table internal.settings (
   id           boolean primary key default true check (id),
   owner_email  text not null
 );
-insert into internal.settings (owner_email) values ('patrick@hypiva.com');
+insert into internal.settings (owner_email) values ('patrickkruiger@icloud.com');
 
 create function public.claim_owner() returns trigger
 language plpgsql security definer set search_path = public

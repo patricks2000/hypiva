@@ -159,8 +159,8 @@ Nodig: **Apple Developer-account** (€99 per jaar). Met je KvK meld je je aan a
 Klaar. De knop **Translate** werkt dan meteen. Zonder sleutel kun je de talen gewoon zelf invullen.
 
 ## Jij als eigenaar
-- Meld je aan op de site met **patrick@hypiva.com** en bevestig je e-mail. Je wordt dan vanzelf **eigenaar en admin**. Dit werkt maar één keer: zodra er een eigenaar is, kan niemand anders dat worden, ook niet met hetzelfde e-mailadres.
-- Daarvoor moet patrick@hypiva.com wel mail kunnen ontvangen (zie hieronder).
+- Meld je aan op de site met **patrickkruiger@icloud.com** en bevestig je e-mail. Je wordt dan vanzelf **eigenaar en admin**. Dit werkt maar één keer: zodra er een eigenaar is, kan niemand anders dat worden, ook niet met hetzelfde e-mailadres.
+- Het eigenaar-adres staat in de database (tabel internal.settings) en kan alleen via Supabase worden veranderd.
 
 ## Mail op @hypiva.com
 - Kies een mailbox voor je domein, bijvoorbeeld **iCloud+ Aangepast e-maildomein** (zit in iCloud+), **Google Workspace** (ongeveer €7 per maand) of **Zoho Mail** (gratis).
