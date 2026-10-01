@@ -1,4 +1,4 @@
-// Lists English texts used with t("...") that have no translation yet. Run: npm run check:i18n
+// Lists English texts used with t("...") that are missing in a language file. Run: npm run check:i18n
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -11,7 +11,11 @@ for (const f of files) for (const m of readFileSync(f, 'utf8').matchAll(re)) {
   const raw = m[1];
   keys.add(raw[0] === '"' ? JSON.parse(raw) : raw.slice(1, -1).replace(/\\'/g, "'"));
 }
-const nl = readFileSync('src/lib/i18n.nl.ts', 'utf8');
-const missing = [...keys].filter((k) => !nl.includes(`'${k.replace(/'/g, "\\'")}':`));
-if (missing.length) { console.log('Missing Dutch translations:\n' + missing.map((k) => '  ' + k).join('\n')); process.exit(1); }
-console.log(`All ${keys.size} texts have a Dutch translation.`);
+let failed = false;
+for (const lang of ['nl', 'de', 'fr', 'es', 'it', 'pt', 'pl', 'tr']) {
+  const dict = readFileSync(`src/lib/i18n.${lang}.ts`, 'utf8');
+  const missing = [...keys].filter((k) => !dict.includes(`'${k.replace(/'/g, "\\'")}':`));
+  if (missing.length) { failed = true; console.log(`Missing ${lang} translations:\n` + missing.map((k) => '  ' + k).join('\n')); }
+}
+if (failed) process.exit(1);
+console.log(`All ${keys.size} texts are translated into every language.`);
