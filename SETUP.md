@@ -173,7 +173,7 @@ patrick@hypiva.com loopt via Google Workspace. Zodat je mails niet in spam belan
 
 - Komt er toch een mail in spam, tik dan op **Geen spam**. Stuur testmails altijd met een onderwerp en wat tekst: lege mails zien er voor spamfilters verdacht uit.
 - **Je logo in plaats van de letter H:** in Apple Mail via **Apple Business Connect** (gratis, businessconnect.apple.com → je bedrijf toevoegen → *Branded Mail*, logo uploaden). Werkt pas als de DMARC-regel hierboven staat. Voor Gmail heet het BIMI; dat vraagt een betaald logo-certificaat, dus later.
-- **Handtekening:** open op een computer `https://www.hypiva.com/landing/signature.html`, selecteer alles, kopieer en plak het in Gmail → **Instellingen → Handtekening**. In de Gmail-app op de iPhone kun je alleen tekst als handtekening zetten; dan gebruikt de app op je telefoon automatisch die van de computer als je *Handtekening voor mobiel* uitzet.
+- **Handtekening:** open op een computer `https://www.hypiva.com/landing/signature.html`, selecteer alles, kopieer en plak het in Gmail → **Instellingen → Handtekening**. Op de iPhone kan een handtekening meestal alleen tekst zijn; zet daar dan *Kind regards, Patrick · Hypiva*.
 
 ## Nieuwe aanmeldingen
 - Onder **People** staat bovenaan hoeveel mensen zich deze week hebben aangemeld, en nieuwe mensen hebben een label **New**.
