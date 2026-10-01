@@ -132,7 +132,9 @@ details p{color:var(--muted);margin:10px 0 0}
 .lead button{border:0;cursor:pointer;justify-self:start}
 .lead .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .formmsg{font-size:16px!important;margin:0!important;text-align:left}
-.final .note{font-size:15px;margin-top:22px}
+.mailbar{max-width:640px;margin:26px auto 0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:22px;text-align:left}
+.mailbar.top{margin:0 auto 26px;border-top:0;border-bottom:1px solid var(--line);padding:0 0 22px}
+.mailbar span{color:var(--muted);font-size:17px;font-weight:600}
 footer{padding-block:40px;color:var(--faint);font-size:15px}
 footer .wrap{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
 footer a:hover{color:var(--text)}
@@ -204,7 +206,7 @@ footer a:hover{color:var(--text)}
           </ul>
         </div>
       </div>
-      <div class="ctas" style="margin-top:26px"><a class="btn primary" href="#contact">Ask for a proposal</a></div>
+      <div class="ctas" style="margin-top:26px"><a class="btn primary" href="#contact">Ask for a proposal</a><a class="btn ghost" href="mailto:patrick@hypiva.com?subject=Question%20about%20Hypiva">Contact us for more information</a></div>
     </div>
   </section>
 
@@ -258,6 +260,10 @@ footer a:hover{color:var(--text)}
         <img src="/landing/icon.png" alt="" width="72" height="72" style="margin:0 auto;border-radius:18px">
         <h2 style="margin-top:18px">Let's promote your campaign</h2>
         <p>Tell us what you want to promote. We reply within one working day.</p>
+        <div class="mailbar top">
+          <span>Or contact us for more information</span>
+          <a class="btn ghost" href="mailto:patrick@hypiva.com?subject=Question%20about%20Hypiva">✉ patrick@hypiva.com</a>
+        </div>
         <form id="leadForm" class="lead" novalidate>
           <div class="row2">
             <label>Your name<input name="name" required maxlength="100" autocomplete="name"></label>
@@ -272,7 +278,6 @@ footer a:hover{color:var(--text)}
           <button class="btn primary" type="submit">Send request</button>
           <p class="formmsg" id="leadMsg" role="status"></p>
         </form>
-        <p class="note">Prefer email? <a href="mailto:patrick@hypiva.com" style="color:var(--accent);font-weight:700">patrick@hypiva.com</a></p>
       </div>
     </div>
   </section>
