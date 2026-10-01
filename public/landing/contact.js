@@ -3,6 +3,19 @@
   var form = document.getElementById('leadForm');
   var msg = document.getElementById('leadMsg');
   if (!form) return;
+
+  // Currency toggle: rewrite the budget options with $ or €.
+  function setCurrency(cur) {
+    var sym = cur === 'EUR' ? '€' : '$';
+    form.querySelectorAll('select[name=budget] option[data-label]').forEach(function (o) {
+      o.textContent = o.getAttribute('data-label').split('{c}').join(sym);
+    });
+  }
+  form.querySelectorAll('input[name=currency]').forEach(function (r) {
+    r.addEventListener('change', function () { if (r.checked) setCurrency(r.value); });
+  });
+  setCurrency('USD');
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var data = {};
@@ -15,7 +28,7 @@
     }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {
         if (!res.ok) throw new Error(res.j && res.j.error || 'Something went wrong');
-        form.reset();
+        form.reset(); setCurrency('USD');
         msg.textContent = 'Thanks! We got your request and reply within one working day.'; msg.style.color = '#3DDC97';
       })
       .catch(function (err) { msg.textContent = err.message + ' You can also email patrick@hypiva.com.'; msg.style.color = '#FFC24B'; })

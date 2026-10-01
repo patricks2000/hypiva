@@ -64,7 +64,10 @@ reset role;
 
 -- Campaign requests: only admins can read them, nobody signed in can write them directly
 reset role;
-insert into brand_leads (name, email, company, budget, message) values ('Lisa', 'lisa@fitapp.com', 'FitApp', '$5,000', 'Test');
+insert into brand_leads (name, email, company, budget, currency, message) values ('Lisa', 'lisa@fitapp.com', 'FitApp', '2000_5000', 'EUR', 'Test');
+do $$ begin insert into brand_leads (name, email, budget) values ('x', 'x@x.com', 'a million'); raise exception 'FAILED: free-text budget accepted'; exception when check_violation then null; end $$;
+do $$ begin insert into brand_leads (name, email, currency) values ('x', 'x@x.com', 'BTC'); raise exception 'FAILED: odd currency accepted'; exception when check_violation then null; end $$;
+select pg_temp.check(true, 'requests only accept the budget ranges and USD or EUR');
 set role authenticated;
 select pg_temp.as_user('00000000-0000-0000-0000-00000000000b');
 select pg_temp.check((select count(*) = 0 from brand_leads), 'creators cannot see campaign requests');

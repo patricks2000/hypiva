@@ -126,4 +126,4 @@ export interface CampaignStats { campaign_id: string; videos: number; views: num
 export const kindLabel = (k: Campaign['kind']) => (k === 'ready_to_post' ? t('Content included') : t('Film it yourself'));
 
 /** A campaign request from the form on the homepage. */
-export interface BrandLead { id: string; name: string; email: string; company: string; budget: string; message: string; handled: boolean; created_at: string }
+export interface BrandLead { id: string; name: string; email: string; company: string; budget: string; currency: 'USD' | 'EUR'; message: string; handled: boolean; created_at: string }

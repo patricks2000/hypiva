@@ -20,7 +20,10 @@ Deno.serve(async (req) => {
   try { b = await req.json(); } catch { return json({ error: 'Bad request' }, 400); }
   const s = (k: string, max: number) => String(b[k] ?? '').trim().slice(0, max);
   if (s('website', 200)) return json({ ok: true }); // bot filled the hidden field
-  const lead = { name: s('name', 100), email: s('email', 200), company: s('company', 120), budget: s('budget', 60), message: s('message', 2000) };
+  const RANGES = ['', 'under_500', '500_2000', '2000_5000', '5000_plus', 'not_sure'];
+  const budget = RANGES.includes(s('budget', 20)) ? s('budget', 20) : '';
+  const currency = s('currency', 3) === 'EUR' ? 'EUR' : 'USD';
+  const lead = { name: s('name', 100), email: s('email', 200), company: s('company', 120), budget, currency, message: s('message', 2000) };
   if (!lead.name) return json({ error: 'Please add your name.' }, 400);
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(lead.email)) return json({ error: 'Please add a valid email address.' }, 400);
 

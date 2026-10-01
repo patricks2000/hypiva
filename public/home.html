@@ -62,8 +62,10 @@ nav .cta .short{display:none}
 .glow{position:relative}
 .glow:before{content:"";position:absolute;inset:-12% -8%;background:radial-gradient(closest-side,rgba(255,90,61,.35),transparent);filter:blur(20px);z-index:0;pointer-events:none}
 .ctas,.btn{position:relative;z-index:2}
-.phone{position:relative;z-index:1;width:min(330px,100%);margin-inline:auto;border-radius:44px;background:#000;padding:11px;box-shadow:0 40px 90px -25px rgba(232,48,122,.45),0 0 0 1px #2a2a33}
-.phone img{border-radius:34px;width:100%}
+.phone{position:relative;z-index:1;width:min(320px,86%);margin-inline:auto;border-radius:44px;background:#000;padding:11px;box-shadow:0 40px 90px -25px rgba(232,48,122,.45),0 0 0 1px #2a2a33}
+.phone{position:relative}
+.phone img{border-radius:34px;width:100%;height:auto;border-top:40px solid #0D0E13;box-sizing:content-box;background:#0D0E13}
+.phone:after{content:"";position:absolute;top:21px;left:50%;transform:translateX(-50%);width:88px;height:24px;border-radius:20px;background:#000}
 @media (max-width:900px){.hero{grid-template-columns:1fr;padding-top:40px}}
 
 .facts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding-bottom:24px}
@@ -130,6 +132,18 @@ details p{color:var(--muted);margin:10px 0 0}
 .lead input,.lead textarea{font:inherit;font-size:16px;color:var(--text);background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:12px 14px;width:100%}
 .lead input:focus,.lead textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
 .lead button{border:0;cursor:pointer;justify-self:start}
+.budget{display:grid;gap:6px}
+.budget-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.budget-head > span{font-weight:600;font-size:14px;color:var(--muted)}
+.budget-head em{font-style:normal;color:var(--faint);font-weight:500}
+.cur{display:flex;background:var(--surface2);border:1px solid var(--line);border-radius:999px;padding:3px}
+.cur label{display:block;cursor:pointer}
+.cur input{position:absolute;opacity:0;width:1px;height:1px}
+.cur span{display:block;padding:4px 10px;border-radius:999px;font-size:13px;font-weight:700;color:var(--muted)}
+.cur input:checked + span{background:var(--accent);color:#1a0b05}
+.cur input:focus-visible + span{outline:2px solid var(--text);outline-offset:1px}
+.lead select{font:inherit;font-size:16px;color:var(--text);background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:12px 14px;width:100%;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px;background-repeat:no-repeat}
+.lead select:focus{outline:2px solid var(--accent);outline-offset:1px}
 .lead .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .formmsg{font-size:16px!important;margin:0!important;text-align:left}
 .mailbar{max-width:640px;margin:26px auto 0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:22px;text-align:left}
@@ -271,7 +285,23 @@ footer a:hover{color:var(--text)}
           </div>
           <div class="row2">
             <label>Company or app<input name="company" maxlength="120" autocomplete="organization"></label>
-            <label>Budget (approx.)<input name="budget" maxlength="60" placeholder="e.g. $5,000"></label>
+            <div class="budget">
+              <div class="budget-head">
+                <span id="budgetLabel">Budget <em>(optional)</em></span>
+                <div class="cur" role="radiogroup" aria-label="Currency">
+                  <label><input type="radio" name="currency" value="USD" checked><span>$ USD</span></label>
+                  <label><input type="radio" name="currency" value="EUR"><span>€ EUR</span></label>
+                </div>
+              </div>
+              <select name="budget" aria-labelledby="budgetLabel">
+                <option value="">Choose a range</option>
+                <option value="under_500" data-label="Under {c}500">Under $500</option>
+                <option value="500_2000" data-label="{c}500–{c}2,000">$500–$2,000</option>
+                <option value="2000_5000" data-label="{c}2,000–{c}5,000">$2,000–$5,000</option>
+                <option value="5000_plus" data-label="{c}5,000+">$5,000+</option>
+                <option value="not_sure">Not sure yet</option>
+              </select>
+            </div>
           </div>
           <label>What do you want to promote?<textarea name="message" rows="4" maxlength="2000"></textarea></label>
           <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>

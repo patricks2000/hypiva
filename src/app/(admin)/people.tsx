@@ -11,6 +11,12 @@ import { must, useLoad } from '../../lib/useLoad';
 
 const ROLE_LABEL: Record<Role, string> = { creator: 'Creator', brand: 'Brand', admin: 'Admin' };
 const WEEK = 7 * 864e5;
+/** "€2,000–€5,000" from the range saved by the homepage form. */
+const budgetLabel = (range: string, currency: string) => {
+  const c = currency === 'EUR' ? '€' : '$';
+  const map: Record<string, string> = { under_500: `Under ${c}500`, '500_2000': `${c}500–${c}2,000`, '2000_5000': `${c}2,000–${c}5,000`, '5000_plus': `${c}5,000+`, not_sure: 'Budget not sure yet' };
+  return map[range] ?? range;
+};
 /** Signed up in the last 7 days. */
 const isNew = (p: Profile) => new Date(p.created_at).getTime() > Date.now() - WEEK;
 
@@ -58,7 +64,7 @@ export default function People() {
             <T variant="muted">From the form on hypiva.com. Tap Done when you have replied.</T>
             {q.data.leads.slice(0, 10).map((x) => (
               <View key={x.id} style={{ gap: 2, opacity: x.handled ? 0.5 : 1, borderTopWidth: 1, borderTopColor: colors.line, paddingTop: 10 }}>
-                <T variant="bodyStrong" selectable>{x.name}{x.company ? ` · ${x.company}` : ''}{x.budget ? ` · ${x.budget}` : ''}</T>
+                <T variant="bodyStrong" selectable>{x.name}{x.company ? ` · ${x.company}` : ''}{x.budget ? ` · ${budgetLabel(x.budget, x.currency)}` : ''}</T>
                 <T variant="body" selectable>{x.email}</T>
                 {x.message ? <T variant="muted" selectable>{x.message}</T> : null}
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
