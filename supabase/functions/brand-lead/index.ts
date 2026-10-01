@@ -46,19 +46,18 @@ const BUDGETS: Record<string, string> = {
 };
 const esc = (s: string) => s.replace(/[<>&"']/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' }[c]!));
 
-/** Hypiva email layout: logo on top, white card, signature with the logo at the bottom. */
+/** Hypiva email layout: white card with the message, small footer. */
 const layout = (body: string) => `<!doctype html><html><body style="margin:0;padding:0;background:#F4F2EF;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F2EF;padding:32px 12px;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;color:#16181F;">
 <tr><td align="center">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
-<tr><td style="padding:0 8px 20px;"><a href="${SITE}"><img src="${SITE}/landing/email-logo.png" width="150" alt="Hypiva" style="display:block;border:0;width:150px;height:auto;"></a></td></tr>
 <tr><td style="background:#FFFFFF;border-radius:16px;padding:32px 28px;font-size:16px;line-height:1.6;">${body}</td></tr>
 <tr><td style="padding:20px 8px;font-size:12px;line-height:1.5;color:#8A8C96;">Hypiva · Creator campaigns on TikTok · <a href="${SITE}" style="color:#8A8C96;">hypiva.com</a></td></tr>
 </table></td></tr></table></body></html>`;
 
-const signature = `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:28px;border-top:1px solid #EEE;padding-top:20px;width:100%;">
-<tr><td style="vertical-align:middle;width:52px;padding-top:20px;"><img src="${SITE}/landing/icon.png" width="40" height="40" alt="" style="display:block;border-radius:10px;"></td>
-<td style="vertical-align:middle;padding-top:20px;font-size:14px;line-height:1.45;"><b>The Hypiva team</b><br><span style="color:#8A8C96;"><a href="mailto:${CONTACT}" style="color:#FF6A3D;text-decoration:none;">${CONTACT}</a></span></td></tr></table>`;
+const signature = `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:6px;">
+<tr><td style="font-size:15px;line-height:1.5;padding-bottom:14px;"><b>Patrick</b><br><span style="color:#8A8C96;">Hypiva · <a href="mailto:${CONTACT}" style="color:#FF6A3D;text-decoration:none;">${CONTACT}</a> · <a href="${SITE}" style="color:#FF6A3D;text-decoration:none;">hypiva.com</a></span></td></tr>
+<tr><td><a href="${SITE}"><img src="${SITE}/landing/email-banner.jpg" width="300" height="100" alt="Hypiva" style="display:block;border:0;width:300px;height:100px;border-radius:10px;"></a></td></tr></table>`;
 
 async function send(key: string, mail: Record<string, unknown>) {
   const res = await fetch('https://api.resend.com/emails', {
@@ -86,8 +85,8 @@ async function sendEmails(lead: { name: string; email: string; company: string; 
 <p style="margin:0 0 16px;">We've received your campaign request. Thanks for thinking of Hypiva.</p>
 <p style="margin:0 0 16px;">We'll get back to you as soon as possible, usually within one business day, with a proposal that fits your goals and budget.</p>
 <p style="margin:0 0 16px;">Anything you'd like to add in the meantime? Just reply to this email.</p>
-<p style="margin:0;">Kind regards,</p>${signature}`),
-    text: `Thank you, ${firstName}!\n\nWe've received your campaign request. Thanks for thinking of Hypiva.\n\nWe'll get back to you as soon as possible, usually within one business day, with a proposal that fits your goals and budget.\n\nAnything you'd like to add in the meantime? Just reply to this email.\n\nKind regards,\nThe Hypiva team\n${CONTACT}\n${SITE}`,
+<p style="margin:0 0 4px;">Kind regards,</p>${signature}`),
+    text: `Thank you, ${firstName}!\n\nWe've received your campaign request. Thanks for thinking of Hypiva.\n\nWe'll get back to you as soon as possible, usually within one business day, with a proposal that fits your goals and budget.\n\nAnything you'd like to add in the meantime? Just reply to this email.\n\nKind regards,\nPatrick\nHypiva · ${CONTACT} · hypiva.com`,
   });
 
   // 2) Heads-up to the owner. Reply goes to the brand.

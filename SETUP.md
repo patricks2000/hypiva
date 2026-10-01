@@ -162,9 +162,18 @@ Klaar. De knop **Translate** werkt dan meteen. Zonder sleutel kun je de talen ge
 - Meld je aan op de site met **patrickkruiger@icloud.com** en bevestig je e-mail. Je wordt dan vanzelf **eigenaar en admin**. Dit werkt maar één keer: zodra er een eigenaar is, kan niemand anders dat worden, ook niet met hetzelfde e-mailadres.
 - Het eigenaar-adres staat in de database (tabel internal.settings) en kan alleen via Supabase worden veranderd.
 
-## Mail op @hypiva.com
-- Kies een mailbox voor je domein, bijvoorbeeld **iCloud+ Aangepast e-maildomein** (zit in iCloud+), **Google Workspace** (ongeveer €7 per maand) of **Zoho Mail** (gratis).
-- Die dienst geeft je een paar DNS-regels (MX en TXT). Zet die in Vercel onder **Domains → hypiva.com → DNS Records**.
+## Mail op @hypiva.com (Google Workspace)
+patrick@hypiva.com loopt via Google Workspace. Zodat je mails niet in spam belanden, moeten deze 3 regels in Vercel staan (**Domains → hypiva.com → DNS Records → Add**):
+
+| Naam | Type | Waarde |
+|---|---|---|
+| *(leeg)* | TXT | `v=spf1 include:_spf.google.com ~all` |
+| `google._domainkey` | TXT | de sleutel uit Google Admin → **Apps → Google Workspace → Gmail → E-mail verifiëren (DKIM)** → *Nieuw record genereren*. Na het toevoegen daar op **Verificatie starten** tikken. |
+| `_dmarc` | TXT | `v=DMARC1; p=quarantine; rua=mailto:patrick@hypiva.com` |
+
+- Komt er toch een mail in spam, tik dan op **Geen spam**. Stuur testmails altijd met een onderwerp en wat tekst: lege mails zien er voor spamfilters verdacht uit.
+- **Je logo in plaats van de letter H:** in Apple Mail via **Apple Business Connect** (gratis, businessconnect.apple.com → je bedrijf toevoegen → *Branded Mail*, logo uploaden). Werkt pas als de DMARC-regel hierboven staat. Voor Gmail heet het BIMI; dat vraagt een betaald logo-certificaat, dus later.
+- **Handtekening:** open op een computer `https://www.hypiva.com/landing/signature.html`, selecteer alles, kopieer en plak het in Gmail → **Instellingen → Handtekening**. In de Gmail-app op de iPhone kun je alleen tekst als handtekening zetten; dan gebruikt de app op je telefoon automatisch die van de computer als je *Handtekening voor mobiel* uitzet.
 
 ## Nieuwe aanmeldingen
 - Onder **People** staat bovenaan hoeveel mensen zich deze week hebben aangemeld, en nieuwe mensen hebben een label **New**.
