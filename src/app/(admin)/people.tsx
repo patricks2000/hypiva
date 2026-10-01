@@ -6,7 +6,7 @@ import { useAuth } from '../../lib/auth';
 import { friendlyError, supabase } from '../../lib/supabase';
 import { colors } from '../../lib/theme';
 import { day, parseDollars, usd } from '../../lib/format';
-import type { Brand, Profile, Referral, ReferralSettings, Role } from '../../lib/types';
+import type { Brand, BrandLead, Profile, Referral, ReferralSettings, Role } from '../../lib/types';
 import { must, useLoad } from '../../lib/useLoad';
 
 const ROLE_LABEL: Record<Role, string> = { creator: 'Creator', brand: 'Brand', admin: 'Admin' };
@@ -23,15 +23,16 @@ export default function People() {
   const [rules, setRules] = useState(false);
   const [rateEdit, setRateEdit] = useState(false);
   const q = useLoad(async () => {
-    const [p, b, r, st, app] = await Promise.all([
+    const [p, b, r, st, app, l] = await Promise.all([
       supabase.from('profiles').select('*').order('created_at', { ascending: false }),
       supabase.from('brands').select('*').order('name'),
       supabase.from('referrals').select('*'),
       supabase.from('referral_settings').select('*').single(),
       supabase.from('app_settings').select('eur_per_usd').single(),
+      supabase.from('brand_leads').select('*').order('created_at', { ascending: false }).limit(50),
     ]);
     return { people: must(p) as Profile[], brands: must(b) as Brand[], referrals: must(r) as Referral[], settings: must(st) as ReferralSettings,
-      rate: Number((must(app) as { eur_per_usd: number | null }).eur_per_usd) || null };
+      rate: Number((must(app) as { eur_per_usd: number | null }).eur_per_usd) || null, leads: must(l) as BrandLead[] };
   });
   const invitedBy = (id: string) => {
     const r = q.data?.referrals.find((x) => x.referred_id === id);
@@ -51,6 +52,27 @@ export default function People() {
             ? 'Everyone starts as a creator. Tap a person to make them a brand user or give them admin access. Only you can do this.'
             : 'You can see everyone, but giving or taking away access is done by the owner.'}</T>
         </Card>
+        {q.data && q.data.leads.length ? (
+          <Card style={{ gap: 10, borderColor: q.data.leads.some((x) => !x.handled) ? colors.accent : colors.line }}>
+            <T variant="h2">Campaign requests</T>
+            <T variant="muted">From the form on hypiva.com. Tap Done when you have replied.</T>
+            {q.data.leads.slice(0, 10).map((x) => (
+              <View key={x.id} style={{ gap: 2, opacity: x.handled ? 0.5 : 1, borderTopWidth: 1, borderTopColor: colors.line, paddingTop: 10 }}>
+                <T variant="bodyStrong" selectable>{x.name}{x.company ? ` · ${x.company}` : ''}{x.budget ? ` · ${x.budget}` : ''}</T>
+                <T variant="body" selectable>{x.email}</T>
+                {x.message ? <T variant="muted" selectable>{x.message}</T> : null}
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+                  <T variant="small" style={{ flex: 1 }}>{day(x.created_at)}</T>
+                  {!x.handled ? <Button small kind="ghost" title="Done" onPress={async () => {
+                    const { error } = await supabase.from('brand_leads').update({ handled: true }).eq('id', x.id);
+                    if (error) return show(friendlyError(error));
+                    q.reload();
+                  }} /> : <T variant="small">Replied</T>}
+                </View>
+              </View>
+            ))}
+          </Card>
+        ) : null}
         {q.data ? (() => {
           const fresh = q.data.people.filter(isNew);
           return (
