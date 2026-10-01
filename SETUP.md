@@ -94,10 +94,10 @@ Nodig: **Apple Developer-account** (€99 per jaar). Met je KvK meld je je aan a
 - Afbeeldingen worden opgeslagen in Supabase Storage (bucket `content`, wordt vanzelf aangemaakt door de migratie).
 
 ## Taal
-- De app kiest automatisch de taal van de telefoon: **Nederlands** voor Nederlandse telefoons, anders **Engels**.
+- De app kiest automatisch de taal van de telefoon of computer: **Nederlands, Engels, Duits, Frans, Spaans, Italiaans, Portugees, Pools of Turks**. Andere talen krijgen Engels.
 - Creators wisselen zelf onder **Profile → Account → Language/Taal**.
 - Teksten die jij of een merk schrijft (campagnenaam, uitleg, checklist, prijs-tekst, content) worden getoond zoals je ze typt. Schrijf die voor buitenlandse creators in het Engels.
-- Een nieuwe taal toevoegen: kopieer `src/lib/i18n.nl.ts` naar bijvoorbeeld `i18n.de.ts`, vertaal de teksten en voeg de taal toe in `src/lib/i18n.tsx`. `npm run check:i18n` laat zien of er iets mist.
+- Een nieuwe taal toevoegen: kopieer `src/lib/i18n.nl.ts` naar bijvoorbeeld `i18n.sv.ts`, vertaal de teksten en voeg de taal toe in `src/lib/i18n.tsx`. `npm run check:i18n` laat zien of er iets mist.
 
 ## Betalen in euro's
 - Alle bedragen in de app zijn in **dollars** (bijvoorbeeld $2 per 1.000 views).
@@ -170,6 +170,19 @@ Klaar. De knop **Translate** werkt dan meteen. Zonder sleutel kun je de talen ge
 - Onder **People** staat bovenaan hoeveel mensen zich deze week hebben aangemeld, en nieuwe mensen hebben een label **New**.
 - Wil je ook een e-mail bij elke aanmelding: maak een gratis account op **resend.com**, voeg daar het domein hypiva.com toe (de DNS-regels die Resend geeft zet je in Vercel), en zet in Supabase onder **Edge Functions → Secrets** de secret `RESEND_API_KEY`. Dan krijg je bij elke aanmelding een mail op patrick@hypiva.com.
 - Tip: gebruik Resend ook als **SMTP** in Supabase (**Authentication → Emails → SMTP Settings**), dan komen bevestigingsmails van noreply@hypiva.com en is er geen limiet van een paar mails per uur.
+
+## E-mails met Hypiva als afzender
+Zolang dit niet is ingesteld, komen mails van Supabase en stuurt het formulier geen bevestiging. Eenmalig instellen (ongeveer 15 minuten, gratis):
+1. Maak een account op **resend.com** → **Domains → Add domain** → `hypiva.com`. Zet de DNS-regels die Resend geeft in Vercel (**Domains → hypiva.com → DNS Records**) en wacht tot Resend "Verified" zegt.
+2. Resend → **API Keys → Create** → kopieer de sleutel. Zet hem in Supabase onder **Edge Functions → Secrets** als `RESEND_API_KEY`.
+3. Supabase → **Authentication → Emails → SMTP Settings** → aanzetten: host `smtp.resend.com`, poort `465`, gebruiker `resend`, wachtwoord = dezelfde sleutel, afzender `noreply@hypiva.com`, naam **Hypiva**.
+4. Supabase → **Authentication → Emails → Templates**: plak `supabase/email-templates/confirm-signup.html` bij **Confirm signup** (onderwerp: *Confirm your Hypiva account*) en `reset-password.html` bij **Reset password** (onderwerp: *Reset your Hypiva password*).
+
+Daarna:
+- Een merk dat het formulier invult, krijgt meteen een Engelse bedankmail van **Hypiva** met logo ("we nemen zo snel mogelijk contact op"). Antwoordt het merk, dan komt dat bij patrick@hypiva.com.
+- Jij krijgt tegelijk een mail met de aanvraag (naam, bedrijf, budget, bericht). Op "beantwoorden" tikken mailt het merk direct.
+- Creators krijgen bevestigings- en wachtwoordmails in Hypiva-stijl.
+- Mail je zelf vanaf patrick@hypiva.com en staat er "Patrick Kruiger" als naam? Die naam stel je in je mailprogramma in (iPhone: **Instellingen → Apps → Mail → Accounts → iCloud → iCloud → Mail → Naam**, op icloud.com bij Mail → Instellingen → Accounts). Zet daar **Hypiva** neer.
 
 ## Accounts verifiëren (tegen fraude)
 - Elk TikTok-account krijgt een code (bijvoorbeeld `HY-3F9A2C`). De creator zet die in zijn TikTok-bio en tikt op **Check**; de site controleert het zelf en zet het account op **Verified**.
