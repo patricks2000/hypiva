@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View } from 'react-native';
+import { Linking, View } from 'react-native';
 import { AccountSection } from '../../components/AccountSection';
 import { Avatar, Button, Card, Chips, Empty, ErrorNote, Field, List, Loading, Pill, Row, Screen, Sheet, T, hueFor, useToast } from '../../components/ui';
 import { useAuth } from '../../lib/auth';
@@ -17,12 +17,20 @@ const budgetLabel = (range: string, currency: string) => {
   const map: Record<string, string> = { under_500: `Under ${c}500`, '500_2000': `${c}500–${c}2,000`, '2000_5000': `${c}2,000–${c}5,000`, '5000_plus': `${c}5,000+`, not_sure: 'Budget not sure yet' };
   return map[range] ?? range;
 };
+/** Opens the mail app with a reply to a campaign request already started. */
+const mailLead = (x: BrandLead) => {
+  const first = x.name.split(' ')[0];
+  const subject = 'Your campaign with Hypiva';
+  const body = `Hi ${first},\n\nThanks for your request${x.company ? ` for ${x.company}` : ''}. \n\nKind regards,\nPatrick\nHypiva`;
+  Linking.openURL(`mailto:${encodeURIComponent(x.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`).catch(() => {});
+};
 /** Signed up in the last 7 days. */
 const isNew = (p: Profile) => new Date(p.created_at).getTime() > Date.now() - WEEK;
 
 export default function People() {
   const { profile: me } = useAuth();
   const { toast, show } = useToast();
+  const [deleting, setDeleting] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<'all' | Role>('all');
   const [editing, setEditing] = useState<Profile | null>(null);
@@ -61,19 +69,28 @@ export default function People() {
         {q.data && q.data.leads.length ? (
           <Card style={{ gap: 10, borderColor: q.data.leads.some((x) => !x.handled) ? colors.accent : colors.line }}>
             <T variant="h2">Campaign requests</T>
-            <T variant="muted">From the form on hypiva.com. Tap Done when you have replied.</T>
+            <T variant="muted">From the form on hypiva.com. Tap Email to reply, Done when you have replied, Delete to remove it.</T>
             {q.data.leads.slice(0, 10).map((x) => (
               <View key={x.id} style={{ gap: 2, opacity: x.handled ? 0.5 : 1, borderTopWidth: 1, borderTopColor: colors.line, paddingTop: 10 }}>
                 <T variant="bodyStrong" selectable>{x.name}{x.company ? ` · ${x.company}` : ''}{x.budget ? ` · ${budgetLabel(x.budget, x.currency)}` : ''}</T>
                 <T variant="body" selectable>{x.email}</T>
                 {x.message ? <T variant="muted" selectable>{x.message}</T> : null}
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-                  <T variant="small" style={{ flex: 1 }}>{day(x.created_at)}</T>
+                <T variant="small">{day(x.created_at)}{x.handled ? ' · Replied' : ''}</T>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 6 }}>
+                  <Button small title="Email" onPress={() => mailLead(x)} />
                   {!x.handled ? <Button small kind="ghost" title="Done" onPress={async () => {
                     const { error } = await supabase.from('brand_leads').update({ handled: true }).eq('id', x.id);
                     if (error) return show(friendlyError(error));
                     q.reload();
-                  }} /> : <T variant="small">Replied</T>}
+                  }} /> : null}
+                  <Button small kind="danger" title={deleting === x.id ? 'Tap again to delete' : 'Delete'} onPress={async () => {
+                    if (deleting !== x.id) return setDeleting(x.id);
+                    setDeleting(null);
+                    const { error } = await supabase.from('brand_leads').delete().eq('id', x.id);
+                    if (error) return show(friendlyError(error));
+                    show('Request deleted');
+                    q.reload();
+                  }} />
                 </View>
               </View>
             ))}
