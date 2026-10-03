@@ -67,16 +67,17 @@ insert into submissions (id, campaign_id, creator_id, tiktok_account_id, url) va
 select pg_temp.check((select count(*) = 1 from submissions), 'Nina only sees her own video');
 select pg_temp.check((select count(*) = 0 from profiles where id <> '00000000-0000-0000-0000-00000000000c'), 'Nina cannot see other people''s profiles');
 
--- Brand reviews: may approve, may not touch views
+-- Brands see their videos but the Hypiva team does the reviewing
 select pg_temp.as_user('00000000-0000-0000-0000-00000000000d');
 select pg_temp.check((select count(*) = 4 from submissions), 'the brand sees the videos for its campaign');
-update submissions set status = 'approved' where id in ('40000000-0000-0000-0000-000000000001', '40000000-0000-0000-0000-000000000002', '40000000-0000-0000-0000-000000000003', '40000000-0000-0000-0000-000000000004');
-select pg_temp.fails($$update submissions set views = 9000 where id = '40000000-0000-0000-0000-000000000001'$$, 'a brand cannot change views');
+update submissions set status = 'approved', views = 9000 where id = '40000000-0000-0000-0000-000000000001';
+select pg_temp.check((select status = 'pending' and views = 0 from submissions where id = '40000000-0000-0000-0000-000000000001'), 'a brand cannot approve videos or change views');
 select pg_temp.check((select count(*) = 0 from creator_balances), 'a brand cannot see what creators are owed');
 select pg_temp.check((select count(*) = 0 from payouts), 'a brand cannot see payouts');
 
--- Owner enters views: 500, 800 and 1,000 on Alex's three videos
+-- Owner approves the videos and enters views: 500, 800 and 1,000 on Alex's three videos
 select pg_temp.as_user('00000000-0000-0000-0000-00000000000a');
+update submissions set status = 'approved' where id in ('40000000-0000-0000-0000-000000000001', '40000000-0000-0000-0000-000000000002', '40000000-0000-0000-0000-000000000003', '40000000-0000-0000-0000-000000000004');
 update submissions set views = 500  where id = '40000000-0000-0000-0000-000000000001';
 update submissions set views = 800  where id = '40000000-0000-0000-0000-000000000002';
 update submissions set views = 1000 where id = '40000000-0000-0000-0000-000000000003';
