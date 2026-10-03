@@ -1,6 +1,5 @@
 -- Only the Hypiva team (admins) approves or rejects videos. Brands can still see their videos and views.
-drop policy submissions_update on public.submissions;
-create policy submissions_update on public.submissions for update to authenticated
+alter policy submissions_update on public.submissions
   using (is_admin()) with check (is_admin());
 
 create or replace function public.guard_submission() returns trigger
