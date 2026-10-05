@@ -287,4 +287,5 @@ export const tr: Record<string, string> = {
   'New password': 'Yeni şifre',
   'Save password': 'Şifreyi kaydet',
   'Promoting your code with ads, spam, comments or DMs to strangers, or on coupon and giveaway sites, is not accepted. The same goes for inviting yourself or fake accounts. Those invites do not count and we can take back the bonus.': 'Kodunu reklamlarla, spamla, yabancılara yorum veya DM ile ya da kupon ve çekiliş sitelerinde tanıtmak kabul edilmez. Kendini veya sahte hesapları davet etmek için de aynısı geçerli. Bu davetler sayılmaz ve bonusu geri alabiliriz.',
+  'Every campaign pays in its own way: per view or a fixed amount. You see exactly what you earn before you join.': 'Her kampanya kendi şekilde öder: görüntüleme başına veya sabit bir tutar. Katılmadan önce ne kazanacağını tam olarak görürsün.',
 };

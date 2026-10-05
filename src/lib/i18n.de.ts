@@ -287,4 +287,5 @@ export const de: Record<string, string> = {
   'New password': 'Neues Passwort',
   'Save password': 'Passwort speichern',
   'Promoting your code with ads, spam, comments or DMs to strangers, or on coupon and giveaway sites, is not accepted. The same goes for inviting yourself or fake accounts. Those invites do not count and we can take back the bonus.': 'Deinen Code mit Werbung, Spam, Kommentaren oder DMs an Fremde oder auf Gutschein- und Gewinnspielseiten zu bewerben, ist nicht erlaubt. Dasselbe gilt dafür, dich selbst oder Fake-Konten einzuladen. Diese Einladungen zählen nicht und wir können den Bonus zurücknehmen.',
+  'Every campaign pays in its own way: per view or a fixed amount. You see exactly what you earn before you join.': 'Jede Kampagne zahlt auf ihre eigene Art: pro Aufruf oder einen festen Betrag. Du siehst genau, was du verdienst, bevor du mitmachst.',
 };

@@ -39,7 +39,7 @@ export default function CreatorHome() {
             <T variant="small">{t("Last 30 days")}</T>
             <View style={{ marginTop: 10 }}><ViewsChart subs={d.subs} /></View>
           </Card>
-          {d.subs.length < 3 ? (() => { const c = d.joined[0]; const r = c ? rateFor(d.rates, profile!.id, c) : null; return <Explainer minViews={r?.min_views} cpmCents={r?.cpm_cents} fixedCents={r?.fixed_cents ?? null} />; })() : null}
+          {d.subs.length < 3 ? (() => { const c = d.joined[0]; const r = c ? rateFor(d.rates, profile!.id, c) : null; return c ? <Explainer minViews={r?.min_views} cpmCents={r?.cpm_cents} fixedCents={r?.fixed_cents ?? null} /> : <Explainer general />; })() : null}
           {d.boardSettings.visible ? (
             <Section title={t("Top creators this month")} hint={d.boardSettings.prize_text || t('Ranked by views gained this month.')}>
               <Leaderboard rows={d.board} empty={t('Nobody is on the board yet. Your views this month count.')} />

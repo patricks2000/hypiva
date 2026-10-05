@@ -174,12 +174,14 @@ export function PostingActivity({ subs }: { subs: Submission[] }) {
   );
 }
 
-export function Explainer({ minViews = 1000, cpmCents = 200, fixedCents = null }: { minViews?: number; cpmCents?: number; fixedCents?: number | null }) {
+export function Explainer({ minViews = 1000, cpmCents = 200, fixedCents = null, general = false }: { minViews?: number; cpmCents?: number; fixedCents?: number | null; general?: boolean }) {
   return (
     <Card style={{ gap: 6, backgroundColor: colors.surface2 }}>
       <T variant="bodyStrong">{t("How you earn")}</T>
       <T variant="muted">
-        {fixedCents != null
+        {general
+          ? t('Every campaign pays in its own way: per view or a fixed amount. You see exactly what you earn before you join.')
+          : fixedCents != null
           ? (minViews > 0
             ? t('You get {x} for every approved video that reaches {min} views. Your views are checked automatically.', { x: usd(fixedCents), min: short(minViews) })
             : t('You get {x} for every approved video.', { x: usd(fixedCents) }))
