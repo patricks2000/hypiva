@@ -13,6 +13,12 @@ import { must, useLoad } from '../../lib/useLoad';
 
 type Tab = 'views' | 'review';
 
+/** The automatic check's reason in plain words. */
+const viewsProblem = (e: string) =>
+  e.startsWith('This video is from') ? e
+    : /10204|10216|privacy|private|removed|status_del/i.test(e) ? 'TikTok says this video is private or removed'
+    : 'TikTok could not be read right now. It tries again within 3 hours';
+
 export default function Videos() {
   const [tab, setTab] = useState<Tab>('views');
   const [search, setSearch] = useState('');
@@ -103,7 +109,7 @@ function ViewsRow({ s, last, onSaved, onRemoved }: { s: Submission; last: boolea
     onRemoved();
   };
 
-  const status = s.views_error ? `⚠ ${s.views_error}` : s.views_checked_at ? `Updated automatically · ${day(s.views_checked_at)}` : 'First check within 3 hours';
+  const status = s.views_error ? `⚠ ${viewsProblem(s.views_error)}` : s.views_checked_at ? `Updated automatically · ${day(s.views_checked_at)}` : 'First check within 3 hours';
   return (
     <>
       <Row last={last} onPress={() => { setSure(false); setOpen(true); }}

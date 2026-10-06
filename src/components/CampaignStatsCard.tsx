@@ -1,11 +1,13 @@
+import { useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { Button, Card, Pill, T, hueFor } from './ui';
+import { Button, Card, LinkButton, Pill, T, hueFor } from './ui';
 import { num, short, usd } from '../lib/format';
 import { colors } from '../lib/theme';
 import { kindLabel, type Campaign, type CampaignStats } from '../lib/types';
 
 /** A campaign with its numbers. forBrand hides what creators are paid: clients see reach, not our costs. */
-export function CampaignStatsCard({ c, stats, onToggle, onOpen, onEditPay, forBrand }: { c: Campaign; stats?: CampaignStats; onToggle?: () => void; onOpen?: () => void; onEditPay?: () => void; forBrand?: boolean }) {
+export function CampaignStatsCard({ c, stats, onToggle, onOpen, onEditPay, onRemove, forBrand }: { c: Campaign; stats?: CampaignStats; onToggle?: () => void; onOpen?: () => void; onEditPay?: () => void; onRemove?: () => void; forBrand?: boolean }) {
+  const [sure, setSure] = useState(false);
   const spent = stats?.spent_cents ?? 0;
   const pct = Math.min(100, (spent / c.budget_cents) * 100);
   return (
@@ -36,6 +38,17 @@ export function CampaignStatsCard({ c, stats, onToggle, onOpen, onEditPay, forBr
         {onToggle && (!forBrand || c.status === 'live') ? <Button small style={{ flex: 1 }} kind="ghost" title={c.status === 'live' ? 'Pause' : 'Make live'} onPress={onToggle} /> : null}
         {forBrand && c.status !== 'live' ? <T variant="small" style={{ flex: 1, alignSelf: 'center' }}>The Hypiva team makes it live.</T> : null}
       </View>
+      {onRemove ? (
+        sure ? (
+          <View style={{ gap: 8 }}>
+            <T variant="small" style={{ color: colors.bad }}>{`Removes the campaign with its content and all ${stats?.videos ?? 0} videos, and what they earned. This can't be undone.`}</T>
+            <View style={{ flexDirection: 'row', gap: 8 }}>
+              <Button small style={{ flex: 1 }} kind="danger" title="Yes, remove" onPress={onRemove} />
+              <Button small style={{ flex: 1 }} kind="ghost" title="Keep it" onPress={() => setSure(false)} />
+            </View>
+          </View>
+        ) : <LinkButton title="Remove campaign" onPress={() => setSure(true)} />
+      ) : null}
     </Card>
   );
 }

@@ -35,6 +35,24 @@ export default function AdminCampaigns() {
     q.reload();
   };
 
+  // Videos point at their campaign and must go first; content, members and rates go with the campaign.
+  const removeCampaign = async (c: Campaign) => {
+    const { error: e1 } = await supabase.from('submissions').delete().eq('campaign_id', c.id);
+    const { error: e2 } = e1 ? { error: e1 } : await supabase.from('campaigns').delete().eq('id', c.id);
+    if (e2) return show(friendlyError(e2));
+    show(`${c.name} removed`);
+    q.reload();
+  };
+  const [removingBrand, setRemovingBrand] = useState<string | null>(null);
+  const removeBrand = async (b: Brand) => {
+    if (removingBrand !== b.id) return setRemovingBrand(b.id);
+    const { error } = await supabase.from('brands').delete().eq('id', b.id);
+    setRemovingBrand(null);
+    if (error) return show(friendlyError(error));
+    show(`${b.name} removed`);
+    q.reload();
+  };
+
   const toggle = async (c: Campaign) => {
     const { error } = await supabase.from('campaigns').update({ status: c.status === 'live' ? 'paused' : 'live' }).eq('id', c.id);
     if (error) return show(friendlyError(error));
@@ -49,14 +67,16 @@ export default function AdminCampaigns() {
         {!q.data ? (q.error ? null : <Loading />) : (
           <>
             {q.data.campaigns.length ? q.data.campaigns.map((c) => (
-              <CampaignStatsCard key={c.id} c={c} stats={q.data!.stats.get(c.id)} onToggle={() => toggle(c)} onEditPay={() => setPaying(c)}
+              <CampaignStatsCard key={c.id} c={c} stats={q.data!.stats.get(c.id)} onToggle={() => toggle(c)} onEditPay={() => setPaying(c)} onRemove={() => removeCampaign(c)}
             onOpen={() => router.push({ pathname: '/manage/[id]', params: { id: c.id } })} />
             )) : <Card><Empty text="No campaigns yet. Add a brand, then create a campaign." /></Card>}
             <Section title="Brands" right={<Button small kind="ghost" title="Add brand" onPress={() => setAddingBrand(true)} />}>
               <List>
                 {q.data.brands.length ? q.data.brands.map((b, i) => (
                   <Row key={b.id} last={i === q.data!.brands.length - 1} title={b.name}
-                    subtitle={`${q.data!.campaigns.filter((c) => c.brand_id === b.id).length} campaigns`} />
+                    subtitle={`${q.data!.campaigns.filter((c) => c.brand_id === b.id).length} campaigns`}
+                    right={q.data!.campaigns.some((c) => c.brand_id === b.id) ? undefined
+                      : <Button small kind={removingBrand === b.id ? 'danger' : 'ghost'} title={removingBrand === b.id ? 'Tap again' : 'Remove'} onPress={() => removeBrand(b)} />} />
                 )) : <Empty text="No brands yet." />}
               </List>
               <T variant="small">To let someone from a brand log in, give them the Brand role under People.</T>
