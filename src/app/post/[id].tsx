@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Linking, Pressable, View, useWindowDimensions } from 'react-native';
+import { Linking, Platform, Pressable, View, useWindowDimensions } from 'react-native';
 import { Icon } from '../../components/Icon';
 import { Avatar, Button, Card, Empty, ErrorNote, Field, LinkButton, List, Loading, Row, Screen, T, hueFor, useToast } from '../../components/ui';
 import { homeFor, useAuth } from '../../lib/auth';
@@ -150,7 +150,7 @@ function ContentStep({ pack, onToast, onNext }: { pack: ContentPack; onToast: (t
     setSaving(true);
     try {
       const n = await saveToPhotos(urls);
-      onToast(n === 1 ? t('Slide saved to your photos') : t('{n} slides saved to your photos', { n }));
+      if (n > 0) onToast(n === 1 ? t('Slide saved to your photos') : t('{n} slides saved to your photos', { n }));
     } catch (e) {
       onToast(friendlyError(e));
     } finally { setSaving(false); }
@@ -162,6 +162,7 @@ function ContentStep({ pack, onToast, onNext }: { pack: ContentPack; onToast: (t
       <T variant="title" style={{ fontSize: 24 }}>{t("Your post is ready")}</T>
       <Card style={{ gap: 6, backgroundColor: colors.surface2 }}>
         <T variant="body">{t('1. Tap Save all to put the slides in your photos')}</T>
+        {Platform.OS === 'web' ? <T variant="small">{t('On iPhone: in the menu that opens, tap "Save images".')}</T> : null}
         <T variant="body">{t('2. Tap Copy caption')}</T>
         <T variant="body">{t("3. Open TikTok, make a photo post with the slides and paste the caption")}</T>
       </Card>

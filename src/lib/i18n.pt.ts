@@ -2,6 +2,7 @@
 export const pt: Record<string, string> = {
   '1 post': '1 publicação',
   '1. Tap Save all to put the slides in your photos': '1. Toca em Guardar tudo para pôr os slides nas tuas fotos',
+  'On iPhone: in the menu that opens, tap "Save images".': 'No iPhone: no menu que abrir, toque em «Salvar imagens».',
   '2. Tap Copy caption': '2. Toca em Copiar legenda',
   '3. Open TikTok, make a photo post with the slides and paste the caption': '3. Abre o TikTok, cria uma publicação de fotos com os slides e cola a legenda',
   '@{u} already posted all content for this campaign. Try another account, or check back later for new content.': '@{u} já publicou todo o conteúdo desta campanha. Experimenta outra conta ou volta mais tarde para ver conteúdo novo.',

@@ -2,6 +2,7 @@
 export const nl: Record<string, string> = {
   '1 post': '1 post',
   '1. Tap Save all to put the slides in your photos': '1. Tik op Alles opslaan om de slides in je foto’s te zetten',
+  'On iPhone: in the menu that opens, tap "Save images".': 'Op iPhone: tik in het menu dat opent op "Bewaar afbeeldingen".',
   '2. Tap Copy caption': '2. Tik op Kopieer caption',
   '3. Open TikTok, make a photo post with the slides and paste the caption': '3. Open TikTok, maak een fotopost met de slides en plak de caption',
   '@{u} already posted all content for this campaign. Try another account, or check back later for new content.':

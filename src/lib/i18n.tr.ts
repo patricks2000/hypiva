@@ -2,6 +2,7 @@
 export const tr: Record<string, string> = {
   '1 post': '1 gönderi',
   '1. Tap Save all to put the slides in your photos': '1. Slaytları fotoğraflarına kaydetmek için Tümünü kaydet\'e dokun',
+  'On iPhone: in the menu that opens, tap "Save images".': "iPhone'da: açılan menüde \"Görüntüleri Kaydet\"e dokun.",
   '2. Tap Copy caption': '2. Açıklamayı kopyala\'ya dokun',
   '3. Open TikTok, make a photo post with the slides and paste the caption': '3. TikTok\'u aç, slaytlarla bir fotoğraf gönderisi oluştur ve açıklamayı yapıştır',
   '@{u} already posted all content for this campaign. Try another account, or check back later for new content.': '@{u} bu kampanyanın tüm içeriğini zaten paylaştı. Başka bir hesap dene ya da yeni içerik için daha sonra tekrar bak.',
