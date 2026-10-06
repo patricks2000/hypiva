@@ -146,7 +146,7 @@ export default function People() {
       {rateEdit && q.data ? <RateSheet current={q.data.rate} onClose={() => setRateEdit(false)} onSaved={() => { setRateEdit(false); show('Euro rate saved'); q.reload(); }} /> : null}
       {rules && q.data ? <RulesSheet s={q.data.settings} onClose={() => setRules(false)} onSaved={() => { setRules(false); show('Invite rules saved'); q.reload(); }} /> : null}
       {editing && q.data ? (
-        <RoleSheet person={editing} brands={q.data.brands} onClose={() => setEditing(null)}
+        <RoleSheet person={editing} brands={q.data.brands} canRemove={editing.id !== me?.id && !editing.is_owner} onClose={() => setEditing(null)}
           onSaved={(m) => { show(m); setEditing(null); q.reload(); }} />
       ) : null}
       {toast}
@@ -154,8 +154,17 @@ export default function People() {
   );
 }
 
-function RoleSheet({ person, brands, onClose, onSaved }: { person: Profile; brands: Brand[]; onClose: () => void; onSaved: (m: string) => void }) {
+function RoleSheet({ person, brands, canRemove, onClose, onSaved }: { person: Profile; brands: Brand[]; canRemove: boolean; onClose: () => void; onSaved: (m: string) => void }) {
   const [role, setRole] = useState<Role>(person.role);
+  const [sure, setSure] = useState(false);
+  const remove = async () => {
+    if (!sure) return setSure(true);
+    setBusy(true); setError(null);
+    const { error: e } = await supabase.rpc('admin_delete_user', { p_user: person.id });
+    setBusy(false);
+    if (e) return setError(friendlyError(e));
+    onSaved(`${person.name || 'User'} removed`);
+  };
   const [brand, setBrand] = useState(person.brand_id ?? brands[0]?.id ?? '');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -185,6 +194,12 @@ function RoleSheet({ person, brands, onClose, onSaved }: { person: Profile; bran
       ) : null}
       {error ? <T variant="muted" style={{ color: colors.bad }}>{error}</T> : null}
       <Button title="Save" onPress={save} busy={busy} disabled={role === person.role && (role !== 'brand' || brand === person.brand_id) || (role === 'brand' && !brand)} />
+      {canRemove ? (
+        <>
+          <Button kind="danger" title={sure ? 'Tap again to remove this account' : 'Remove account'} onPress={remove} busy={busy} />
+          {sure ? <T variant="small" style={{ color: colors.bad }}>{'Their login, TikTok accounts, videos and payment history are deleted. Copy what you need from Money first. This can\'t be undone.'}</T> : null}
+        </>
+      ) : null}
     </Sheet>
   );
 }
