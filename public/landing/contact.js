@@ -3,6 +3,12 @@
   var form = document.getElementById('leadForm');
   var msg = document.getElementById('leadMsg');
   if (!form) return;
+  var nl = form.getAttribute('data-lang') === 'nl';
+  var topic = form.getAttribute('data-topic');
+  var T = nl
+    ? { name: 'Vul je naam in.', email: 'Vul een geldig e-mailadres in.', sending: 'Versturen…', ok: 'Dankjewel! We hebben je aanvraag ontvangen en reageren binnen één werkdag.', also: ' Je kunt ook mailen naar patrick@hypiva.com.', send: 'Verstuur', err: 'Er ging iets mis.' }
+    : { name: 'Please add your name.', email: 'Please add a valid email address.', sending: 'Sending…', ok: 'Thanks! We got your request and reply within one working day.', also: ' You can also email patrick@hypiva.com.', send: 'Send request', err: 'Something went wrong' };
+  var startCurrency = (form.querySelector('input[name=currency]:checked') || {}).value || 'USD';
 
   // Currency toggle: rewrite the budget options with $ or €.
   function setCurrency(cur) {
@@ -14,24 +20,25 @@
   form.querySelectorAll('input[name=currency]').forEach(function (r) {
     r.addEventListener('change', function () { if (r.checked) setCurrency(r.value); });
   });
-  setCurrency('USD');
+  setCurrency(startCurrency);
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var data = {};
     new FormData(form).forEach(function (v, k) { data[k] = String(v); });
-    if (!data.name.trim()) { msg.textContent = 'Please add your name.'; msg.style.color = '#FFC24B'; return; }
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email.trim())) { msg.textContent = 'Please add a valid email address.'; msg.style.color = '#FFC24B'; return; }
-    var btn = form.querySelector('button'); btn.disabled = true; btn.textContent = 'Sending…';
+    if (!data.name.trim()) { msg.textContent = T.name; msg.style.color = '#FFC24B'; return; }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email.trim())) { msg.textContent = T.email; msg.style.color = '#FFC24B'; return; }
+    if (topic) data.message = '[' + topic + '] ' + (data.message || '');
+    var btn = form.querySelector('button'); btn.disabled = true; btn.textContent = T.sending;
     fetch('https://fooxcixwmmdjursbsols.supabase.co/functions/v1/brand-lead', {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data),
     }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {
-        if (!res.ok) throw new Error(res.j && res.j.error || 'Something went wrong');
-        form.reset(); setCurrency('USD');
-        msg.textContent = 'Thanks! We got your request and reply within one working day.'; msg.style.color = '#3DDC97';
+        if (!res.ok) throw new Error(res.j && res.j.error || T.err);
+        form.reset(); setCurrency(startCurrency);
+        msg.textContent = T.ok; msg.style.color = '#3DDC97';
       })
-      .catch(function (err) { msg.textContent = err.message + ' You can also email patrick@hypiva.com.'; msg.style.color = '#FFC24B'; })
-      .then(function () { btn.disabled = false; btn.textContent = 'Send request'; });
+      .catch(function (err) { msg.textContent = err.message + T.also; msg.style.color = '#FFC24B'; })
+      .then(function () { btn.disabled = false; btn.textContent = T.send; });
   });
 })();

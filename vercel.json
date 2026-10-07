@@ -3,6 +3,10 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
+      "source": "/influencers",
+      "destination": "/influencers.html"
+    },
+    {
       "source": "/((?!landing/|_expo/|assets/|favicon).*)",
       "destination": "/app.html"
     }
