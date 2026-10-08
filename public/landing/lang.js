@@ -4,7 +4,7 @@
   els.forEach(function (el) { el.setAttribute('data-en', el.innerHTML); });
   var form = document.getElementById('leadForm');
   var btn = document.getElementById('langBtn');
-  var titles = { en: document.title, nl: 'UGC- & influencercampagnes | Hypiva' };
+  var titles = { en: document.title, nl: 'UGC-campagnes | Hypiva' };
   function set(lang) {
     els.forEach(function (el) { el.innerHTML = el.getAttribute(lang === 'nl' ? 'data-nl' : 'data-en'); });
     document.documentElement.lang = lang;
