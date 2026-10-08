@@ -3,6 +3,10 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
+      "source": "/ugc",
+      "destination": "/influencers.html"
+    },
+    {
       "source": "/influencers",
       "destination": "/influencers.html"
     },
