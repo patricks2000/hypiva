@@ -3,10 +3,11 @@ import { Linking, View } from 'react-native';
 import { AccountSection } from '../../components/AccountSection';
 import { Avatar, Button, Card, Chips, Empty, ErrorNote, Field, List, Loading, Pill, Row, Screen, Sheet, T, hueFor, useToast } from '../../components/ui';
 import { useAuth } from '../../lib/auth';
+import { copy } from '../../lib/content';
 import { friendlyError, supabase } from '../../lib/supabase';
 import { colors } from '../../lib/theme';
 import { day, parseDollars, usd } from '../../lib/format';
-import type { Brand, BrandLead, Profile, Referral, ReferralSettings, Role } from '../../lib/types';
+import type { Brand, BrandLead, Profile, Referral, ReferralSettings, Review, Role } from '../../lib/types';
 import { must, useLoad } from '../../lib/useLoad';
 
 const ROLE_LABEL: Record<Role, string> = { creator: 'Creator', brand: 'Brand', admin: 'Admin' };
@@ -37,16 +38,17 @@ export default function People() {
   const [rules, setRules] = useState(false);
   const [rateEdit, setRateEdit] = useState(false);
   const q = useLoad(async () => {
-    const [p, b, r, st, app, l] = await Promise.all([
+    const [p, b, r, st, app, l, rv] = await Promise.all([
       supabase.from('profiles').select('*').order('created_at', { ascending: false }),
       supabase.from('brands').select('*').order('name'),
       supabase.from('referrals').select('*'),
       supabase.from('referral_settings').select('*').single(),
       supabase.from('app_settings').select('eur_per_usd').single(),
       supabase.from('brand_leads').select('*').order('created_at', { ascending: false }).limit(50),
+      supabase.from('reviews').select('*').order('approved').order('created_at', { ascending: false }).limit(30),
     ]);
     return { people: must(p) as Profile[], brands: must(b) as Brand[], referrals: must(r) as Referral[], settings: must(st) as ReferralSettings,
-      rate: Number((must(app) as { eur_per_usd: number | null }).eur_per_usd) || null, leads: must(l) as BrandLead[] };
+      rate: Number((must(app) as { eur_per_usd: number | null }).eur_per_usd) || null, leads: must(l) as BrandLead[], reviews: must(rv) as Review[] };
   });
   const invitedBy = (id: string) => {
     const r = q.data?.referrals.find((x) => x.referred_id === id);
@@ -94,6 +96,41 @@ export default function People() {
                 </View>
               </View>
             ))}
+          </Card>
+        ) : null}
+        {q.data ? (
+          <Card style={{ gap: 10, borderColor: q.data.reviews.some((x) => !x.approved) ? colors.accent : colors.line }}>
+            <T variant="h2">Reviews</T>
+            <T variant="muted">Clients write a review at hypiva.com/write-review. Tap Show on site to put it on the homepage, Hide to take it off, Delete to remove it.</T>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+              <Button small kind="ghost" title="Copy review link" onPress={async () => {
+                await copy('https://www.hypiva.com/write-review');
+                show('Link copied');
+              }} />
+            </View>
+            {q.data.reviews.length ? q.data.reviews.map((x) => (
+              <View key={x.id} style={{ gap: 2, borderTopWidth: 1, borderTopColor: colors.line, paddingTop: 10 }}>
+                <T variant="bodyStrong" selectable>{'★'.repeat(x.rating)}{'☆'.repeat(5 - x.rating)} {x.name}{x.role ? ` · ${x.role}` : ''}{x.company ? ` · ${x.company}` : ''}</T>
+                <T variant="body" selectable>{x.body}</T>
+                <T variant="small">{day(x.created_at)} · {x.approved ? 'On the site' : 'Waiting for you'}</T>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 6 }}>
+                  <Button small kind={x.approved ? 'ghost' : 'primary'} title={x.approved ? 'Hide' : 'Show on site'} onPress={async () => {
+                    const { error } = await supabase.from('reviews').update({ approved: !x.approved }).eq('id', x.id);
+                    if (error) return show(friendlyError(error));
+                    show(x.approved ? 'Review hidden' : 'Review is on the site');
+                    q.reload();
+                  }} />
+                  <Button small kind="danger" title={deleting === x.id ? 'Tap again to delete' : 'Delete'} onPress={async () => {
+                    if (deleting !== x.id) return setDeleting(x.id);
+                    setDeleting(null);
+                    const { error } = await supabase.from('reviews').delete().eq('id', x.id);
+                    if (error) return show(friendlyError(error));
+                    show('Review deleted');
+                    q.reload();
+                  }} />
+                </View>
+              </View>
+            )) : <T variant="small">No reviews yet. Send the link to a happy client.</T>}
           </Card>
         ) : null}
         {q.data ? (() => {

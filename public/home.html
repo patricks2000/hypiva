@@ -159,6 +159,13 @@ details p{color:var(--muted);margin:10px 0 0}
 footer{padding-block:40px;color:var(--faint);font-size:15px}
 footer .wrap{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
 footer a:hover{color:var(--text)}
+.review-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.review{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:26px;display:flex;flex-direction:column;gap:14px}
+.review-stars{color:#FFC24B;font-size:20px;letter-spacing:2px}
+.review blockquote{margin:0;font-size:17px;line-height:1.55}
+.review figcaption{margin-top:auto;display:flex;flex-direction:column;font-size:15px}
+.review figcaption span{color:var(--muted)}
+[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -275,6 +282,13 @@ footer a:hover{color:var(--text)}
     </div>
   </section>
 
+  <section id="reviews" hidden>
+    <div class="wrap">
+      <div class="sec-h"><div class="eyebrow">Reviews</div><h2>What clients say</h2></div>
+      <div class="review-grid" id="reviewList"></div>
+    </div>
+  </section>
+
   <section id="faq">
     <div class="wrap">
       <div class="sec-h"><div class="eyebrow">FAQ</div><h2>Questions brands ask</h2></div>
@@ -338,5 +352,6 @@ footer a:hover{color:var(--text)}
   </div>
 </footer>
 <script src="/landing/contact.js" defer></script>
+<script src="/landing/reviews.js" defer></script>
 </body>
 </html>
