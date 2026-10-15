@@ -70,7 +70,7 @@
     }).then(function (r) {
       if (!r.ok) throw new Error();
       return BASE + '/storage/v1/object/public/review-photos/' + name + '.jpg';
-    });
+    }).catch(function () { return null; }); // photo is optional: send the review without it
   }
 
   form.addEventListener('submit', function (e) {

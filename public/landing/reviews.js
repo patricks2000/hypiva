@@ -8,7 +8,10 @@
   var PHOTOS = 'https://fooxcixwmmdjursbsols.supabase.co/storage/v1/object/public/review-photos/';
   function initials(n) { return n.split(/\s+/).filter(Boolean).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase(); }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
-  fetch(URL, { headers: { apikey: KEY, Authorization: 'Bearer ' + KEY } })
+  function get(u) { return fetch(u, { headers: { apikey: KEY, Authorization: 'Bearer ' + KEY } }); }
+  get(URL)
+    // Older database without the photo column: load the reviews without photos.
+    .then(function (r) { return r.ok ? r : get(URL.replace(',photo_url', '')); })
     .then(function (r) { return r.ok ? r.json() : []; })
     .then(function (rows) {
       if (!rows || !rows.length) return;
