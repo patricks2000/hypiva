@@ -14,12 +14,19 @@
   var text = form.querySelector('textarea[name=body]');
   var photo = null; // JPEG blob, ready to upload
   text.addEventListener('input', function () { counter.textContent = text.value.length + ' / 600'; });
+  // English and Dutch texts; the page language comes from the switch in lang.js.
+  var TEXT = {
+    en: { choose: 'Choose photo', change: 'Change photo', type: 'Please pick a JPG, PNG or WebP image.', big: 'That photo is too big. Please pick one under 15 MB.', read: 'We could not read that photo. Please try another one.', thanks: 'Thanks! We got your review.', rating: 'Please pick a rating.', name: 'Please add your name.', more: 'Please write a few more words.', sending: 'Sending…', ok: 'Thank you! 💜 Your review will show on our website after a quick check.', err: 'Something went wrong. You can also email your review to patrick@hypiva.com.', send: 'Send review' },
+    nl: { choose: 'Kies foto', change: 'Andere foto', type: 'Kies een JPG-, PNG- of WebP-afbeelding.', big: 'Die foto is te groot. Kies er een onder 15 MB.', read: 'We konden die foto niet lezen. Probeer een andere.', thanks: 'Dankjewel! We hebben je review ontvangen.', rating: 'Kies een beoordeling.', name: 'Vul je naam in.', more: 'Schrijf nog een paar woorden.', sending: 'Versturen…', ok: 'Dankjewel! 💜 Je review verschijnt op onze website na een korte check.', err: 'Er ging iets mis. Je kunt je review ook mailen naar patrick@hypiva.com.', send: 'Verstuur review' },
+  };
+  function T() { return document.documentElement.lang === 'nl' ? TEXT.nl : TEXT.en; }
   function say(t, ok) { msg.textContent = t; msg.style.color = ok ? '#3DDC97' : '#FFC24B'; }
+  document.addEventListener('hypiva:lang', function () { photoBtn.textContent = photo ? T().change : T().choose; });
 
   function resetPhoto() {
     photo = null;
     photoPrev.textContent = '+';
-    photoBtn.textContent = 'Choose photo';
+    photoBtn.textContent = T().choose;
   }
 
   // Square crop from the centre, scaled to 400x400.
@@ -46,8 +53,8 @@
   photoInput.addEventListener('change', function () {
     var f = photoInput.files && photoInput.files[0];
     if (!f) return resetPhoto();
-    if (!/^image\/(jpeg|png|webp)$/.test(f.type)) { photoInput.value = ''; resetPhoto(); return say('Please pick a JPG, PNG or WebP image.'); }
-    if (f.size > 15 * 1024 * 1024) { photoInput.value = ''; resetPhoto(); return say('That photo is too big. Please pick one under 15 MB.'); }
+    if (!/^image\/(jpeg|png|webp)$/.test(f.type)) { photoInput.value = ''; resetPhoto(); return say(T().type); }
+    if (f.size > 15 * 1024 * 1024) { photoInput.value = ''; resetPhoto(); return say(T().big); }
     toJpeg(f).then(function (b) {
       photo = b;
       var img = document.createElement('img');
@@ -55,9 +62,9 @@
       img.src = window.URL.createObjectURL(b);
       photoPrev.textContent = '';
       photoPrev.appendChild(img);
-      photoBtn.textContent = 'Change photo';
+      photoBtn.textContent = T().change;
       say('');
-    }).catch(function () { photoInput.value = ''; resetPhoto(); say('We could not read that photo. Please try another one.'); });
+    }).catch(function () { photoInput.value = ''; resetPhoto(); say(T().read); });
   });
 
   function uploadPhoto() {
@@ -77,11 +84,11 @@
     e.preventDefault();
     var d = {};
     new FormData(form).forEach(function (v, k) { if (typeof v === 'string') d[k] = v.trim(); });
-    if (d.website) { form.reset(); resetPhoto(); return say('Thanks! We got your review.', true); } // bot
-    if (!d.rating) return say('Please pick a rating.');
-    if (!d.name) return say('Please add your name.');
-    if (d.body.length < 10) return say('Please write a few more words.');
-    var btn = form.querySelector('button'); btn.disabled = true; btn.textContent = 'Sending…';
+    if (d.website) { form.reset(); resetPhoto(); return say(T().thanks, true); } // bot
+    if (!d.rating) return say(T().rating);
+    if (!d.name) return say(T().name);
+    if (d.body.length < 10) return say(T().more);
+    var btn = form.querySelector('button'); btn.disabled = true; btn.textContent = T().sending;
     uploadPhoto().then(function (photoUrl) {
       var row = { name: d.name.slice(0, 80), company: (d.company || '').slice(0, 100), role: (d.role || '').slice(0, 80), body: d.body.slice(0, 600), rating: Number(d.rating) };
       if (photoUrl) row.photo_url = photoUrl;
@@ -93,9 +100,9 @@
     }).then(function (r) {
       if (!r.ok) throw new Error();
       form.reset(); resetPhoto(); counter.textContent = '0 / 600';
-      say('Thank you! 💜 Your review will show on our website after a quick check.', true);
+      say(T().ok, true);
     }).catch(function () {
-      say('Something went wrong. You can also email your review to patrick@hypiva.com.');
-    }).then(function () { btn.disabled = false; btn.textContent = 'Send review'; });
+      say(T().err);
+    }).then(function () { btn.disabled = false; btn.textContent = T().send; });
   });
 })();

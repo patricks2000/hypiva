@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-nl-title="Schrijf een review | Hypiva">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -185,7 +185,8 @@ footer a:hover{color:var(--text)}
 <nav class="top" aria-label="Main">
   <div class="wrap">
     <a class="brand" href="/"><img src="/landing/icon.png" alt=""><span>hyp<b>iva</b></span></a>
-    <a class="login" href="/" style="margin-left:auto">Back to hypiva.com</a>
+    <button class="langbtn" id="langBtn" type="button" aria-label="Naar Nederlands" style="margin-left:auto">NL</button>
+    <a class="login" href="/" data-nl="Terug naar hypiva.com">Back to hypiva.com</a>
   </div>
 </nav>
 <main>
@@ -193,11 +194,11 @@ footer a:hover{color:var(--text)}
     <div class="wrap">
       <div class="final" id="review">
         <img src="/landing/icon.png" alt="" width="72" height="72" style="margin:0 auto;border-radius:18px">
-        <h2 style="margin-top:18px">How was working with Hypiva?</h2>
-        <p>Your honest review helps other brands and apps decide. It shows on our website after a quick check.</p>
+        <h2 style="margin-top:18px" data-nl="Hoe was het werken met Hypiva?">How was working with Hypiva?</h2>
+        <p data-nl="Je eerlijke review helpt andere merken en apps bij hun keuze. Hij verschijnt op onze website na een korte check.">Your honest review helps other brands and apps decide. It shows on our website after a quick check.</p>
         <form id="reviewForm" class="lead" novalidate>
           <div>
-            <span style="display:block;font-weight:600;font-size:14px;color:var(--muted);margin-bottom:6px" id="ratingLabel">Your rating</span>
+            <span style="display:block;font-weight:600;font-size:14px;color:var(--muted);margin-bottom:6px" id="ratingLabel" data-nl="Je beoordeling">Your rating</span>
             <div class="stars" role="radiogroup" aria-labelledby="ratingLabel">
               <input type="radio" id="r5" name="rating" value="5"><label for="r5" title="5 stars">★</label>
               <input type="radio" id="r4" name="rating" value="4"><label for="r4" title="4 stars">★</label>
@@ -207,21 +208,21 @@ footer a:hover{color:var(--text)}
             </div>
           </div>
           <div class="row2">
-            <label>Your name<input name="name" required maxlength="80" autocomplete="name"></label>
-            <label>Company or app<input name="company" maxlength="100" autocomplete="organization"></label>
+            <label><span data-nl="Je naam">Your name</span><input name="name" required maxlength="80" autocomplete="name"></label>
+            <label><span data-nl="Bedrijf of app">Company or app</span><input name="company" maxlength="100" autocomplete="organization"></label>
           </div>
-          <label>Your role <em style="font-weight:500">(optional, for example Founder)</em><input name="role" maxlength="80" autocomplete="organization-title"></label>
-          <label>Your review<textarea name="body" rows="5" maxlength="600" required placeholder="What did we do for you, and how did it go?"></textarea></label>
+          <label><span data-nl='Je functie <em style="font-weight:500">(optioneel, bijvoorbeeld Oprichter)</em>'>Your role <em style="font-weight:500">(optional, for example Founder)</em></span><input name="role" maxlength="80" autocomplete="organization-title"></label>
+          <label><span data-nl="Je review">Your review</span><textarea name="body" rows="5" maxlength="600" required placeholder="What did we do for you, and how did it go?" data-nl-placeholder="Wat hebben we voor je gedaan, en hoe ging het?"></textarea></label>
           <div class="counter" id="counter">0 / 600</div>
           <div class="photo">
             <div class="photo-prev" id="photoPrev" aria-hidden="true">+</div>
-            <label class="photo-pick">Your photo or logo <em>(optional, shown next to your review)</em>
+            <label class="photo-pick"><span data-nl="Je foto of logo <em>(optioneel, staat naast je review)</em>">Your photo or logo <em>(optional, shown next to your review)</em></span>
               <input type="file" name="photo" id="photoInput" accept="image/jpeg,image/png,image/webp">
-              <span class="photo-btn" id="photoBtn">Choose photo</span>
+              <span class="photo-btn" id="photoBtn" data-nl="Kies foto">Choose photo</span>
             </label>
           </div>
           <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
-          <button class="btn primary" type="submit">Send review</button>
+          <button class="btn primary" type="submit" data-nl="Verstuur review">Send review</button>
           <p class="formmsg" id="reviewMsg" role="status"></p>
         </form>
       </div>
@@ -236,5 +237,6 @@ footer a:hover{color:var(--text)}
   </div>
 </footer>
 <script src="/landing/review.js" defer></script>
+<script src="/landing/lang.js"></script>
 </body>
 </html>
