@@ -194,6 +194,12 @@ footer a:hover{color:var(--text)}
 .ex-cap span{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:999px;background:var(--surface2);color:var(--muted)}
 .ex-hint{color:var(--faint);font-size:14px;margin-top:18px;text-align:center}
 @media (max-width:860px){.examples{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:18px;padding-bottom:6px;scrollbar-width:none}.examples::-webkit-scrollbar{display:none}.ex{flex:none;width:78%;scroll-snap-align:center}}
+.about{display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:36px}
+.about-pic{width:120px;height:120px;border-radius:50%;background:var(--grad);color:#1a0b05;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:52px}
+.about h2{font-size:clamp(28px,4vw,40px);font-weight:800;margin:8px 0 16px}
+.about p{color:var(--muted);margin:0 0 14px;max-width:680px}
+.about .sign{color:var(--text);font-weight:700;margin-bottom:0}
+@media (max-width:700px){.about{grid-template-columns:1fr;padding:26px;gap:20px}.about-pic{width:84px;height:84px;font-size:38px}}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -329,6 +335,23 @@ footer a:hover{color:var(--text)}
         <h2 style="font-size:clamp(28px,4.4vw,44px);margin-top:10px" data-nl="Wil je dat een creator je product laat zien?">Want a creator to show your product?</h2>
         <p style="margin:12px auto 24px" data-nl="TikTok- en UGC-video's door echte creators in het Nederlands, Engels, Frans en meer, voor elk merk of product. Wij zoeken de juiste mensen en regelen alles.">TikTok and UGC videos by real creators in English, Dutch, French and more, for any brand or product. We find the right people and handle everything.</p>
         <div class="ctas" style="justify-content:center"><a class="btn primary" href="/ugc" data-nl="UGC-campagnes">UGC campaigns</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" style="padding-block:20px 40px">
+    <div class="wrap">
+      <div class="about">
+        <div class="about-pic" aria-hidden="true">P</div>
+        <div>
+        <div class="eyebrow" data-nl="Over ons">About</div>
+        <h2 data-nl="Wie zit er achter Hypiva">Who's behind Hypiva</h2>
+        <p data-nl="Hoi, ik ben Patrick. 👋">Hi, I'm Patrick. 👋</p>
+        <p data-nl="Ik geloof dat een goed product gezien verdient te worden. Te veel mooie apps en merken krijgen niet de aandacht die ze verdienen, gewoon omdat niemand ze aan de juiste mensen laat zien.">I believe a good product deserves to be seen. Too many great apps and brands never get the attention they deserve, simply because nobody shows them to the right people.</p>
+        <p data-nl="Daar is Hypiva voor. Echte creators die je product laten zien zoals mensen het echt gebruiken, in content die natuurlijk voelt in plaats van als reclame.">That's what Hypiva is for. Real creators showing your product the way people actually use it, in content that feels natural instead of like an ad.</p>
+        <p data-nl="Hypiva is nog klein, en dat is precies wat het anders maakt. Je wordt niet doorgeschoven binnen een groot team. Je werkt direct met mij, van het eerste idee tot de laatste video. Elke slideshow en elke video krijgt mijn volle aandacht, want hier telt elke klant.">Hypiva is still small, and that's exactly what makes it different. You don't get passed around a big team. You work with me directly, from the first idea to the last video. Every slideshow and every video gets my full attention, because every client matters here.</p>
+        <p class="sign" data-nl="Heb jij iets wat mensen moeten zien? Laten we het waarmaken. 🚀">Got something you want people to see? Let's make it happen. 🚀</p>
+        </div>
       </div>
     </div>
   </section>
