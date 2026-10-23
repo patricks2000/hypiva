@@ -167,6 +167,20 @@ footer .wrap > span{flex-wrap:wrap}
 
 .opts{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 @media (max-width:820px){.opts{grid-template-columns:1fr}}
+/* Livelier touches, same as the homepage */
+.trust{display:flex;flex-wrap:wrap;gap:10px;padding-bottom:30px}
+.trust > span{display:inline-block;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:8px 14px;font-size:14px;font-weight:600;color:var(--muted);line-height:1.4}
+@media (max-width:560px){.trust{gap:8px}.trust > span{font-size:13px;padding:7px 12px}}
+.trust .stars{color:#FFC24B;letter-spacing:1px;margin-right:6px}
+.trust b{color:var(--text);font-weight:700}
+.sticker{display:inline-block;background:#fff;color:#16131A;border:3px solid #16131A;border-radius:999px;padding:7px 15px;font-weight:800;font-size:15px;box-shadow:4px 4px 0 var(--accent);white-space:nowrap}
+.stickers{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
+.stickers .sticker:nth-child(1){transform:rotate(-4deg)}.stickers .sticker:nth-child(2){transform:rotate(3deg)}.stickers .sticker:nth-child(3){transform:rotate(-2deg)}
+#how{background:#FFF4EA;color:#16131A;background-image:radial-gradient(rgba(22,19,26,.07) 2px,transparent 2px);background-size:28px 28px;margin-block:30px}
+#how .sec-h p{color:#5b5562}
+#how .step{background:#fff;border:3px solid #16131A;box-shadow:6px 6px 0 #16131A;color:#16131A}
+#how .step:nth-child(1){transform:rotate(-1deg)}#how .step:nth-child(3){transform:rotate(1deg)}
+#how .step p{color:#4a4452}
 </style>
 </head>
 <body>
@@ -187,8 +201,17 @@ footer .wrap > span{flex-wrap:wrap}
       <h1 style="font-size:clamp(40px,6.2vw,72px);line-height:1;font-weight:800;margin-top:14px" data-nl='Creators die <span style="background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent">jouw merk laten zien</span>'>Creators who <span style="background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent">show your brand</span></h1>
       <p style="font-size:20px;color:var(--muted);max-width:600px;margin:22px 0 30px" data-nl="TikTok- en UGC-video's door echte creators, in het Nederlands, Engels en meer. Welk merk of product je ook hebt, wij maken het passend. Wij zoeken de juiste mensen, regelen de afspraken en leveren de content. Jij hoeft alleen te zeggen wat je wilt.">TikTok and UGC videos by real creators, in English, Dutch, French and more. Whatever your brand or product, we make it work. We find the right people, handle the deals and deliver the content. You just tell us what you want.</p>
       <div class="ctas"><a class="btn primary" href="#contact" data-nl="Neem contact op">Contact us</a><a class="btn ghost" href="#how" data-nl="Zo werkt het">How it works</a></div>
+      <div class="stickers" aria-hidden="true"><span class="sticker" data-nl="🎥 Echte creators">🎥 Real creators</span><span class="sticker" data-nl="🗣️ NL · EN · FR · ES · DE">🗣️ NL · EN · FR · ES · DE</span><span class="sticker" data-nl="📦 Elk product">📦 Any product</span></div>
     </div>
   </section>
+
+  <div class="wrap trust" aria-label="Why clients trust us">
+    <span data-nl="<span class=&quot;stars&quot;>★★★★★</span><b>“Hypiva took care of everything”</b> – Em Skinner, oprichter"><span class="stars">★★★★★</span><b>“Hypiva took care of everything”</b> – Em Skinner, founder</span>
+    <span data-nl="🇳🇱 Gevestigd in Nederland · ingeschreven bij de KvK">🇳🇱 Based in the Netherlands · KvK registered</span>
+    <span data-nl="⚡ We proberen binnen 1 werkdag te reageren">⚡ We try to reply within 1 working day</span>
+    <span data-nl="👀 Elke video gecheckt voordat je hem krijgt">👀 Every video checked before you get it</span>
+    <span data-nl="✏️ Eén aanpassingsronde inbegrepen">✏️ One round of changes included</span>
+  </div>
 
   <section id="how">
     <div class="wrap">
@@ -209,7 +232,7 @@ footer .wrap > span{flex-wrap:wrap}
           <span class="tag">UGC</span>
           <h3 data-nl="Echte video's van echte creators">Real videos by real creators</h3>
           <p class="muted" style="margin:0" data-nl="De creator maakt de video en jij gebruikt hem zelf: op je eigen account, je website of als advertentie.">The creator makes the video and you use it yourself: on your own account, your website or as an ad.</p>
-          <ul><li data-nl="Echte, natuurlijke content voor je eigen kanalen">Real, natural content for your own channels</li><li data-nl="Ideaal voor advertenties">Great for ads</li><li data-nl="Je bekijkt elke video voordat je hem gebruikt">You review every video before you use it</li></ul>
+          <ul><li data-nl="Echte, natuurlijke content voor je eigen kanalen">Real, natural content for your own channels</li><li data-nl="Ideaal voor advertenties">Great for ads</li><li data-nl="Je bekijkt elke video voordat je hem gebruikt">You review every video before you use it</li><li data-nl="Eén aanpassingsronde per video inbegrepen">One round of changes per video included</li></ul>
         </div>
       </div>
       <div class="example" style="margin-top:22px" data-nl='Promoot je een <b>app</b>? Kijk dan ook naar onze <a href="/" style="color:var(--accent);font-weight:700">slideshow-campagnes</a>, waarbij veel creators tegelijk posten.'>Promoting an <b>app</b>? Have a look at our <a href="/" style="color:var(--accent);font-weight:700">slideshow campaigns</a> too, where many creators post at once.</div>
