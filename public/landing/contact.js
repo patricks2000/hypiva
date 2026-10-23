@@ -7,8 +7,8 @@
   // Read the language each time: the influencer page can switch between English and Dutch.
   function isNl() { return form.getAttribute('data-lang') === 'nl'; }
   var TEXT = {
-    nl: { name: 'Vul je naam in.', email: 'Vul een geldig e-mailadres in.', sending: 'Versturen…', ok: 'Dankjewel! We hebben je aanvraag ontvangen en reageren binnen één werkdag.', also: ' Je kunt ook mailen naar patrick@hypiva.com.', send: 'Verstuur', err: 'Er ging iets mis.' },
-    en: { name: 'Please add your name.', email: 'Please add a valid email address.', sending: 'Sending…', ok: 'Thanks! We got your request and reply within one working day.', also: ' You can also email patrick@hypiva.com.', send: 'Send request', err: 'Something went wrong' },
+    nl: { name: 'Vul je naam in.', email: 'Vul een geldig e-mailadres in.', sending: 'Versturen…', ok: 'Dankjewel! We hebben je aanvraag ontvangen en proberen binnen één werkdag te reageren.', also: ' Je kunt ook mailen naar patrick@hypiva.com.', send: 'Verstuur', err: 'Er ging iets mis.' },
+    en: { name: 'Please add your name.', email: 'Please add a valid email address.', sending: 'Sending…', ok: 'Thanks! We got your request and try to reply within one working day.', also: ' You can also email patrick@hypiva.com.', send: 'Send request', err: 'Something went wrong' },
   };
   function T() { return isNl() ? TEXT.nl : TEXT.en; }
   var startCurrency = (form.querySelector('input[name=currency]:checked') || {}).value || 'USD';

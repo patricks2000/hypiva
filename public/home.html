@@ -220,6 +220,11 @@ footer .wrap > span{flex-wrap:wrap}
 .feat:nth-child(3) .ic{background:rgba(123,156,255,.14)}.feat:nth-child(3) .ic svg{stroke:#7B9CFF}
 .feat:nth-child(4) .ic{background:rgba(255,194,75,.14)}.feat:nth-child(4) .ic svg{stroke:#FFC24B}
 .feat:nth-child(5) .ic{background:rgba(232,48,122,.14)}.feat:nth-child(5) .ic svg{stroke:#E8307A}
+.trust{display:flex;flex-wrap:wrap;gap:10px;padding-bottom:30px}
+.trust > span{display:inline-block;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:8px 14px;font-size:14px;font-weight:600;color:var(--muted);line-height:1.4}
+@media (max-width:560px){.trust{gap:8px}.trust > span{font-size:13px;padding:7px 12px}}
+.trust .stars{color:#FFC24B;letter-spacing:1px;margin-right:6px}
+.trust b{color:var(--text);font-weight:700}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -256,6 +261,14 @@ footer .wrap > span{flex-wrap:wrap}
     <div class="fact"><b data-nl="<span class=&quot;e&quot;>✅</span>Alleen goedgekeurd"><span class="e">✅</span>Approved only</b><span data-nl="Elke video, voordat hij telt">Every video, before it counts</span></div>
     <div class="fact"><b data-nl="<span class=&quot;e&quot;>📈</span>Live bijhouden"><span class="e">📈</span>Live tracking</b><span data-nl="Views worden automatisch bijgewerkt">Views update automatically</span></div>
     <div class="fact"><b data-nl="<span class=&quot;e&quot;>🌍</span>Meerdere talen"><span class="e">🌍</span>Many languages</b><span data-nl="Engels, Nederlands, Duits, Frans, Spaans">English, Dutch, German, French, Spanish</span></div>
+  </div>
+
+  <div class="wrap trust" aria-label="Why clients trust us">
+    <span data-nl="<span class=&quot;stars&quot;>★★★★★</span><b>“Hypiva took care of everything”</b> – Em Skinner, oprichter"><span class="stars">★★★★★</span><b>“Hypiva took care of everything”</b> – Em Skinner, founder</span>
+    <span data-nl="🇳🇱 Gevestigd in Nederland · ingeschreven bij de KvK">🇳🇱 Based in the Netherlands · KvK registered</span>
+    <span data-nl="⚡ We proberen binnen 1 werkdag te reageren">⚡ We try to reply within 1 working day</span>
+    <span data-nl="👀 Elke video gecheckt voordat hij online gaat">👀 Every video checked before it goes live</span>
+    <span data-nl="✏️ Eén aanpassingsronde inbegrepen">✏️ One round of changes included</span>
   </div>
 
   <section id="how">
@@ -310,6 +323,7 @@ footer .wrap > span{flex-wrap:wrap}
             <li data-nl="Creators, content, posten en bijhouden">Creators, content, posting and tracking</li>
             <li data-nl="Content in de talen die je nodig hebt">Content in the languages you need</li>
             <li data-nl="Begin met een kleine test, schaal op wat werkt">Start with a small test, scale up what works</li>
+            <li data-nl="Eén aanpassingsronde per video inbegrepen">One round of changes per video included</li>
           </ul>
         </div>
       </div>
@@ -411,7 +425,7 @@ footer .wrap > span{flex-wrap:wrap}
       <div class="final" id="contact">
         <img src="/landing/icon.png" alt="" width="72" height="72" style="margin:0 auto;border-radius:18px">
         <h2 style="margin-top:18px" data-nl="Laten we je campagne promoten">Let's promote your campaign</h2>
-        <p data-nl="Vertel wat je wilt promoten. We reageren binnen één werkdag.">Tell us what you want to promote. We reply within one working day.</p>
+        <p data-nl="Vertel wat je wilt promoten. We proberen binnen één werkdag te reageren.">Tell us what you want to promote. We try to reply within one working day.</p>
         <form id="leadForm" class="lead" novalidate data-lang="en">
           <div class="row2">
             <label><span data-nl="Je naam">Your name</span><input name="name" required maxlength="100" autocomplete="name"></label>
