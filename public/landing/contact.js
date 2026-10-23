@@ -34,9 +34,10 @@
     new FormData(form).forEach(function (v, k) { data[k] = String(v); });
     if (!data.name.trim()) { msg.textContent = T().name; msg.style.color = '#FFC24B'; return; }
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email.trim())) { msg.textContent = T().email; msg.style.color = '#FFC24B'; return; }
-    // The UGC page asks for a number of videos instead of a budget; it travels inside the message.
-    if (data.videos) data.message = 'Videos: ' + data.videos + '\n' + (data.message || '');
-    delete data.videos;
+    // The UGC page asks for a number of videos and a budget per video instead of a total budget; both travel inside the message.
+    var extra = [data.videos && 'Videos: ' + data.videos, data.per_video && 'Budget per video: ' + data.per_video].filter(Boolean).join(' · ');
+    if (extra) data.message = extra + '\n' + (data.message || '');
+    delete data.videos; delete data.per_video;
     if (topic) data.message = '[' + topic + '] ' + (data.message || '');
     var btn = form.querySelector('button'); btn.disabled = true; btn.textContent = T().sending;
     fetch('https://fooxcixwmmdjursbsols.supabase.co/functions/v1/brand-lead', {
