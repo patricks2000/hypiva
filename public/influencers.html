@@ -190,8 +190,8 @@ footer .wrap > span{flex-wrap:wrap}
 .vc.a{left:0;top:60px;transform:rotate(-7deg);background:linear-gradient(160deg,#FFB27A,#FF5A3D)}
 .vc.b{left:50%;margin-left:-115px;top:0;z-index:2;background:linear-gradient(160deg,#B9A8FF,#7B61FF)}
 .vc.c{right:0;top:70px;transform:rotate(7deg);background:linear-gradient(160deg,#8FE3D6,#18A999)}
-.trustcard{display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border:1px solid var(--line);border-radius:22px;margin-bottom:20px}
-.trustcard > div{padding:22px;display:flex;gap:14px;align-items:flex-start}
+.trustcard{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface);border:1px solid var(--line);border-radius:22px;margin-bottom:20px}
+.trustcard > div{padding:18px 20px;display:flex;gap:14px;align-items:flex-start}
 .trustcard > div + div{border-left:1px solid var(--line)}
 .trustcard i{font-style:normal;font-size:24px;line-height:1}
 .trustcard p{margin:0}.trustcard b{display:block;font-size:16px}.trustcard span{color:var(--muted);font-size:14px}
@@ -206,8 +206,8 @@ footer .wrap > span{flex-wrap:wrap}
 #how .step .num{font-family:var(--display);font-weight:800;font-size:56px;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 #how .step h3{font-size:22px;margin:12px 0 8px}
 #how .step p{margin:0;color:#4a4452}
-@media (max-width:900px){.uhero{grid-template-columns:1fr;padding-top:36px}.vcards{height:400px}.vc{width:170px}.vc.b{margin-left:-85px}.vc .emo{font-size:60px}.vc .lab{right:36px}.vc .lab span{font-size:13px}.trustcard{grid-template-columns:1fr 1fr}.trustcard > div + div{border-left:0}.trustcard > div:nth-child(even){border-left:1px solid var(--line)}.trustcard > div:nth-child(n+3){border-top:1px solid var(--line)}}
-@media (max-width:520px){.trustcard{grid-template-columns:1fr}.trustcard > div:nth-child(even){border-left:0}.trustcard > div + div{border-top:1px solid var(--line)}}
+@media (max-width:900px){.uhero{grid-template-columns:1fr;padding-top:36px}.vcards{height:400px}.vc{width:170px}.vc.b{margin-left:-85px}.vc .emo{font-size:60px}.vc .lab{right:36px}.vc .lab span{font-size:13px}}
+@media (max-width:700px){.trustcard{grid-template-columns:1fr}.trustcard > div{padding:12px 16px;align-items:center}.trustcard > div + div{border-left:0;border-top:1px solid var(--line)}.trustcard span{display:none}.trustcard i{font-size:20px}}
 </style>
 </head>
 <body>
@@ -238,7 +238,6 @@ footer .wrap > span{flex-wrap:wrap}
 
   <div class="wrap">
     <div class="trustcard">
-      <div><i aria-hidden="true">🇳🇱</i><p><b data-nl="Nederlands bedrijf">Dutch company</b><span data-nl="Ingeschreven bij de KvK">Registered with the KvK</span></p></div>
       <div><i aria-hidden="true">👀</i><p><b data-nl="Door ons gecheckt">Checked by us</b><span data-nl="Elke video, voordat je hem krijgt">Every video, before you get it</span></p></div>
       <div><i aria-hidden="true">✏️</i><p><b data-nl="Aanpassingen inbegrepen">Changes included</b><span data-nl="Eén ronde per video">One round per video</span></p></div>
       <div><i aria-hidden="true">⚡</i><p><b data-nl="Snel antwoord">Quick replies</b><span data-nl="We proberen binnen 1 werkdag te reageren">We try to reply within 1 working day</span></p></div>
