@@ -143,6 +143,7 @@ details p{color:var(--muted);margin:10px 0 0}
 .budget-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .budget-head > span{font-weight:600;font-size:14px;color:var(--muted)}
 .budget-head em{font-style:normal;color:var(--faint);font-weight:500}
+.lead label em{font-style:normal;color:var(--faint);font-weight:500}
 .cur{display:flex;background:var(--surface2);border:1px solid var(--line);border-radius:999px;padding:3px}
 .cur label{display:block;cursor:pointer}
 .cur input{position:absolute;opacity:0;width:1px;height:1px}
@@ -237,23 +238,16 @@ footer a:hover{color:var(--text)}
           </div>
           <div class="row2">
             <label><span data-nl="Bedrijf of merk">Company or brand</span><input name="company" maxlength="120" autocomplete="organization"></label>
-            <div class="budget">
-              <div class="budget-head">
-                <span id="budgetLabel" data-nl="Budget <em>(optioneel)</em>">Budget <em>(optional)</em></span>
-                <div class="cur" role="radiogroup" aria-label="Currency">
-                  <label><input type="radio" name="currency" value="EUR" checked><span>€ EUR</span></label>
-                  <label><input type="radio" name="currency" value="USD"><span>$ USD</span></label>
-                </div>
-              </div>
-              <select name="budget" aria-labelledby="budgetLabel">
-                <option value="" data-nl="Kies een bedrag">Choose a range</option>
-                <option value="under_500" data-label="Under {c}500" data-label-nl="Onder {c}500">Under €500</option>
-                <option value="500_2000" data-label="{c}500–{c}2,000" data-label-nl="{c}500–{c}2.000">€500–€2,000</option>
-                <option value="2000_5000" data-label="{c}2,000–{c}5,000" data-label-nl="{c}2.000–{c}5.000">€2,000–€5,000</option>
-                <option value="5000_plus" data-label="{c}5,000+" data-label-nl="{c}5.000+">€5,000+</option>
-                <option value="not_sure" data-nl="Weet ik nog niet">Not sure yet</option>
+            <label><span data-nl="Hoeveel video's? <em>(optioneel)</em>">How many videos? <em>(optional)</em></span>
+              <select name="videos">
+                <option value="" data-nl="Kies een aantal">Choose a number</option>
+                <option value="1" data-nl="1 video (om te testen)">1 video (to test)</option>
+                <option value="2-5" data-nl="2–5 video's">2–5 videos</option>
+                <option value="6-10" data-nl="6–10 video's">6–10 videos</option>
+                <option value="10+" data-nl="10+ video's">10+ videos</option>
+                <option value="not sure" data-nl="Weet ik nog niet">Not sure yet</option>
               </select>
-            </div>
+            </label>
           </div>
           <label><span data-nl="Wat wil je promoten?">What do you want to promote?</span><textarea name="message" rows="4" maxlength="1900"></textarea></label>
           <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>

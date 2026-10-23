@@ -90,7 +90,7 @@
     if (d.body.length < 10) return say(T().more);
     var btn = form.querySelector('button'); btn.disabled = true; btn.textContent = T().sending;
     uploadPhoto().then(function (photoUrl) {
-      var row = { name: d.name.slice(0, 80), company: (d.company || '').slice(0, 100), role: (d.role || '').slice(0, 80), body: d.body.slice(0, 600), rating: Number(d.rating) };
+      var row = { name: d.name.slice(0, 80), company: (d.company || '').slice(0, 100), role: (d.role || '').slice(0, 80), body: d.body.slice(0, 600), rating: Number(d.rating), lang: document.documentElement.lang === 'nl' ? 'nl' : 'en' };
       if (photoUrl) row.photo_url = photoUrl;
       return fetch(URL, {
         method: 'POST',

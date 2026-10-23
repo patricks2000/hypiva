@@ -1,42 +1,55 @@
 // Homepage: shows approved client reviews. The section stays hidden until there is at least one.
+// Each review shows in the page language: the client's own words, or the admin's translation with a "Translated from ..." note.
 (function () {
   var box = document.getElementById('reviews');
   var list = document.getElementById('reviewList');
   if (!box || !list) return;
   var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvb3hjaXh3bW1kanVyc2Jzb2xzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MjgyNzMsImV4cCI6MjEwNjIwNDI3M30.QCKwmvOktHj8zA9JMetodaE2NX1F-uqN0qmRUnXmq20';
-  var URL = 'https://fooxcixwmmdjursbsols.supabase.co/rest/v1/reviews?select=name,company,role,body,rating,photo_url&approved=eq.true&order=created_at.desc&limit=6';
+  var URL = 'https://fooxcixwmmdjursbsols.supabase.co/rest/v1/reviews?select=name,company,role,body,rating,photo_url,lang,translation&approved=eq.true&order=created_at.desc&limit=6';
   var PHOTOS = 'https://fooxcixwmmdjursbsols.supabase.co/storage/v1/object/public/review-photos/';
   function initials(n) { return n.split(/\s+/).filter(Boolean).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase(); }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
   function get(u) { return fetch(u, { headers: { apikey: KEY, Authorization: 'Bearer ' + KEY } }); }
+  var FROM = { en: { en: 'Translated from English', nl: 'Vertaald uit het Engels' }, nl: { en: 'Translated from Dutch', nl: 'Vertaald uit het Nederlands' } };
+  var rows = [];
+  function render() {
+    var page = document.documentElement.lang === 'nl' ? 'nl' : 'en';
+    list.textContent = '';
+    rows.forEach(function (x) {
+      var own = (x.lang || 'en') === page || !x.translation;
+      var card = el('figure', 'review');
+      card.appendChild(el('div', 'review-stars', '★★★★★'.slice(0, x.rating) + '☆☆☆☆☆'.slice(0, 5 - x.rating)));
+      card.appendChild(el('blockquote', '', '“' + (own ? x.body : x.translation) + '”'));
+      if (!own) card.appendChild(el('span', 'review-note', FROM[x.lang][page]));
+      var who = el('figcaption');
+      var pic;
+      if (x.photo_url && x.photo_url.indexOf(PHOTOS) === 0) {
+        pic = el('img', 'review-pic');
+        pic.src = x.photo_url; pic.alt = ''; pic.loading = 'lazy'; pic.width = 48; pic.height = 48;
+      } else {
+        pic = el('div', 'review-pic', initials(x.name));
+      }
+      pic.setAttribute('aria-hidden', 'true');
+      who.appendChild(pic);
+      var txt = el('div');
+      txt.appendChild(el('b', '', x.name));
+      var sub = [x.role, x.company].filter(Boolean).join(', ');
+      if (sub) txt.appendChild(el('span', '', sub));
+      who.appendChild(txt);
+      card.appendChild(who);
+      list.appendChild(card);
+    });
+  }
+  document.addEventListener('hypiva:lang', function () { if (rows.length) render(); });
   get(URL)
-    // Older database without the photo column: load the reviews without photos.
-    .then(function (r) { return r.ok ? r : get(URL.replace(',photo_url', '')); })
+    // Older database without the translation or photo columns: load the reviews without them.
+    .then(function (r) { return r.ok ? r : get(URL.replace(',lang,translation', '')); })
+    .then(function (r) { return r.ok ? r : get(URL.replace(',photo_url,lang,translation', '')); })
     .then(function (r) { return r.ok ? r.json() : []; })
-    .then(function (rows) {
-      if (!rows || !rows.length) return;
-      rows.forEach(function (x) {
-        var card = el('figure', 'review');
-        card.appendChild(el('div', 'review-stars', '★★★★★'.slice(0, x.rating) + '☆☆☆☆☆'.slice(0, 5 - x.rating)));
-        card.appendChild(el('blockquote', '', '“' + x.body + '”'));
-        var who = el('figcaption');
-        var pic;
-        if (x.photo_url && x.photo_url.indexOf(PHOTOS) === 0) {
-          pic = el('img', 'review-pic');
-          pic.src = x.photo_url; pic.alt = ''; pic.loading = 'lazy'; pic.width = 48; pic.height = 48;
-        } else {
-          pic = el('div', 'review-pic', initials(x.name));
-        }
-        pic.setAttribute('aria-hidden', 'true');
-        who.appendChild(pic);
-        var txt = el('div');
-        txt.appendChild(el('b', '', x.name));
-        var sub = [x.role, x.company].filter(Boolean).join(', ');
-        if (sub) txt.appendChild(el('span', '', sub));
-        who.appendChild(txt);
-        card.appendChild(who);
-        list.appendChild(card);
-      });
+    .then(function (data) {
+      if (!data || !data.length) return;
+      rows = data;
+      render();
       box.hidden = false;
     })
     .catch(function () {});
