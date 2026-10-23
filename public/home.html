@@ -165,6 +165,9 @@ details p{color:var(--muted);margin:10px 0 0}
 footer{padding-block:40px;color:var(--faint);font-size:15px}
 footer .wrap{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
 footer a:hover{color:var(--text)}
+footer .social{display:flex;gap:14px;flex-wrap:wrap}
+footer a{white-space:nowrap}
+footer .wrap > span{flex-wrap:wrap}
 .review-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
 .review{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:26px;display:flex;flex-direction:column;gap:14px}
 .review-stars{color:#FFC24B;font-size:20px;letter-spacing:2px}
@@ -195,11 +198,11 @@ footer a:hover{color:var(--text)}
 .ex-hint{color:var(--faint);font-size:14px;margin-top:18px;text-align:center}
 @media (max-width:860px){.examples{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:18px;padding-bottom:6px;scrollbar-width:none}.examples::-webkit-scrollbar{display:none}.ex{flex:none;width:78%;scroll-snap-align:center}}
 .about{display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:36px}
-.about-pic{width:120px;height:120px;border-radius:50%;background:var(--grad);color:#1a0b05;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:52px}
+.about-pic{width:220px;height:auto;aspect-ratio:3/4;border-radius:22px;object-fit:cover;display:block}
 .about h2{font-size:clamp(28px,4vw,40px);font-weight:800;margin:8px 0 16px}
 .about p{color:var(--muted);margin:0 0 14px;max-width:680px}
 .about .sign{color:var(--text);font-weight:700;margin-bottom:0}
-@media (max-width:700px){.about{grid-template-columns:1fr;padding:26px;gap:20px}.about-pic{width:84px;height:84px;font-size:38px}}
+@media (max-width:700px){.about{grid-template-columns:1fr;padding:22px;gap:20px}.about-pic{width:100%;aspect-ratio:4/3;object-position:center 62%}}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -342,7 +345,7 @@ footer a:hover{color:var(--text)}
   <section id="about" style="padding-block:20px 40px">
     <div class="wrap">
       <div class="about">
-        <div class="about-pic" aria-hidden="true">P</div>
+        <img class="about-pic" src="/landing/patrick.webp" alt="Patrick from Hypiva on a longtail boat in Thailand" width="480" height="640" loading="lazy">
         <div>
         <div class="eyebrow" data-nl="Over ons">About</div>
         <h2 data-nl="Wie zit er achter Hypiva">Who's behind Hypiva</h2>
@@ -432,6 +435,7 @@ footer a:hover{color:var(--text)}
   <div class="wrap">
     <span class="brand" style="font-size:19px"><img src="/landing/icon.png" alt="" style="width:26px;height:26px;border-radius:7px"><span>hyp<b>iva</b></span></span>
     <span>© 2026 Hypiva</span>
+    <span class="social"><a href="https://www.tiktok.com/@hypiva.agency" target="_blank" rel="noopener">TikTok</a><a href="https://www.instagram.com/hypiva/" target="_blank" rel="noopener">Instagram</a><a href="https://www.linkedin.com/company/hypiva/" target="_blank" rel="noopener">LinkedIn</a><a href="https://x.com/hypiva" target="_blank" rel="noopener">X</a></span>
     <span style="margin-left:auto;display:flex;gap:18px"><a href="/ugc">UGC</a><a href="/write-review" data-nl="Schrijf een review">Write a review</a><a href="mailto:patrick@hypiva.com">Contact</a><a href="/privacy" data-nl="Privacy">Privacy</a><a href="/sign-in" data-nl="Inloggen">Log in</a></span>
   </div>
 </footer>
