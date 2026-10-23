@@ -179,6 +179,21 @@ footer a:hover{color:var(--text)}
 .review-cta h3{margin:0;font-size:22px}
 .review-cta p{margin:4px 0 0;color:var(--muted)}
 @media (max-width:600px){.review-cta .btn{width:100%}}
+.examples{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.ex{display:flex;flex-direction:column;align-items:center;gap:14px}
+.ex-phone{position:relative;width:min(270px,100%);aspect-ratio:9/16;border-radius:36px;background:#000;padding:8px;box-shadow:0 30px 70px -25px rgba(232,48,122,.4),0 0 0 1px #2a2a33}
+.ex-slides{display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;border-radius:28px;scrollbar-width:none;cursor:pointer}
+.ex-slides::-webkit-scrollbar{display:none}
+.ex-slides img{flex:none;width:100%;height:100%;object-fit:cover;scroll-snap-align:start}
+.ex-ui{position:absolute;inset:8px;border-radius:28px;pointer-events:none;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.45)}
+.ex-top{position:absolute;top:14px;left:0;right:0;text-align:center;font-size:12px;font-weight:700}
+.ex-top b{text-decoration:underline;text-underline-offset:4px}
+.ex-side{position:absolute;right:10px;bottom:70px;display:grid;gap:14px;font-size:19px;text-align:center;line-height:1}
+.ex-user{position:absolute;left:12px;bottom:16px;font-size:12px;font-weight:700}
+.ex-cap{display:flex;align-items:center;gap:8px;font-weight:700}
+.ex-cap span{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:999px;background:var(--surface2);color:var(--muted)}
+.ex-hint{color:var(--faint);font-size:14px;margin-top:18px;text-align:center}
+@media (max-width:860px){.examples{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:18px;padding-bottom:6px;scrollbar-width:none}.examples::-webkit-scrollbar{display:none}.ex{flex:none;width:78%;scroll-snap-align:center}}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -225,6 +240,27 @@ footer a:hover{color:var(--text)}
         <div class="step"><div class="n">2</div><h3 data-nl="Creators posten">Creators post</h3><p data-nl="Geverifieerde creators posten je content op hun TikTok-accounts. Elk account krijgt content die het nog niet eerder heeft gepost, zodat feeds fris blijven.">Verified creators post your content on their TikTok accounts. Each account gets content it has not posted before, so feeds stay fresh.</p></div>
         <div class="step"><div class="n">3</div><h3 data-nl="Jij ziet de resultaten">You see the results</h3><p data-nl="Views worden bij elke video automatisch bijgehouden. Je ziet views en video's live, en elke video wordt goedgekeurd voordat hij telt.">Views are tracked automatically on every video. You see views and videos live, and every video is approved before it counts.</p></div>
       </div>
+    </div>
+  </section>
+
+  <section id="examples" style="padding-top:20px">
+    <div class="wrap">
+      <div class="sec-h"><div class="eyebrow" data-nl="Voorbeelden">Examples</div><h2 data-nl="Zo ziet een slideshow eruit">What a slideshow looks like</h2><p data-nl="Drie voorbeeld-slideshows die we hebben gemaakt om het idee te laten zien: een sterke hook, echte tips en jouw app als tip die mensen willen bewaren.">Three example slideshows we made to show the idea: a strong hook, real tips and your app as a tip people want to save.</p></div>
+      <div class="examples">
+        <div class="ex">
+          <div class="ex-phone"><div class="ex-slides" tabindex="0" aria-label="Reading app: example slideshow"><img src="/landing/examples/read-1.webp" alt="How I read 30 books this year" width="540" height="960" loading="lazy"><img src="/landing/examples/read-2.webp" alt="Tip 1: 10 pages before bed" width="540" height="960" loading="lazy"><img src="/landing/examples/read-3.webp" alt="Tip 2: I track every book in this app" width="540" height="960" loading="lazy"><img src="/landing/examples/read-4.webp" alt="Save this for your next reading slump" width="540" height="960" loading="lazy"></div><div class="ex-ui" aria-hidden="true"><div class="ex-top">Following &nbsp;<b>For You</b></div><div class="ex-side">♥<br>💬<br>🔖<br>↗</div><div class="ex-user">@creator</div></div></div>
+          <div class="ex-cap"><span data-nl="Lees-app">Reading app</span><span data-nl="Voorbeeld">Example</span></div>
+        </div>
+        <div class="ex">
+          <div class="ex-phone"><div class="ex-slides" tabindex="0" aria-label="Budget app: example slideshow"><img src="/landing/examples/money-1.webp" alt="1,000 euro saved in 3 months" width="540" height="960" loading="lazy"><img src="/landing/examples/money-2.webp" alt="Step 1: I stopped guessing where my money went" width="540" height="960" loading="lazy"><img src="/landing/examples/money-3.webp" alt="Step 2: one budget, checked every Sunday" width="540" height="960" loading="lazy"><img src="/landing/examples/money-4.webp" alt="Small steps. Real money." width="540" height="960" loading="lazy"></div><div class="ex-ui" aria-hidden="true"><div class="ex-top">Following &nbsp;<b>For You</b></div><div class="ex-side">♥<br>💬<br>🔖<br>↗</div><div class="ex-user">@creator</div></div></div>
+          <div class="ex-cap"><span data-nl="Budget-app">Budget app</span><span data-nl="Voorbeeld">Example</span></div>
+        </div>
+        <div class="ex">
+          <div class="ex-phone"><div class="ex-slides" tabindex="0" aria-label="Habit app: example slideshow"><img src="/landing/examples/habit-1.webp" alt="5 tiny habits that fixed my mornings" width="540" height="960" loading="lazy"><img src="/landing/examples/habit-2.webp" alt="1: make the bed first thing" width="540" height="960" loading="lazy"><img src="/landing/examples/habit-3.webp" alt="2: tick it off in my habit app" width="540" height="960" loading="lazy"><img src="/landing/examples/habit-4.webp" alt="Which one are you trying first?" width="540" height="960" loading="lazy"></div><div class="ex-ui" aria-hidden="true"><div class="ex-top">Following &nbsp;<b>For You</b></div><div class="ex-side">♥<br>💬<br>🔖<br>↗</div><div class="ex-user">@creator</div></div></div>
+          <div class="ex-cap"><span data-nl="Gewoonte-app">Habit app</span><span data-nl="Voorbeeld">Example</span></div>
+        </div>
+      </div>
+      <p class="ex-hint" data-nl="Tik of swipe door de slides →">Tap or swipe through the slides →</p>
     </div>
   </section>
 
@@ -378,6 +414,7 @@ footer a:hover{color:var(--text)}
 </footer>
 <script src="/landing/contact.js" defer></script>
 <script src="/landing/reviews.js" defer></script>
+<script src="/landing/examples.js" defer></script>
 <script src="/landing/lang.js"></script>
 </body>
 </html>
