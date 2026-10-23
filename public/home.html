@@ -203,28 +203,34 @@ footer .wrap > span{flex-wrap:wrap}
 .about p{color:var(--muted);margin:0 0 14px;max-width:680px}
 .about .sign{color:var(--text);font-weight:700;margin-bottom:0}
 @media (max-width:900px){.about{grid-template-columns:1fr;padding:22px;gap:22px}}
-/* Livelier touches, in the style of the Hypiva social posts */
-.sticker{position:absolute;z-index:3;background:#fff;color:#16131A;border:3px solid #16131A;border-radius:999px;padding:8px 16px;font-weight:800;font-size:15px;box-shadow:4px 4px 0 var(--accent);white-space:nowrap}
-.sticker.s1{top:8%;left:-2%;transform:rotate(-6deg)}
-.sticker.s2{bottom:12%;right:-2%;transform:rotate(5deg)}
-@media (max-width:900px){.sticker.s1{left:4%}.sticker.s2{right:4%}}
-.fact b .e{margin-right:6px}
-.fact{border-top:3px solid var(--accent)}
-.fact:nth-child(2){border-top-color:#3DDC97}.fact:nth-child(3){border-top-color:#7B9CFF}.fact:nth-child(4){border-top-color:#FFC24B}
-#how{background:#FFF4EA;color:#16131A;background-image:radial-gradient(rgba(22,19,26,.07) 2px,transparent 2px);background-size:28px 28px;margin-block:30px}
-#how .sec-h p{color:#5b5562}
-#how .step{background:#fff;border:3px solid #16131A;box-shadow:6px 6px 0 #16131A;color:#16131A}
-#how .step:nth-child(1){transform:rotate(-1deg)}#how .step:nth-child(3){transform:rotate(1deg)}
-#how .step p{color:#4a4452}
 .feat:nth-child(2) .ic{background:rgba(61,220,151,.13)}.feat:nth-child(2) .ic svg{stroke:#3DDC97}
 .feat:nth-child(3) .ic{background:rgba(123,156,255,.14)}.feat:nth-child(3) .ic svg{stroke:#7B9CFF}
 .feat:nth-child(4) .ic{background:rgba(255,194,75,.14)}.feat:nth-child(4) .ic svg{stroke:#FFC24B}
 .feat:nth-child(5) .ic{background:rgba(232,48,122,.14)}.feat:nth-child(5) .ic svg{stroke:#E8307A}
-.trust{display:flex;flex-wrap:wrap;gap:10px;padding-bottom:30px}
-.trust > span{display:inline-block;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:8px 14px;font-size:14px;font-weight:600;color:var(--muted);line-height:1.4}
-@media (max-width:560px){.trust{gap:8px}.trust > span{font-size:13px;padding:7px 12px}}
-.trust .stars{color:#FFC24B;letter-spacing:1px;margin-right:6px}
-.trust b{color:var(--text);font-weight:700}
+/* Same look as the UGC page: pill labels, review card, one trust card and a calm cream steps band */
+.pill{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);background:rgba(255,106,61,.12);padding:6px 12px;border-radius:999px}
+.hero h1{margin-top:18px}
+@media (max-width:520px){.pill{font-size:12px;letter-spacing:.06em}}
+.proof{display:flex;align-items:center;gap:14px;margin-top:30px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px;max-width:520px}
+.proof img{width:44px;height:44px;border-radius:50%;flex:none}
+.proof .st{color:#FFC24B;font-size:15px;letter-spacing:2px}
+.proof b{display:block;font-size:15px}
+.proof small{color:var(--muted);font-size:13px}
+.trustcard{display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border:1px solid var(--line);border-radius:22px;margin-bottom:20px}
+.trustcard > div{padding:22px;display:flex;gap:14px;align-items:flex-start}
+.trustcard > div + div{border-left:1px solid var(--line)}
+.trustcard i{font-style:normal;font-size:24px;line-height:1}
+.trustcard p{margin:0}.trustcard b{display:block;font-size:16px}.trustcard span{color:var(--muted);font-size:14px}
+@media (max-width:900px){.trustcard{grid-template-columns:1fr 1fr}.trustcard > div + div{border-left:0}.trustcard > div:nth-child(even){border-left:1px solid var(--line)}.trustcard > div:nth-child(n+3){border-top:1px solid var(--line)}}
+@media (max-width:520px){.trustcard{grid-template-columns:1fr}.trustcard > div:nth-child(even){border-left:0}.trustcard > div + div{border-top:1px solid var(--line)}}
+#how{background:#FFF4EA;color:#16131A;margin-block:50px 30px;padding-block:80px}
+#how .pill{background:rgba(255,106,61,.14)}
+#how .sec-h p{color:#5b5562}
+#how .steps{gap:22px}
+#how .step{background:#fff;border:2px solid #16131A;box-shadow:6px 6px 0 #16131A;color:#16131A}
+#how .step .num{font-family:var(--display);font-weight:800;font-size:56px;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+#how .step h3{margin-top:12px}
+#how .step p{color:#4a4452}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -245,39 +251,34 @@ footer .wrap > span{flex-wrap:wrap}
 <main>
   <div class="wrap hero">
     <div>
-      <div class="eyebrow" data-nl="TikTok-bereik voor apps &amp; merken">TikTok reach for apps &amp; brands</div>
+      <span class="pill" data-nl="📱 TikTok-bereik voor apps &amp; merken">📱 TikTok reach for apps &amp; brands</span>
       <h1 data-nl='Jouw product op veel echte feeds. <span class="hl">Betaal alleen voor resultaat.</span>'>Your product on many real feeds. <span class="hl">Pay only for results.</span></h1>
       <p class="lead" data-nl="Ons creatornetwerk post je content op veel echte TikTok-accounts. Je betaalt alleen voor resultaat, en alleen voor video's die zijn goedgekeurd.">Our creator network posts your content across many real TikTok accounts. You only pay for results, and only for videos that are approved.</p>
       <div class="ctas">
         <a class="btn primary" href="#contact" data-nl="Start een campagne">Launch a campaign</a>
         <a class="btn ghost" href="#how" data-nl="Bekijk hoe het werkt">See how it works</a>
       </div>
+      <div class="proof"><img src="/landing/em-skinner.webp" alt="" width="44" height="44"><div><div class="st" aria-label="5 stars">★★★★★</div><b>“Hypiva took care of everything.”</b><small data-nl="Em Skinner, oprichter van TheCozyDev (slideshow-campagne)">Em Skinner, founder of TheCozyDev (slideshow campaign)</small></div></div>
     </div>
-    <div class="glow"><span class="sticker s1" data-nl="✓ Echte creators">✓ Real creators</span><span class="sticker s2" data-nl="⚡ Live in dagen">⚡ Live in days</span><div class="phone"><img src="/landing/brand-phone.png" alt="The Hypiva brand dashboard: live campaigns with views and videos" width="390" height="780"></div></div>
+    <div class="glow"><div class="phone"><img src="/landing/brand-phone.png" alt="The Hypiva brand dashboard: live campaigns with views and videos" width="390" height="780"></div></div>
   </div>
 
-  <div class="wrap facts" aria-label="Key facts">
-    <div class="fact"><b data-nl="<span class=&quot;e&quot;>💸</span>Betaal per resultaat"><span class="e">💸</span>Pay per result</b><span data-nl="Echte views, geen beloftes">Real views, not promises</span></div>
-    <div class="fact"><b data-nl="<span class=&quot;e&quot;>✅</span>Alleen goedgekeurd"><span class="e">✅</span>Approved only</b><span data-nl="Elke video, voordat hij telt">Every video, before it counts</span></div>
-    <div class="fact"><b data-nl="<span class=&quot;e&quot;>📈</span>Live bijhouden"><span class="e">📈</span>Live tracking</b><span data-nl="Views worden automatisch bijgewerkt">Views update automatically</span></div>
-    <div class="fact"><b data-nl="<span class=&quot;e&quot;>🌍</span>Meerdere talen"><span class="e">🌍</span>Many languages</b><span data-nl="Creators in verschillende talen">Creators in different languages</span></div>
-  </div>
-
-  <div class="wrap trust" aria-label="Why clients trust us">
-    <span data-nl="<span class=&quot;stars&quot;>★★★★★</span><b>“Hypiva took care of everything”</b> – Em Skinner, oprichter"><span class="stars">★★★★★</span><b>“Hypiva took care of everything”</b> – Em Skinner, founder</span>
-    <span data-nl="🇳🇱 Gevestigd in Nederland · ingeschreven bij de KvK">🇳🇱 Based in the Netherlands · KvK registered</span>
-    <span data-nl="⚡ We proberen binnen 1 werkdag te reageren">⚡ We try to reply within 1 working day</span>
-    <span data-nl="👀 Elke video gecheckt voordat hij online gaat">👀 Every video checked before it goes live</span>
-    <span data-nl="✏️ Eén aanpassingsronde inbegrepen">✏️ One round of changes included</span>
+  <div class="wrap">
+    <div class="trustcard">
+      <div><i aria-hidden="true">💸</i><p><b data-nl="Betaal per resultaat">Pay per result</b><span data-nl="Echte views, geen beloftes">Real views, not promises</span></p></div>
+      <div><i aria-hidden="true">👀</i><p><b data-nl="Door ons gecheckt">Checked by us</b><span data-nl="Elke video, voordat hij telt">Every video, before it counts</span></p></div>
+      <div><i aria-hidden="true">📈</i><p><b data-nl="Live bijhouden">Live tracking</b><span data-nl="Views worden automatisch bijgewerkt">Views update automatically</span></p></div>
+      <div><i aria-hidden="true">🇳🇱</i><p><b data-nl="Nederlands bedrijf">Dutch company</b><span data-nl="Ingeschreven bij de KvK">Registered with the KvK</span></p></div>
+    </div>
   </div>
 
   <section id="how">
     <div class="wrap">
-      <div class="sec-h"><div class="eyebrow" data-nl="Hoe het werkt">How it works</div><h2 data-nl="Live in dagen, niet maanden">Live in days, not months</h2><p data-nl="Jij levert het product en de boodschap. Wij regelen de creators, het posten en het bijhouden.">You bring the product and the message. We handle the creators, the posting and the tracking.</p></div>
+      <div class="sec-h"><span class="pill" data-nl="Hoe het werkt">How it works</span><h2 data-nl="Live in dagen, niet maanden">Live in days, not months</h2><p data-nl="Jij levert het product en de boodschap. Wij regelen de creators, het posten en het bijhouden.">You bring the product and the message. We handle the creators, the posting and the tracking.</p></div>
       <div class="steps">
-        <div class="step"><div class="n">1</div><h3 data-nl="Briefing &amp; budget">Brief &amp; budget</h3><p data-nl="Vertel wat je wilt promoten en wat je budget is. Wij maken er kant-en-klare content van, met captions en hashtags, in de talen die je nodig hebt.">Tell us what to promote and your budget. We turn it into ready-to-post content with captions and hashtags, in every language you need.</p></div>
-        <div class="step"><div class="n">2</div><h3 data-nl="Creators posten">Creators post</h3><p data-nl="Geverifieerde creators posten je content op hun TikTok-accounts. Elk account krijgt content die het nog niet eerder heeft gepost, zodat feeds fris blijven.">Verified creators post your content on their TikTok accounts. Each account gets content it has not posted before, so feeds stay fresh.</p></div>
-        <div class="step"><div class="n">3</div><h3 data-nl="Jij ziet de resultaten">You see the results</h3><p data-nl="Views worden bij elke video automatisch bijgehouden. Je ziet views en video's live, en elke video wordt goedgekeurd voordat hij telt.">Views are tracked automatically on every video. You see views and videos live, and every video is approved before it counts.</p></div>
+        <div class="step"><div class="num">01</div><h3 data-nl="Briefing &amp; budget">Brief &amp; budget</h3><p data-nl="Vertel wat je wilt promoten en wat je budget is. Wij maken er kant-en-klare content van, met captions en hashtags, in de talen die je nodig hebt.">Tell us what to promote and your budget. We turn it into ready-to-post content with captions and hashtags, in every language you need.</p></div>
+        <div class="step"><div class="num">02</div><h3 data-nl="Creators posten">Creators post</h3><p data-nl="Geverifieerde creators posten je content op hun TikTok-accounts. Elk account krijgt content die het nog niet eerder heeft gepost, zodat feeds fris blijven.">Verified creators post your content on their TikTok accounts. Each account gets content it has not posted before, so feeds stay fresh.</p></div>
+        <div class="step"><div class="num">03</div><h3 data-nl="Jij ziet de resultaten">You see the results</h3><p data-nl="Views worden bij elke video automatisch bijgehouden. Je ziet views en video's live, en elke video wordt goedgekeurd voordat hij telt.">Views are tracked automatically on every video. You see views and videos live, and every video is approved before it counts.</p></div>
       </div>
     </div>
   </section>
