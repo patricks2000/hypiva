@@ -1,13 +1,13 @@
 <!doctype html>
-<html lang="en" data-nl-title="UGC-campagnes | Hypiva">
+<html lang="en" data-nl-title="UGC laten maken | UGC-video's voor merken | Hypiva">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>UGC campaigns | Hypiva</title>
-<meta name="description" content="Hypiva matches your brand with TikTok creators in English, Dutch, French and more for any kind of TikTok and UGC video. We handle the creators, the deals and the content.">
+<title>UGC videos for brands | Hypiva</title>
+<meta name="description" content="UGC laten maken voor je merk: echte UGC-video's van Nederlandse en Engelstalige creators voor TikTok, Instagram en advertenties. Prijs in overleg, eerste video's meestal binnen 7 dagen. Real UGC videos for brands by Dutch and English-speaking creators.">
 <meta name="theme-color" content="#0D0E13">
-<meta property="og:title" content="UGC campaigns | Hypiva">
-<meta property="og:description" content="TikTok creators for your brand, in your language. We handle everything.">
+<meta property="og:title" content="UGC videos for brands | Hypiva">
+<meta property="og:description" content="Real UGC videos by Dutch and English-speaking creators. We handle everything.">
 <meta property="og:image" content="https://hypiva.com/landing/og.png">
 <link rel="icon" href="/landing/icon.png">
 <link rel="apple-touch-icon" href="/landing/icon.png">
@@ -89,6 +89,10 @@ section{padding-block:76px}
 .sec-h p{color:var(--muted);font-size:19px;margin:14px 0 0}
 
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.steps.four{grid-template-columns:repeat(4,1fr)}
+@media (max-width:1100px){.steps.four{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){.steps.four{grid-template-columns:1fr}}
+.timeline{margin:22px 0 0;font-weight:700;color:var(--text)}
 .step{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:28px}
 .step .n{width:44px;height:44px;border-radius:14px;background:var(--grad);color:#1a0b05;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:22px}
 .step h3{font-size:22px;margin:18px 0 8px}
@@ -229,6 +233,27 @@ nav .links a.on{color:var(--text)}
 @media (max-width:560px){.ways{grid-template-columns:1fr}.ways a{flex-direction:row;gap:12px;justify-content:flex-start;padding:14px 16px}}
 .fab{display:none}
 @media (max-width:820px){.fab{display:inline-flex;position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:30;background:var(--grad);color:#1a0b05;font-weight:800;padding:13px 20px;border-radius:999px;box-shadow:0 10px 30px -8px rgba(255,90,61,.7);transition:opacity .2s,transform .2s}.fab.away{opacity:0;transform:translateY(20px);pointer-events:none}}
+
+/* Mobile menu (☰) instead of the scrolling link row */
+.menubtn{display:none;background:none;border:1px solid var(--line);border-radius:12px;width:40px;height:40px;place-items:center;cursor:pointer;color:var(--text);flex:none}
+.menubtn span{display:block;width:18px;height:2px;background:currentColor;border-radius:2px;box-shadow:0 6px 0 currentColor,0 -6px 0 currentColor}
+nav.open .menubtn span{box-shadow:none;transform:rotate(45deg)}
+nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;background:currentColor;border-radius:2px;transform:rotate(90deg)}
+.mpanel{display:none}
+@media (max-width:820px){
+  nav .sublinks{display:none!important}
+  .menubtn{display:inline-grid}
+  nav .login{display:none}
+  nav.open .mpanel{display:flex;flex-direction:column;padding:6px 16px 16px;border-top:1px solid rgba(42,45,56,.6)}
+  .mpanel a{padding:14px 4px;font-weight:700;font-size:17px;color:var(--text);border-bottom:1px solid rgba(42,45,56,.6)}
+  .mpanel a:last-child{border-bottom:0;color:var(--muted)}
+}
+.about{display:grid;grid-template-columns:minmax(0,420px) 1fr;gap:36px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:36px}
+.about-pic{width:100%;height:auto;aspect-ratio:4/3;border-radius:22px;object-fit:cover;display:block}
+.about h2{font-size:clamp(28px,4vw,40px);font-weight:800;margin:8px 0 16px}
+.about p{color:var(--muted);margin:0 0 14px;max-width:680px}
+.about .sign{color:var(--text);font-weight:700;margin-bottom:0}
+@media (max-width:900px){.about{grid-template-columns:1fr;padding:22px;gap:22px}}
 </style>
 </head>
 <body>
@@ -239,8 +264,10 @@ nav .links a.on{color:var(--text)}
     <button class="langbtn" id="langBtn" type="button" aria-label="Switch language">NL</button>
     <a class="login" href="/sign-in" data-nl="Inloggen">Log in</a>
     <a class="btn primary cta" href="#contact"><span class="long" data-nl="Neem contact op">Contact us</span><span class="short">Contact</span></a>
+    <button class="menubtn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mpanel"><span></span></button>
   </div>
   <div class="sublinks"><a href="/">Slideshows</a><a href="/ugc" style="color:var(--text)">UGC</a><a href="#how" data-nl="Hoe het werkt">How it works</a><a href="#faq" data-nl="Vragen">FAQ</a><a href="#contact">Contact</a></div>
+  <div class="mpanel" id="mpanel"><a href="/" data-nl="📱 Slideshows voor apps">📱 Slideshows for apps</a><a href="/ugc" data-nl="🎥 UGC voor merken">🎥 UGC for brands</a><a href="#how" data-nl="Hoe het werkt">How it works</a><a href="#options" data-nl="Prijs">Price</a><a href="#about" data-nl="Over ons">About</a><a href="#faq" data-nl="Vragen">FAQ</a><a href="#contact">Contact</a><a href="/sign-in" data-nl="Inloggen">Log in</a></div>
 </nav>
 
 <main>
@@ -249,7 +276,7 @@ nav .links a.on{color:var(--text)}
     <div>
       <div class="svc"><a href="/" data-nl="📱 Slideshows voor apps">📱 Slideshows for apps</a><a href="/ugc" class="on" data-nl="🎥 UGC voor merken">🎥 UGC for brands</a></div>
       <h1 data-nl='Echte creators.<br>Echte video&#39;s.<br><span class="hl">Gemaakt voor jouw merk.</span>'>Real creators.<br>Real videos.<br><span class="hl">Made for your brand.</span></h1>
-      <p class="lead" data-nl="Korte, eerlijke video's waardoor mensen je product vertrouwen, met creators in verschillende talen. Jij vertelt wat je wilt, wij regelen de rest.">Short, honest videos that make people trust your product, with creators in different languages. You tell us what you want, we handle the rest.</p>
+      <p class="lead" data-nl="Korte, eerlijke video's waardoor mensen je product vertrouwen, met Nederlandse en Engelstalige creators. Jij vertelt wat je wilt, wij regelen de rest.">Short, honest videos that make people trust your product, with Dutch and English-speaking creators. You tell us what you want, we handle the rest.</p>
       <div class="ctas"><a class="btn primary" href="#contact" data-nl="Vraag je eerste video's aan →">Get your first videos →</a><a class="btn ghost" href="#how" data-nl="Zo werkt het">How it works</a></div>
     </div>
     <div class="vcards" aria-hidden="true">
@@ -272,21 +299,24 @@ nav .links a.on{color:var(--text)}
     <div class="wrap">
       <span class="pill" data-nl="Hoe het werkt">How it works</span>
       <h2 data-nl="Van idee tot video, zonder gedoe">From idea to video, without the hassle</h2>
-      <p class="sub" data-nl="Drie simpele stappen. Jij houdt de regie, wij doen het werk.">Three simple steps. You stay in control, we do the work.</p>
-      <div class="steps">
-        <div class="step"><div class="num">01</div><h3 data-nl="Jij vertelt wat je wilt">Tell us what you want</h3><p data-nl="Je product, je doelgroep en wat voor video's. Een kort bericht is genoeg.">Your product, your audience and the kind of videos. A short message is enough.</p></div>
-        <div class="step"><div class="num">02</div><h3 data-nl="Wij kiezen de creators">We pick the creators</h3><p data-nl="We stellen creators voor die bij je merk, doelgroep en taal passen. Jij keurt ze goed.">We suggest creators who fit your brand, audience and language. You approve them.</p></div>
-        <div class="step"><div class="num">03</div><h3 data-nl="Jij krijgt je video's">You get your videos</h3><p data-nl="Wij checken elke video, jij bekijkt hem, en je gebruikt hem op je kanalen of in advertenties.">We check every video, you review it, and you use it on your channels or in ads.</p></div>
+      <p class="sub" data-nl="Vier duidelijke stappen. Jij weet altijd wat er gebeurt en wat je kunt verwachten.">Four clear steps. You always know what happens and what to expect.</p>
+      <div class="steps four">
+        <div class="step"><div class="num">01</div><h3 data-nl="Kennismaken">Get to know each other</h3><p data-nl="We leren je merk, je product en je doelgroep kennen. Zo maken we video's die echt bij jou passen.">We get to know your brand, product and audience, so the videos really fit you.</p></div>
+        <div class="step"><div class="num">02</div><h3 data-nl="Briefing &amp; budget">Brief &amp; budget</h3><p data-nl="We spreken samen af wat je krijgt: hoeveel video's, welke creators en wat het kost. Geen verrassingen.">We agree together on what you get: how many videos, which creators and the price. No surprises.</p></div>
+        <div class="step"><div class="num">03</div><h3 data-nl="Eerste versie">First version</h3><p data-nl="Je bekijkt de video's voordat je ze gebruikt. Wil je iets anders? Eén aanpassingsronde per video is inbegrepen.">You review the videos before you use them. Want something different? One round of changes per video is included.</p></div>
+        <div class="step"><div class="num">04</div><h3 data-nl="Live">Go live</h3><p data-nl="Je gebruikt de video's op je eigen kanalen of als advertentie. Wij denken mee over wat het beste werkt.">You use the videos on your own channels or as ads. We help you see what works best.</p></div>
       </div>
+      <p class="timeline" data-nl="⏱ Van kennismaking tot je eerste video's: meestal binnen 7 dagen.">⏱ From first chat to your first videos: usually within 7 days.</p>
+</div>
     </div>
   </section>
 
   <section id="options" style="padding-top:20px">
     <div class="wrap">
-      <div class="sec-h"><span class="pill" data-nl="Wat je krijgt">What you get</span><h2 data-nl="Video's die jij zelf gebruikt">Videos you use yourself</h2><p data-nl="Wij zoeken de creators en regelen alles. De prijs is per video, op basis van de lengte en hoe je hem gebruikt. Je weet hem vooraf.">We find the creators and handle everything. The price is per video, based on its length and how you use it. You know it upfront.</p></div>
+      <div class="sec-h"><span class="pill" data-nl="Wat je krijgt">What you get</span><h2 data-nl="Video's die jij zelf gebruikt">Videos you use yourself</h2><p data-nl="Wij zoeken de creators en regelen alles. De prijs is in overleg: we stemmen hem af op het aantal video&#39;s, de lengte en hoe je ze gebruikt. Je weet hem altijd vooraf.">We find the creators and handle everything. The price is agreed together: we base it on the number of videos, their length and how you use them. You always know it upfront.</p></div>
       <div class="opts" style="grid-template-columns:1fr">
         <div class="plan hot">
-          <span class="tag">UGC</span>
+          <span class="tag" data-nl="UGC · prijs in overleg">UGC · price on request</span>
           <h3 data-nl="Echte video's van echte creators">Real videos by real creators</h3>
           <p class="muted" style="margin:0" data-nl="De creator maakt de video en jij gebruikt hem zelf: op je eigen account, je website of als advertentie.">The creator makes the video and you use it yourself: on your own account, your website or as an ad.</p>
           <ul><li data-nl="Echte, natuurlijke content voor je eigen kanalen">Real, natural content for your own channels</li><li data-nl="Ideaal voor advertenties">Great for ads</li><li data-nl="Je bekijkt elke video voordat je hem gebruikt">You review every video before you use it</li><li data-nl="Eén aanpassingsronde per video inbegrepen">One round of changes per video included</li></ul>
@@ -296,12 +326,30 @@ nav .links a.on{color:var(--text)}
     </div>
   </section>
 
+  <section id="about" style="padding-block:20px 40px">
+    <div class="wrap">
+      <div class="about">
+        <img class="about-pic" src="/landing/patrick.webp" alt="Patrick from Hypiva" width="800" height="600" loading="lazy">
+        <div>
+        <span class="pill" data-nl="Over ons">About</span>
+        <h2 data-nl="Wie zit er achter Hypiva">Who's behind Hypiva</h2>
+        <p data-nl="Hoi, ik ben Patrick. 👋">Hi, I'm Patrick. 👋</p>
+        <p data-nl="Ik geloof dat een goed product gezien verdient te worden. Daarom laat Hypiva echte creators je product laten zien, zoals mensen het echt gebruiken.">I believe a good product deserves to be seen. That's why Hypiva has real creators show your product the way people actually use it.</p>
+        <p data-nl="Hypiva is klein en persoonlijk: je werkt direct met mij, van de eerste kennismaking tot de laatste video. Ik ga graag een langere samenwerking aan, zodat we samen leren wat het beste werkt voor jouw merk.">Hypiva is small and personal: you work with me directly, from the first chat to the last video. I like to build long-term partnerships, so we learn together what works best for your brand.</p>
+        <p class="sign" data-nl="Heb jij iets wat mensen moeten zien? Laten we het waarmaken. 🚀">Got something you want people to see? Let's make it happen. 🚀</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="faq">
     <div class="wrap">
       <div class="sec-h"><span class="pill" data-nl="Vragen">FAQ</span><h2 data-nl="Wat merken ons vragen">Questions brands ask</h2></div>
       <div class="faq">
-        <details open><summary data-nl="Met wat voor creators werken jullie?">What kind of creators do you work with?</summary><p data-nl="TikTok- en UGC-creators in allerlei niches, in het Nederlands, Engels en meer. We kiezen per merk creators wiens content en publiek echt bij je product passen.">TikTok and UGC creators in many niches, in English, Dutch, French and more. For every brand we pick creators whose content and audience really fit your product.</p></details>
-        <details><summary data-nl="Wat kost het?">What does it cost?</summary><p data-nl="Dat hangt af van het aantal creators en het soort video. Vertel wat je in gedachten hebt en je krijgt een duidelijke prijs, van een kleine test tot een grotere campagne.">It depends on the number of creators and the type of video. Tell us what you have in mind and you get a clear price, from a small test to a bigger campaign.</p></details>
+        <details open><summary data-nl="Met wat voor creators werken jullie?">What kind of creators do you work with?</summary><p data-nl="TikTok- en UGC-creators in allerlei niches, in het Nederlands en Engels. We kiezen per merk creators wiens content en publiek echt bij je product passen.">TikTok and UGC creators in many niches, in Dutch and English. For every brand we pick creators whose content and audience really fit your product.</p></details>
+        <details><summary data-nl="Wat kost het?">What does it cost?</summary><p data-nl="De prijs is in overleg en hangt af van het aantal video&#39;s, de creators en hoe je de video&#39;s gebruikt. Vertel wat je in gedachten hebt en je krijgt vooraf een duidelijke prijs, van een kleine test tot een grotere campagne.">The price is agreed together and depends on the number of videos, the creators and how you use the videos. Tell us what you have in mind and you get a clear price upfront, from a small test to a bigger campaign.</p></details>
+        <details><summary data-nl="In welke talen kan het?">Which languages are available?</summary><p data-nl="Op dit moment maken we UGC-video&#39;s in het Nederlands en Engels. Heb je een andere taal nodig? Dat kan in overleg, laat het ons weten.">Right now we make UGC videos in Dutch and English. Need another language? That's possible on request, just let us know.</p></details>
+        <details><summary data-nl="Wat als ik niet tevreden ben?">What if I'm not happy with a video?</summary><p data-nl="Dan bespreken we het samen met de creator en passen we de video aan. Eén aanpassingsronde per video is altijd inbegrepen.">Then we talk it through together with the creator and adjust the video. One round of changes per video is always included.</p></details>
         <details><summary data-nl="Kan ik de video zien voordat hij online gaat?">Can I see the video before it goes live?</summary><p data-nl="Ja. Je bekijkt elke video vooraf en kunt om een aanpassing vragen.">Yes. You review every video first and can ask for a change.</p></details>
         <details><summary data-nl="Mogen we de video ook als advertentie gebruiken?">Can we use the video as an ad?</summary><p data-nl="Ja. We spreken vooraf af hoe en hoe lang je de video mag gebruiken.">Yes. We agree upfront how and for how long you can use it.</p></details>
       </div>
@@ -362,6 +410,7 @@ nav .links a.on{color:var(--text)}
   </div>
 </footer>
 <script src="/landing/fab.js" defer></script>
+<script src="/landing/menu.js" defer></script>
 <script src="/landing/lang.js"></script>
 <script src="/landing/contact.js" defer></script>
 </body>
