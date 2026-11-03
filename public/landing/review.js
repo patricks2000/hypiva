@@ -16,8 +16,8 @@
   text.addEventListener('input', function () { counter.textContent = text.value.length + ' / 600'; });
   // English and Dutch texts; the page language comes from the switch in lang.js.
   var TEXT = {
-    en: { choose: 'Choose photo', change: 'Change photo', type: 'Please pick a JPG, PNG or WebP image.', big: 'That photo is too big. Please pick one under 15 MB.', read: 'We could not read that photo. Please try another one.', thanks: 'Thanks! We got your review.', rating: 'Please pick a rating.', name: 'Please add your name.', more: 'Please write a few more words.', sending: 'Sending…', ok: 'Thank you! 💜 Your review will show on our website after a quick check.', err: 'Something went wrong. You can also email your review to patrick@hypiva.com.', send: 'Send review' },
-    nl: { choose: 'Kies foto', change: 'Andere foto', type: 'Kies een JPG-, PNG- of WebP-afbeelding.', big: 'Die foto is te groot. Kies er een onder 15 MB.', read: 'We konden die foto niet lezen. Probeer een andere.', thanks: 'Dankjewel! We hebben je review ontvangen.', rating: 'Kies een beoordeling.', name: 'Vul je naam in.', more: 'Schrijf nog een paar woorden.', sending: 'Versturen…', ok: 'Dankjewel! 💜 Je review verschijnt op onze website na een korte check.', err: 'Er ging iets mis. Je kunt je review ook mailen naar patrick@hypiva.com.', send: 'Verstuur review' },
+    en: { choose: 'Choose photo', change: 'Change photo', type: 'Please pick a JPG, PNG or WebP image.', big: 'That photo is too big. Please pick one under 15 MB.', read: 'We could not read that photo. Please try another one.', thanks: 'Thanks! We got your review.', rating: 'Please pick a rating.', service: 'Please choose what we did for you.', name: 'Please add your name.', more: 'Please write a few more words.', sending: 'Sending…', ok: 'Thank you! 💜 Your review will show on our website after a quick check.', err: 'Something went wrong. You can also email your review to patrick@hypiva.com.', send: 'Send review' },
+    nl: { choose: 'Kies foto', change: 'Andere foto', type: 'Kies een JPG-, PNG- of WebP-afbeelding.', big: 'Die foto is te groot. Kies er een onder 15 MB.', read: 'We konden die foto niet lezen. Probeer een andere.', thanks: 'Dankjewel! We hebben je review ontvangen.', rating: 'Kies een beoordeling.', service: 'Kies waarvoor je met ons werkte.', name: 'Vul je naam in.', more: 'Schrijf nog een paar woorden.', sending: 'Versturen…', ok: 'Dankjewel! 💜 Je review verschijnt op onze website na een korte check.', err: 'Er ging iets mis. Je kunt je review ook mailen naar patrick@hypiva.com.', send: 'Verstuur review' },
   };
   function T() { return document.documentElement.lang === 'nl' ? TEXT.nl : TEXT.en; }
   function say(t, ok) { msg.textContent = t; msg.style.color = ok ? '#3DDC97' : '#FFC24B'; }
@@ -80,17 +80,25 @@
     }).catch(function () { return null; }); // photo is optional: send the review without it
   }
 
+  // hypiva.com/write-review?for=ugc (or =slideshows) picks the service upfront.
+  var pre = new URLSearchParams(location.search).get('for');
+  var sel = document.getElementById('serviceSelect');
+  if (sel && (pre === 'ugc' || pre === 'slideshows')) sel.value = pre;
+  // form.reset() would clear it again, so keep the link's choice after sending.
+  function keepService() { if (sel && (pre === 'ugc' || pre === 'slideshows')) sel.value = pre; }
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var d = {};
     new FormData(form).forEach(function (v, k) { if (typeof v === 'string') d[k] = v.trim(); });
     if (d.website) { form.reset(); resetPhoto(); return say(T().thanks, true); } // bot
     if (!d.rating) return say(T().rating);
+    if (d.service !== 'slideshows' && d.service !== 'ugc') return say(T().service);
     if (!d.name) return say(T().name);
     if (d.body.length < 10) return say(T().more);
     var btn = form.querySelector('button'); btn.disabled = true; btn.textContent = T().sending;
     uploadPhoto().then(function (photoUrl) {
-      var row = { name: d.name.slice(0, 80), company: (d.company || '').slice(0, 100), role: (d.role || '').slice(0, 80), body: d.body.slice(0, 600), rating: Number(d.rating), lang: document.documentElement.lang === 'nl' ? 'nl' : 'en' };
+      var row = { name: d.name.slice(0, 80), company: (d.company || '').slice(0, 100), role: (d.role || '').slice(0, 80), body: d.body.slice(0, 600), rating: Number(d.rating), service: d.service, lang: document.documentElement.lang === 'nl' ? 'nl' : 'en' };
       if (photoUrl) row.photo_url = photoUrl;
       return fetch(URL, {
         method: 'POST',
@@ -99,7 +107,7 @@
       });
     }).then(function (r) {
       if (!r.ok) throw new Error();
-      form.reset(); resetPhoto(); counter.textContent = '0 / 600';
+      form.reset(); keepService(); resetPhoto(); counter.textContent = '0 / 600';
       say(T().ok, true);
     }).catch(function () {
       say(T().err);

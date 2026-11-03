@@ -101,10 +101,14 @@ export default function People() {
         {q.data ? (
           <Card style={{ gap: 10, borderColor: q.data.reviews.some((x) => !x.approved) ? colors.accent : colors.line }}>
             <T variant="h2">Reviews</T>
-            <T variant="muted">Clients write a review at hypiva.com/write-review. Tap Show on site to put it on the homepage, Hide to take it off, Delete to remove it.</T>
+            <T variant="muted">Clients write a review at hypiva.com/write-review. Tap Show on site to put it on the homepage (slideshows) or the UGC page, Hide to take it off, Delete to remove it.</T>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-              <Button small kind="ghost" title="Copy review link" onPress={async () => {
-                await copy('https://www.hypiva.com/write-review');
+              <Button small kind="ghost" title="Copy slideshow review link" onPress={async () => {
+                await copy('https://www.hypiva.com/write-review?for=slideshows');
+                show('Link copied');
+              }} />
+              <Button small kind="ghost" title="Copy UGC review link" onPress={async () => {
+                await copy('https://www.hypiva.com/write-review?for=ugc');
                 show('Link copied');
               }} />
             </View>
@@ -112,7 +116,7 @@ export default function People() {
               <View key={x.id} style={{ gap: 2, borderTopWidth: 1, borderTopColor: colors.line, paddingTop: 10 }}>
                 <T variant="bodyStrong" selectable>{'★'.repeat(x.rating)}{'☆'.repeat(5 - x.rating)} {x.name}{x.role ? ` · ${x.role}` : ''}{x.company ? ` · ${x.company}` : ''}</T>
                 <T variant="body" selectable>{x.body}</T>
-                <T variant="small">{day(x.created_at)} · {x.approved ? 'On the site' : 'Waiting for you'}</T>
+                <T variant="small">{day(x.created_at)} · {x.service === 'ugc' ? 'UGC page' : 'Homepage (slideshows)'} · {x.approved ? 'On the site' : 'Waiting for you'}</T>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 6 }}>
                   <Button small kind={x.approved ? 'ghost' : 'primary'} title={x.approved ? 'Hide' : 'Show on site'} onPress={async () => {
                     const { error } = await supabase.from('reviews').update({ approved: !x.approved }).eq('id', x.id);
