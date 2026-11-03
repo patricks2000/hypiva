@@ -12,7 +12,7 @@
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
   function get(u) { return fetch(u, { headers: { apikey: KEY, Authorization: 'Bearer ' + KEY } }); }
   var FROM = { en: { en: 'Translated from English', nl: 'Vertaald uit het Engels' }, nl: { en: 'Translated from Dutch', nl: 'Vertaald uit het Nederlands' } };
-  var TAG = { slideshows: { en: 'TikTok slideshows', nl: 'TikTok-slideshows' }, ugc: { en: 'UGC videos', nl: "UGC-video's" } };
+  var TAG = { slideshows: { en: 'slideshow campaign', nl: 'slideshow-campagne' }, ugc: { en: 'UGC campaign', nl: 'UGC-campagne' } };
   var rows = [];
   function render() {
     var page = document.documentElement.lang === 'nl' ? 'nl' : 'en';
@@ -20,10 +20,7 @@
     rows.forEach(function (x) {
       var own = (x.lang || 'en') === page || !x.translation;
       var card = el('figure', 'review');
-      var top = el('div', 'review-top');
-      top.appendChild(el('div', 'review-stars', '★★★★★'.slice(0, x.rating) + '☆☆☆☆☆'.slice(0, 5 - x.rating)));
-      top.appendChild(el('span', 'review-tag', TAG[x.service === 'ugc' ? 'ugc' : 'slideshows'][page]));
-      card.appendChild(top);
+      card.appendChild(el('div', 'review-stars', '★★★★★'.slice(0, x.rating) + '☆☆☆☆☆'.slice(0, 5 - x.rating)));
       card.appendChild(el('blockquote', '', '“' + (own ? x.body : x.translation) + '”'));
       if (!own) card.appendChild(el('span', 'review-note', FROM[x.lang][page]));
       var who = el('figcaption');
@@ -38,8 +35,10 @@
       who.appendChild(pic);
       var txt = el('div');
       txt.appendChild(el('b', '', x.name));
+      // Same as the small quote at the top of the homepage: "Founder, TheCozyDev (slideshow campaign)".
       var sub = [x.role, x.company].filter(Boolean).join(', ');
-      if (sub) txt.appendChild(el('span', '', sub));
+      var kind = '(' + TAG[x.service === 'ugc' ? 'ugc' : 'slideshows'][page] + ')';
+      txt.appendChild(el('span', '', sub ? sub + ' ' + kind : kind));
       who.appendChild(txt);
       card.appendChild(who);
       list.appendChild(card);
