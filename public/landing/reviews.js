@@ -1,4 +1,4 @@
-// Homepage: shows approved client reviews. The section stays hidden until there is at least one.
+// Homepage and UGC page: show approved client reviews. The section stays hidden until there is at least one.
 // Each review shows in the page language: the client's own words, or the admin's translation with a "Translated from ..." note.
 (function () {
   var box = document.getElementById('reviews');
