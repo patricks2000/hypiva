@@ -19,6 +19,14 @@
       "destination": "/influencers.html"
     },
     {
+      "source": "/blog",
+      "destination": "/blog/index.html"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/blog/:slug.html"
+    },
+    {
       "source": "/((?!landing/|_expo/|assets/|favicon).*)",
       "destination": "/app.html"
     }
