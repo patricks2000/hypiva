@@ -12,10 +12,12 @@
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
   function get(u) { return fetch(u, { headers: { apikey: KEY, Authorization: 'Bearer ' + KEY } }); }
   var FROM = { en: { en: 'Translated from English', nl: 'Vertaald uit het Engels' }, nl: { en: 'Translated from Dutch', nl: 'Vertaald uit het Nederlands' } };
-  var TAG = { slideshows: { en: 'slideshow campaign', nl: 'slideshow-campagne' }, ugc: { en: 'UGC campaign', nl: 'UGC-campagne' } };
+  var TAG = { slideshows: { en: 'slideshow campaign', nl: 'slideshow-campagne', fr: 'campagne slideshow' }, ugc: { en: 'UGC campaign', nl: 'UGC-campagne', fr: 'campagne UGC' } };
   var rows = [];
   function render() {
-    var page = document.documentElement.lang === 'nl' ? 'nl' : 'en';
+    var lang = document.documentElement.lang;
+    var page = lang === 'nl' ? 'nl' : 'en'; // reviews and their translations exist in English and Dutch; French pages read the English version
+    var label = lang === 'fr' ? 'fr' : page;
     list.textContent = '';
     rows.forEach(function (x) {
       var own = (x.lang || 'en') === page || !x.translation;
@@ -37,7 +39,7 @@
       txt.appendChild(el('b', '', x.name));
       // Same as the small quote at the top of the homepage: "Founder, TheCozyDev (slideshow campaign)".
       var sub = [x.role, x.company].filter(Boolean).join(', ');
-      var kind = '(' + TAG[x.service === 'ugc' ? 'ugc' : 'slideshows'][page] + ')';
+      var kind = '(' + TAG[x.service === 'ugc' ? 'ugc' : 'slideshows'][label] + ')';
       txt.appendChild(el('span', '', sub ? sub + ' ' + kind : kind));
       who.appendChild(txt);
       card.appendChild(who);

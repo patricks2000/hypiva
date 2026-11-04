@@ -4,20 +4,21 @@
   var msg = document.getElementById('leadMsg');
   if (!form) return;
   var topic = form.getAttribute('data-topic');
-  // Read the language each time: the influencer page can switch between English and Dutch.
-  function isNl() { return form.getAttribute('data-lang') === 'nl'; }
+  // Read the language each time: the pages can switch between English, Dutch and French.
+  function lang() { var l = form.getAttribute('data-lang'); return l === 'nl' || l === 'fr' ? l : 'en'; }
   var TEXT = {
     nl: { name: 'Vul je naam in.', email: 'Vul een geldig e-mailadres in.', sending: 'Versturen…', ok: 'Dankjewel! We hebben je aanvraag ontvangen en proberen binnen één werkdag te reageren.', also: ' Je kunt ook mailen naar patrick@hypiva.com.', send: 'Verstuur', err: 'Er ging iets mis.' },
+    fr: { name: 'Indiquez votre nom.', email: 'Indiquez une adresse e-mail valide.', sending: 'Envoi…', ok: 'Merci ! Nous avons bien reçu votre demande et essayons de répondre sous un jour ouvré.', also: ' Vous pouvez aussi écrire à patrick@hypiva.com.', send: 'Envoyer la demande', err: 'Une erreur est survenue.' },
     en: { name: 'Please add your name.', email: 'Please add a valid email address.', sending: 'Sending…', ok: 'Thanks! We got your request and try to reply within one working day.', also: ' You can also email patrick@hypiva.com.', send: 'Send request', err: 'Something went wrong' },
   };
-  function T() { return isNl() ? TEXT.nl : TEXT.en; }
+  function T() { return TEXT[lang()]; }
   var startCurrency = (form.querySelector('input[name=currency]:checked') || {}).value || 'USD';
 
   // Currency toggle: rewrite the budget options with $ or €.
   function setCurrency(cur) {
     var sym = cur === 'EUR' ? '€' : '$';
     form.querySelectorAll('select[name=budget] option[data-label]').forEach(function (o) {
-      o.textContent = ((isNl() && o.getAttribute('data-label-nl')) || o.getAttribute('data-label')).split('{c}').join(sym);
+      o.textContent = (o.getAttribute('data-label-' + lang()) || o.getAttribute('data-label')).split('{c}').join(sym);
     });
   }
   form.querySelectorAll('input[name=currency]').forEach(function (r) {
