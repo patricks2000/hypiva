@@ -1,5 +1,5 @@
 // English / Dutch switch. English is in the page; Dutch lives in data-nl (data-nl-placeholder for input hints,
-// data-nl-title on <html> for the tab title). Starts in English, remembers the choice; ?lang=nl or ?lang=en forces one.
+// data-nl-title on <html> for the tab title). Starts in the browser's language (Dutch for nl, otherwise English), remembers the choice; ?lang=nl or ?lang=en forces one.
 (function () {
   var els = document.querySelectorAll('[data-nl]');
   els.forEach(function (el) { el.setAttribute('data-en', el.innerHTML); });
@@ -25,7 +25,10 @@
   }
   var q = (location.search.match(/[?&]lang=(nl|en)/) || [])[1];
   var saved = null; try { saved = localStorage.getItem('hypiva-lang'); } catch (e) {}
-  var start = q || saved || 'en';
+  // No choice yet: follow the browser's language, so Dutch speakers (nl, nl-NL, nl-BE) get Dutch and everyone else English.
+  var langs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || '']);
+  var browser = /^nl\b/i.test(langs[0] || '') ? 'nl' : 'en';
+  var start = q || saved || browser;
   btns.forEach(function (b) { b.addEventListener('click', function () { set(root.lang === 'nl' ? 'en' : 'nl'); }); });
   if (start === 'nl') set('nl');
 })();
