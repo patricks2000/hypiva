@@ -38,3 +38,4 @@ footer{border-top:1px solid var(--line);padding:26px 0;color:var(--faint);font-s
 footer .wrap{display:flex;gap:18px;flex-wrap:wrap}
 footer .flinks{margin-left:auto;display:flex;gap:18px}
 footer a:hover{color:var(--text)}
+.creator-box{margin-top:20px;padding:24px 30px}.creator-box h2{font-size:20px}.creator-box p{margin-bottom:0}.creator-box a{color:var(--accent);font-weight:700}
