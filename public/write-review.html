@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-nl-title="Schrijf een review | Hypiva">
+<html lang="en" data-nl-title="Schrijf een review | Hypiva" data-fr-title="Laisser un avis | Hypiva">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -189,7 +189,7 @@ footer .wrap > span{flex-wrap:wrap}
   <div class="wrap">
     <a class="brand" href="/"><img src="/landing/icon.png" alt=""><span>hyp<b>iva</b></span></a>
     <button class="langbtn" id="langBtn" type="button" aria-label="Naar Nederlands" style="margin-left:auto">NL</button>
-    <a class="login" href="/" data-nl="Terug naar hypiva.com">Back to hypiva.com</a>
+    <a class="login" href="/" data-nl="Terug naar hypiva.com" data-fr="Retour à hypiva.com">Back to hypiva.com</a>
   </div>
 </nav>
 <main>
@@ -197,11 +197,11 @@ footer .wrap > span{flex-wrap:wrap}
     <div class="wrap">
       <div class="final" id="review">
         <img src="/landing/icon.png" alt="" width="72" height="72" style="margin:0 auto;border-radius:18px">
-        <h2 style="margin-top:18px" data-nl="Hoe was het werken met Hypiva?">How was working with Hypiva?</h2>
-        <p data-nl="Je eerlijke review helpt andere merken en apps bij hun keuze. Hij verschijnt op onze website na een korte check.">Your honest review helps other brands and apps decide. It shows on our website after a quick check.</p>
+        <h2 style="margin-top:18px" data-nl="Hoe was het werken met Hypiva?" data-fr="Comment s&#39;est passée votre collaboration avec Hypiva ?">How was working with Hypiva?</h2>
+        <p data-nl="Je eerlijke review helpt andere merken en apps bij hun keuze. Hij verschijnt op onze website na een korte check." data-fr="Votre avis sincère aide d&#39;autres marques et apps à faire leur choix. Il apparaîtra sur notre site après une rapide vérification.">Your honest review helps other brands and apps decide. It shows on our website after a quick check.</p>
         <form id="reviewForm" class="lead" novalidate>
           <div>
-            <span style="display:block;font-weight:600;font-size:14px;color:var(--muted);margin-bottom:6px" id="ratingLabel" data-nl="Je beoordeling">Your rating</span>
+            <span style="display:block;font-weight:600;font-size:14px;color:var(--muted);margin-bottom:6px" id="ratingLabel" data-nl="Je beoordeling" data-fr="Votre note">Your rating</span>
             <div class="stars" role="radiogroup" aria-labelledby="ratingLabel">
               <input type="radio" id="r5" name="rating" value="5"><label for="r5" title="5 stars">★</label>
               <input type="radio" id="r4" name="rating" value="4"><label for="r4" title="4 stars">★</label>
@@ -210,29 +210,29 @@ footer .wrap > span{flex-wrap:wrap}
               <input type="radio" id="r1" name="rating" value="1"><label for="r1" title="1 star">★</label>
             </div>
           </div>
-          <label><span data-nl="Waarvoor werkte je met ons?">What did we do for you?</span>
+          <label><span data-nl="Waarvoor werkte je met ons?" data-fr="Qu&#39;avons-nous fait pour vous ?">What did we do for you?</span>
             <select name="service" id="serviceSelect" required>
-              <option value="" data-nl="Kies een dienst">Choose a service</option>
-              <option value="slideshows" data-nl="TikTok-slideshows voor mijn app">TikTok slideshows for my app</option>
-              <option value="ugc" data-nl="UGC-video's voor mijn merk">UGC videos for my brand</option>
+              <option value="" data-nl="Kies een dienst" data-fr="Choisissez un service">Choose a service</option>
+              <option value="slideshows" data-nl="TikTok-slideshows voor mijn app" data-fr="Des slideshows TikTok pour mon app">TikTok slideshows for my app</option>
+              <option value="ugc" data-nl="UGC-video's voor mijn merk" data-fr="Des vidéos UGC pour ma marque">UGC videos for my brand</option>
             </select>
           </label>
           <div class="row2">
-            <label><span data-nl="Je naam">Your name</span><input name="name" required maxlength="80" autocomplete="name"></label>
-            <label><span data-nl="Bedrijf of app">Company or app</span><input name="company" maxlength="100" autocomplete="organization"></label>
+            <label><span data-nl="Je naam" data-fr="Votre nom">Your name</span><input name="name" required maxlength="80" autocomplete="name"></label>
+            <label><span data-nl="Bedrijf of app" data-fr="Entreprise ou app">Company or app</span><input name="company" maxlength="100" autocomplete="organization"></label>
           </div>
-          <label><span data-nl='Je functie <em style="font-weight:500">(optioneel, bijvoorbeeld Oprichter)</em>'>Your role <em style="font-weight:500">(optional, for example Founder)</em></span><input name="role" maxlength="80" autocomplete="organization-title"></label>
-          <label><span data-nl="Je review">Your review</span><textarea name="body" rows="5" maxlength="600" required placeholder="What did we do for you, and how did it go?" data-nl-placeholder="Wat hebben we voor je gedaan, en hoe ging het?"></textarea></label>
+          <label><span data-nl='Je functie <em style="font-weight:500">(optioneel, bijvoorbeeld Oprichter)</em>' data-fr='Votre fonction <em style="font-weight:500">(facultatif, par exemple Fondateur)</em>'>Your role <em style="font-weight:500">(optional, for example Founder)</em></span><input name="role" maxlength="80" autocomplete="organization-title"></label>
+          <label><span data-nl="Je review" data-fr="Votre avis">Your review</span><textarea name="body" rows="5" maxlength="600" required placeholder="What did we do for you, and how did it go?" data-nl-placeholder="Wat hebben we voor je gedaan, en hoe ging het?" data-fr-placeholder="Qu&#39;avons-nous fait pour vous, et comment ça s&#39;est passé ?"></textarea></label>
           <div class="counter" id="counter">0 / 600</div>
           <div class="photo">
             <div class="photo-prev" id="photoPrev" aria-hidden="true">+</div>
-            <label class="photo-pick"><span data-nl="Je foto of logo <em>(optioneel, staat naast je review)</em>">Your photo or logo <em>(optional, shown next to your review)</em></span>
+            <label class="photo-pick"><span data-nl="Je foto of logo <em>(optioneel, staat naast je review)</em>" data-fr="Votre photo ou logo <em>(facultatif, affiché à côté de votre avis)</em>">Your photo or logo <em>(optional, shown next to your review)</em></span>
               <input type="file" name="photo" id="photoInput" accept="image/jpeg,image/png,image/webp">
-              <span class="photo-btn" id="photoBtn" data-nl="Kies foto">Choose photo</span>
+              <span class="photo-btn" id="photoBtn" data-nl="Kies foto" data-fr="Choisir une photo">Choose photo</span>
             </label>
           </div>
           <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
-          <button class="btn primary" type="submit" data-nl="Verstuur review">Send review</button>
+          <button class="btn primary" type="submit" data-nl="Verstuur review" data-fr="Envoyer l&#39;avis">Send review</button>
           <p class="formmsg" id="reviewMsg" role="status"></p>
         </form>
       </div>
@@ -244,10 +244,10 @@ footer .wrap > span{flex-wrap:wrap}
     <span class="brand" style="font-size:19px"><img src="/landing/icon.png" alt="" style="width:26px;height:26px;border-radius:7px"><span>hyp<b>iva</b></span></span>
     <span>© 2026 Hypiva</span>
     <span class="social"><a href="https://www.tiktok.com/@hypiva.agency" target="_blank" rel="noopener">TikTok</a><a href="https://www.instagram.com/hypiva/" target="_blank" rel="noopener">Instagram</a><a href="https://www.linkedin.com/company/hypiva/" target="_blank" rel="noopener">LinkedIn</a><a href="https://x.com/hypiva" target="_blank" rel="noopener">X</a></span>
-    <span style="margin-left:auto;display:flex;gap:18px"><a href="/">hypiva.com</a><a href="mailto:patrick@hypiva.com">Contact</a><a href="/privacy" data-nl="Privacy">Privacy</a></span>
+    <span style="margin-left:auto;display:flex;gap:18px"><a href="/">hypiva.com</a><a href="mailto:patrick@hypiva.com">Contact</a><a href="/privacy" data-nl="Privacy" data-fr="Confidentialité">Privacy</a></span>
   </div>
 </footer>
-<script src="/landing/review.js" defer></script>
+<script src="/landing/review.js?v=2" defer></script>
 <script src="/landing/lang.js?v=6"></script>
 </body>
 </html>

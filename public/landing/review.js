@@ -14,12 +14,14 @@
   var text = form.querySelector('textarea[name=body]');
   var photo = null; // JPEG blob, ready to upload
   text.addEventListener('input', function () { counter.textContent = text.value.length + ' / 600'; });
-  // English and Dutch texts; the page language comes from the switch in lang.js.
+  // English, Dutch and French texts; the page language comes from the switch in lang.js.
   var TEXT = {
     en: { choose: 'Choose photo', change: 'Change photo', type: 'Please pick a JPG, PNG or WebP image.', big: 'That photo is too big. Please pick one under 15 MB.', read: 'We could not read that photo. Please try another one.', thanks: 'Thanks! We got your review.', rating: 'Please pick a rating.', service: 'Please choose what we did for you.', name: 'Please add your name.', more: 'Please write a few more words.', sending: 'Sending…', ok: 'Thank you! 💜 Your review will show on our website after a quick check.', err: 'Something went wrong. You can also email your review to patrick@hypiva.com.', send: 'Send review' },
     nl: { choose: 'Kies foto', change: 'Andere foto', type: 'Kies een JPG-, PNG- of WebP-afbeelding.', big: 'Die foto is te groot. Kies er een onder 15 MB.', read: 'We konden die foto niet lezen. Probeer een andere.', thanks: 'Dankjewel! We hebben je review ontvangen.', rating: 'Kies een beoordeling.', service: 'Kies waarvoor je met ons werkte.', name: 'Vul je naam in.', more: 'Schrijf nog een paar woorden.', sending: 'Versturen…', ok: 'Dankjewel! 💜 Je review verschijnt op onze website na een korte check.', err: 'Er ging iets mis. Je kunt je review ook mailen naar patrick@hypiva.com.', send: 'Verstuur review' },
+    fr: { choose: 'Choisir une photo', change: 'Changer de photo', type: 'Choisissez une image JPG, PNG ou WebP.', big: 'Cette photo est trop lourde. Choisissez-en une de moins de 15 Mo.', read: "Nous n'avons pas pu lire cette photo. Essayez-en une autre.", thanks: 'Merci ! Nous avons bien reçu votre avis.', rating: 'Choisissez une note.', service: "Choisissez ce que nous avons fait pour vous.", name: 'Ajoutez votre nom.', more: 'Écrivez encore quelques mots.', sending: 'Envoi…', ok: 'Merci ! 💜 Votre avis apparaîtra sur notre site après une rapide vérification.', err: "Une erreur s'est produite. Vous pouvez aussi envoyer votre avis à patrick@hypiva.com.", send: "Envoyer l'avis" },
   };
-  function T() { return document.documentElement.lang === 'nl' ? TEXT.nl : TEXT.en; }
+  function lang() { var l = document.documentElement.lang; return l === 'nl' || l === 'fr' ? l : 'en'; }
+  function T() { return TEXT[lang()]; }
   function say(t, ok) { msg.textContent = t; msg.style.color = ok ? '#3DDC97' : '#FFC24B'; }
   document.addEventListener('hypiva:lang', function () { photoBtn.textContent = photo ? T().change : T().choose; });
 
@@ -98,7 +100,7 @@
     if (d.body.length < 10) return say(T().more);
     var btn = form.querySelector('button'); btn.disabled = true; btn.textContent = T().sending;
     uploadPhoto().then(function (photoUrl) {
-      var row = { name: d.name.slice(0, 80), company: (d.company || '').slice(0, 100), role: (d.role || '').slice(0, 80), body: d.body.slice(0, 600), rating: Number(d.rating), service: d.service, lang: document.documentElement.lang === 'nl' ? 'nl' : 'en' };
+      var row = { name: d.name.slice(0, 80), company: (d.company || '').slice(0, 100), role: (d.role || '').slice(0, 80), body: d.body.slice(0, 600), rating: Number(d.rating), service: d.service, lang: lang() };
       if (photoUrl) row.photo_url = photoUrl;
       return fetch(URL, {
         method: 'POST',
