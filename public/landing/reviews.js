@@ -50,9 +50,7 @@
       var txt = el('div');
       txt.appendChild(el('b', '', x.name));
       // Same as the small quote at the top of the homepage: "Founder, TheCozyDev (slideshow campaign)".
-      // The job title can be translated too ("role_nl", "role_fr" in translations), e.g. Founder -> Oprichter.
-      var role = (lang !== (x.lang || 'en') && x.translations && x.translations['role_' + lang]) || x.role;
-      var sub = [role, x.company].filter(Boolean).join(', ');
+      var sub = [x.role, x.company].filter(Boolean).join(', '); // name, job title and company stay as the client wrote them
       var kind = '(' + TAG[x.service === 'ugc' ? 'ugc' : 'slideshows'][lang] + ')';
       txt.appendChild(el('span', '', sub ? sub + ' ' + kind : kind));
       who.appendChild(txt);
