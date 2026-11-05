@@ -70,8 +70,13 @@
   }
   function openMenu(b) {
     var r = b.getBoundingClientRect();
+    // Open under the button, kept fully on screen (aligned to the button's right edge, or its left edge
+    // when the button sits on the left half).
     menu.style.top = (r.bottom + 8) + 'px';
-    menu.style.right = Math.max(8, window.innerWidth - r.right) + 'px';
+    menu.style.left = 'auto'; menu.style.right = 'auto';
+    var w = menu.offsetWidth || 190, vw = document.documentElement.clientWidth;
+    var left = r.left + r.width / 2 < vw / 2 ? r.left : r.right - w;
+    menu.style.left = Math.min(Math.max(8, left), vw - w - 8) + 'px';
     menu.querySelectorAll('button').forEach(function (m) { m.setAttribute('aria-checked', String(m.getAttribute('data-l') === root.lang)); });
     menu.classList.add('show');
     opener = b; b.setAttribute('aria-expanded', 'true');
