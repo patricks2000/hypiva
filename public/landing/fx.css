@@ -1,0 +1,150 @@
+/* Hypiva visual effects: 3D hero, depth on cards, scroll reveals. Works together with fx.js.
+   Everything here is decoration: without this file (or without JavaScript) the pages still work. */
+
+@property --fx-a{syntax:"<angle>";inherits:false;initial-value:0deg}
+
+/* ---------- Page background: slow coloured glow ---------- */
+body::before{content:"";position:fixed;inset:-20%;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(38% 32% at 18% 16%,rgba(255,106,61,.13),transparent 70%),
+    radial-gradient(34% 30% at 86% 30%,rgba(232,48,122,.11),transparent 70%),
+    radial-gradient(40% 36% at 50% 92%,rgba(123,97,255,.09),transparent 70%);
+  animation:fx-drift 22s ease-in-out infinite alternate}
+@keyframes fx-drift{to{transform:translate3d(3%,-4%,0) scale(1.08) rotate(4deg)}}
+
+/* ---------- Top bar: reading progress line ---------- */
+nav.top::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--grad);
+  transform:scaleX(var(--fx-p,0));transform-origin:0 50%;pointer-events:none}
+
+/* ---------- Headline: moving gradient ---------- */
+.hero h1 .hl,.uhero .hl{background-image:linear-gradient(100deg,#FF8A3D,#FF5A3D 28%,#E8307A 55%,#FF8A3D 85%,#FF5A3D);
+  background-size:220% 100%;animation:fx-hue 7s ease-in-out infinite alternate}
+@keyframes fx-hue{to{background-position:100% 0}}
+
+main{overflow-x:clip}
+
+/* ---------- Hero: floor grid in perspective ---------- */
+.hero,.uhero{position:relative}
+.hero::after,.uhero::after{content:"";position:absolute;left:50%;bottom:-30px;width:100vw;height:300px;z-index:-1;pointer-events:none;
+  transform:translateX(-50%) perspective(620px) rotateX(64deg);transform-origin:50% 100%;
+  background-image:linear-gradient(rgba(255,122,61,.34) 1px,transparent 1px),linear-gradient(90deg,rgba(255,122,61,.34) 1px,transparent 1px);
+  background-size:64px 64px;
+  -webkit-mask-image:radial-gradient(60% 100% at 50% 100%,#000 0,transparent 75%);mask-image:radial-gradient(60% 100% at 50% 100%,#000 0,transparent 75%);
+  animation:fx-floor 5s linear infinite}
+@keyframes fx-floor{to{background-position:0 64px,0 0}}
+
+/* ---------- Hero 3D scene (homepage phone) ---------- */
+.fx-stage{perspective:1300px}
+.fx-scene{position:relative;z-index:1;width:min(320px,86%);margin-inline:auto;transform-style:preserve-3d;
+  transform:rotateX(calc(7deg + var(--rx,0deg))) rotateY(calc(-17deg + var(--ry,0deg))) rotateZ(1.5deg);
+  animation:fx-float 6.5s ease-in-out infinite}
+.fx-scene .phone{width:100%;transform-style:preserve-3d;
+  box-shadow:0 50px 100px -30px rgba(232,48,122,.55),0 30px 60px -30px rgba(0,0,0,.9),0 0 0 1px #34343f,inset 0 0 0 1px rgba(255,255,255,.06)}
+@media (max-width:900px){.hero .fx-scene{width:min(230px,62%)}.hero .fx-scene .phone{width:100%}}
+@keyframes fx-float{50%{translate:0 -14px}}
+
+/* phone thickness: two plates behind the front */
+.fx-edge,.fx-edge::before{position:absolute;inset:0;border-radius:44px;background:#24242d;transform:translateZ(-7px);pointer-events:none}
+.fx-edge::before{content:"";background:#16161c;box-shadow:0 0 0 1px #2c2c36}
+/* light sweep over the screen, follows the tilt */
+.fx-glare{position:absolute;inset:11px;border-radius:34px;pointer-events:none;transform:translateZ(1px);
+  background:linear-gradient(112deg,transparent 30%,rgba(255,255,255,.13) 46%,rgba(255,255,255,.03) 54%,transparent 66%);
+  background-size:260% 100%;background-position:var(--gx,50%) 0}
+
+/* example slides floating behind the phone: "many feeds" */
+.fx-ghost{position:absolute;inset:15% 13%;border-radius:30px;pointer-events:none;background:#16181F center/cover no-repeat;
+  box-shadow:0 0 0 1px rgba(255,255,255,.10),0 30px 60px -25px rgba(0,0,0,.8);opacity:.5;filter:saturate(.8) brightness(.8)}
+.fx-ghost.g1{background-image:url(/landing/examples/read-1.webp);transform:translate3d(-62%,-6%,-150px) rotateZ(-9deg);animation:fx-bob 7s ease-in-out -2s infinite}
+.fx-ghost.g2{background-image:url(/landing/examples/money-1.webp);transform:translate3d(60%,8%,-230px) rotateZ(8deg);animation:fx-bob 8s ease-in-out -5s infinite}
+@keyframes fx-bob{50%{translate:0 12px}}
+
+/* small labels floating in front */
+.fx-chip{position:absolute;z-index:3;white-space:nowrap;font-weight:700;font-size:14px;line-height:1;color:var(--text);
+  padding:11px 14px;border-radius:14px;background:rgba(30,33,42,.94);border:1px solid rgba(255,255,255,.13);
+  box-shadow:0 18px 40px -14px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.08);pointer-events:none}
+.fx-chip.c1{left:-36%;top:13%;transform:translateZ(90px);animation:fx-bob 5.5s ease-in-out -1s infinite}
+.fx-chip.c2{right:-32%;top:46%;transform:translateZ(130px);animation:fx-bob 6.5s ease-in-out -3s infinite}
+.fx-chip.c3{left:-28%;bottom:13%;transform:translateZ(70px);animation:fx-bob 6s ease-in-out -4s infinite}
+@media (max-width:900px){.fx-chip{font-size:12px;padding:9px 11px;border-radius:12px}.fx-chip.c1{left:-30%}.fx-chip.c2{right:-30%}.fx-chip.c3{left:-26%}}
+
+/* ---------- Hero 3D scene (UGC page: three video cards) ---------- */
+.vcards.fx-stage{perspective:1200px}
+.fx-stage .vc{box-shadow:0 40px 80px -24px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.12),inset 0 1px 0 rgba(255,255,255,.25)}
+.fx-stage .vc.a{transform:translateZ(-70px) rotateX(var(--rx,0deg)) rotateY(calc(28deg + var(--ry,0deg))) rotate(-6deg);animation:fx-bob 7s ease-in-out -2s infinite}
+.fx-stage .vc.b{transform:translateZ(60px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));animation:fx-float 6s ease-in-out infinite}
+.fx-stage .vc.c{transform:translateZ(-70px) rotateX(var(--rx,0deg)) rotateY(calc(-28deg + var(--ry,0deg))) rotate(6deg);animation:fx-bob 8s ease-in-out -5s infinite}
+.fx-stage .vc::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(112deg,transparent 30%,rgba(255,255,255,.22) 46%,transparent 62%);background-size:260% 100%;background-position:var(--gx,50%) 0}
+.vcards .fx-chip.u1{right:0;bottom:3%;transform:translateZ(120px);animation:fx-bob 6s ease-in-out -1s infinite}
+.vcards .fx-chip.u2{left:-3%;top:3%;transform:translateZ(140px);animation:fx-bob 7s ease-in-out -3s infinite}
+@media (max-width:900px){.vcards .fx-chip.u1{bottom:0}.vcards .fx-chip.u2{display:none}
+  .fx-ghost{inset:20% 18%;opacity:.4}}
+
+/* ---------- Buttons: lift and a light sweep ---------- */
+.btn{transition:transform .2s ease,box-shadow .25s ease,filter .2s ease}
+.btn.primary{overflow:hidden;box-shadow:0 10px 30px -12px rgba(255,90,61,.75),inset 0 1px 0 rgba(255,255,255,.35)}
+.btn.primary::after{content:"";position:absolute;inset:0;pointer-events:none;transform:translateX(-130%) skewX(-18deg);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent)}
+.ctas .btn.primary::after{animation:fx-shine 5.5s ease-in-out 1.5s infinite}
+@keyframes fx-shine{0%,72%{transform:translateX(-130%) skewX(-18deg)}100%{transform:translateX(130%) skewX(-18deg)}}
+.btn.ghost{box-shadow:inset 0 1px 0 rgba(255,255,255,.07)}
+@media (hover:hover){
+  .btn:hover{transform:translateY(-2px)}
+  .btn.primary:hover{box-shadow:0 18px 40px -12px rgba(255,90,61,.9),inset 0 1px 0 rgba(255,255,255,.4);filter:saturate(1.1)}
+  .btn.primary:hover::after{animation:none;transform:translateX(130%) skewX(-18deg);transition:transform .6s ease}
+  .btn.ghost:hover{background:#262a35}
+}
+.btn:active{transform:translateY(0) scale(.98)}
+
+/* ---------- Cards: soft top light, depth on hover ---------- */
+.step,.plan,.feat,.review,.about,.bar,.review-cta,.trustcard,.proof,details{
+  background-image:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 42%)}
+.plan.hot{background-image:linear-gradient(180deg,rgba(255,106,61,.16),transparent 62%)}
+.step,.plan,.feat,.review,.about,.bar,.review-cta{position:relative;transition:transform .22s ease-out,border-color .3s ease}
+.step::after,.plan::after,.feat::after,.review::after,.about::after,.bar::after,.review-cta::after{content:"";position:absolute;inset:0;border-radius:inherit;
+  pointer-events:none;opacity:0;transition:opacity .35s ease;
+  background:radial-gradient(440px circle at var(--mx,50%) var(--my,50%),rgba(255,138,61,.16),transparent 62%)}
+.fx-tilt{transform-style:preserve-3d;border-color:rgba(255,138,61,.55)!important;z-index:2}
+.fx-tilt::after{opacity:1}
+.fx-tilt > *{transform:translateZ(18px)}
+.fx-tilt > .num,.fx-tilt > .tag,.fx-tilt > .emo,.fx-tilt > .review-stars{transform:translateZ(38px)}
+.step > *,.plan > *,.feat > *,.review > *,.bar > *,.review-cta > *{transition:transform .25s ease-out}
+details{transition:border-color .25s ease,background-color .25s ease}
+details[open]{border-color:rgba(255,106,61,.4)}
+@media (hover:hover){details:hover{border-color:rgba(255,106,61,.4)}.factors span{transition:transform .2s,border-color .2s}.factors span:hover{transform:translateY(-3px);border-color:var(--accent)}
+  .ways a{transition:transform .2s,border-color .2s}.ways a:hover{transform:translateY(-3px)}}
+.trustcard i,.bar .emo{display:inline-block;animation:fx-bob 4.5s ease-in-out infinite}
+.trustcard > div:nth-child(2) i{animation-delay:-1.1s}.trustcard > div:nth-child(3) i{animation-delay:-2.2s}.trustcard > div:nth-child(4) i{animation-delay:-3.3s}
+
+/* ---------- Example phones: fanned out in 3D on wide screens ---------- */
+@media (min-width:861px){
+  .ex{perspective:1100px}
+  .ex-phone{transition:transform .55s cubic-bezier(.2,.7,.2,1),box-shadow .4s ease}
+  .ex:nth-child(1) .ex-phone{transform:rotateY(24deg) translateZ(-30px);transform-origin:100% 50%}
+  .ex:nth-child(2) .ex-phone{transform:scale(1.04)}
+  .ex:nth-child(3) .ex-phone{transform:rotateY(-24deg) translateZ(-30px);transform-origin:0 50%}
+  .ex:hover .ex-phone,.ex:focus-within .ex-phone{transform:rotateY(0deg) scale(1.06);box-shadow:0 40px 90px -25px rgba(232,48,122,.6),0 0 0 1px #3a3a46}
+}
+
+/* ---------- Contact card: light running around the edge ---------- */
+.final{border-color:transparent;
+  background:radial-gradient(120% 140% at 50% 0%,rgba(255,106,61,.28),transparent 60%) padding-box,
+    linear-gradient(var(--surface),var(--surface)) padding-box,
+    conic-gradient(from var(--fx-a),#2A2D38 0 52%,#FF8A3D 68%,#E8307A 84%,#2A2D38 100%) border-box;
+  animation:fx-spin 7s linear infinite;box-shadow:0 60px 120px -60px rgba(255,90,61,.45)}
+@keyframes fx-spin{to{--fx-a:360deg}}
+.final > img{animation:fx-float 5s ease-in-out infinite;box-shadow:0 20px 40px -14px rgba(255,90,61,.7)}
+
+/* ---------- About photo ---------- */
+.about-pic{box-shadow:0 30px 60px -30px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.06)}
+
+/* ---------- Scroll reveal (classes are set by fx.js) ---------- */
+.fx-r{opacity:0;transform:perspective(1000px) translateY(36px) rotateX(11deg);transform-origin:50% 100%}
+.fx-r.fx-in{opacity:1;transform:none;transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .85s cubic-bezier(.2,.7,.2,1)}
+
+/* ---------- Calm mode ---------- */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important}
+  .fx-r{opacity:1;transform:none}
+  .btn,.ex-phone{transition:none}
+}
