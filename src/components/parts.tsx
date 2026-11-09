@@ -6,6 +6,7 @@ import { day, short, usd, videoEarningsCents } from '../lib/format';
 import { colors, fonts } from '../lib/theme';
 import { kindLabel, type Campaign, type Submission } from '../lib/types';
 import { Button, Card, Pill, Row, T, hueFor } from './ui';
+import { Float3D, Gradient } from './fx';
 import { dateLocale, t } from '../lib/i18n';
 import type { Rate } from '../lib/queries';
 
@@ -23,9 +24,12 @@ export function CampaignCard({ c, joined, onJoin, onSubmit, onOpen, busy, width,
   const color = hueFor(c.brand_id);
   const cpm = rate?.cpm_cents ?? c.cpm_cents, min = rate?.min_views ?? c.min_views, fixed = c.fixed_cents;
   return (
-    <View style={{ width, borderRadius: 22, overflow: 'hidden', backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line }}>
+    <View style={{ width, borderRadius: 22, overflow: 'hidden', backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, boxShadow: '0 22px 44px -26px rgba(0,0,0,0.95)' }}>
       <Pressable onPress={onOpen} disabled={!onOpen} accessibilityRole="button" accessibilityLabel={`Open ${c.name}`}>
-      <View style={{ height: 110, backgroundColor: color, padding: 16, justifyContent: 'space-between' }}>
+      <View style={{ height: 118, backgroundColor: color, padding: 16, justifyContent: 'space-between', overflow: 'hidden' }}>
+        <Gradient colors={['rgba(255,255,255,0.22)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.38)']} />
+        <View style={{ position: 'absolute', right: -34, top: -44, width: 150, height: 150, borderRadius: 75, backgroundColor: 'rgba(255,255,255,0.14)' }} />
+        <View style={{ position: 'absolute', right: 46, bottom: -52, width: 110, height: 110, borderRadius: 55, backgroundColor: 'rgba(255,255,255,0.09)' }} />
         <View style={{ alignSelf: 'flex-start', backgroundColor: 'rgba(0,0,0,0.35)', paddingHorizontal: 9, paddingVertical: 4, borderRadius: 999 }}>
           <T variant="label" style={{ color: '#fff', fontSize: 10.5 }}>{kindLabel(c.kind)}</T>
         </View>
@@ -53,6 +57,33 @@ export function CampaignCard({ c, joined, onJoin, onSubmit, onOpen, busy, width,
         </View>
       </View>
     </View>
+  );
+}
+
+/** The big orange card at the top of a creator screen: one number that matters, floating in 3D. */
+export function HeroCard({ eyebrow, value, sub, onPress, children }: {
+  eyebrow: string; value: string; sub?: string; onPress?: () => void; children?: React.ReactNode;
+}) {
+  const ink = '#1A0D07';
+  const body = (
+    <View style={{ borderRadius: 26, overflow: 'hidden', padding: 22, gap: 4, backgroundColor: colors.accent }}>
+      <Gradient />
+      <View style={{ position: 'absolute', right: -50, top: -70, width: 210, height: 210, borderRadius: 105, backgroundColor: 'rgba(255,255,255,0.16)' }} />
+      <View style={{ position: 'absolute', right: 70, bottom: -90, width: 170, height: 170, borderRadius: 85, backgroundColor: 'rgba(255,255,255,0.10)' }} />
+      <View style={{ position: 'absolute', left: -40, top: 0, bottom: 0, width: 90, backgroundColor: 'rgba(255,255,255,0.10)', transform: [{ skewX: '-18deg' }] }} />
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <T variant="label" style={{ color: ink, opacity: 0.75, flex: 1 }}>{eyebrow}</T>
+        {onPress ? <T variant="bodyStrong" style={{ color: ink, fontSize: 20 }}>→</T> : null}
+      </View>
+      <T variant="title" style={{ color: ink, fontSize: 46, lineHeight: 52, fontVariant: ['tabular-nums'] }} numberOfLines={1}>{value}</T>
+      {sub ? <T variant="bodyStrong" style={{ color: ink, opacity: 0.8 }}>{sub}</T> : null}
+      {children}
+    </View>
+  );
+  return (
+    <Float3D style={{ borderRadius: 26, boxShadow: '0 28px 50px -22px rgba(255,90,61,0.7)', marginVertical: 6 }}>
+      {onPress ? <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`${eyebrow}: ${value}`}>{body}</Pressable> : body}
+    </Float3D>
   );
 }
 

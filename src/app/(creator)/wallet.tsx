@@ -7,6 +7,7 @@ import { loadCreator, weekLabel } from '../../lib/queries';
 import { friendlyError, supabase } from '../../lib/supabase';
 import { colors } from '../../lib/theme';
 import { useLoad } from '../../lib/useLoad';
+import { HeroCard } from '../../components/parts';
 import { t } from '../../lib/i18n';
 
 const MIN_PAYOUT = 1000;
@@ -53,9 +54,8 @@ export default function Wallet() {
         {q.error ? <ErrorNote text={q.error} onRetry={q.reload} /> : null}
         {!d ? (q.error ? null : <Loading />) : (
           <>
+            <HeroCard eyebrow={t("Available to withdraw")} value={usd(d.balance.available_cents)} />
             <Card style={{ gap: 10 }}>
-              <T variant="label">{t("Available to withdraw")}</T>
-              <T variant="title" style={{ color: colors.money, fontSize: 40 }}>{usd(d.balance.available_cents)}</T>
               <T variant="muted">
                 {d.balance.available_cents < MIN_PAYOUT
                   ? t('You can withdraw from {min}. {left} to go.', { min: usd(MIN_PAYOUT), left: usd(MIN_PAYOUT - d.balance.available_cents) })

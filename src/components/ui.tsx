@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, fonts, radius } from '../lib/theme';
 import { initials } from '../lib/format';
 import { t } from '../lib/i18n';
+import { Glow, Gradient } from './fx';
 
 /* ---------- text ---------- */
 export function T({ children, style, variant = 'body', numberOfLines, selectable }: {
@@ -25,8 +26,10 @@ export function Screen({ title, right, children, onRefresh, refreshing = false }
 }) {
   const insets = useSafeAreaInsets();
   return (
+    <View style={{ flex: 1, backgroundColor: colors.bg }}>
+    <Glow />
     <ScrollView
-      style={{ flex: 1, backgroundColor: colors.bg }}
+      style={{ flex: 1 }}
       contentContainerStyle={{ paddingTop: insets.top + 12, paddingBottom: 120, paddingHorizontal: 16, gap: 12, width: '100%', maxWidth: MAX_WIDTH, alignSelf: 'center' }}
       keyboardShouldPersistTaps="handled"
       refreshControl={onRefresh ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.muted} /> : undefined}
@@ -39,6 +42,7 @@ export function Screen({ title, right, children, onRefresh, refreshing = false }
       ) : null}
       {children}
     </ScrollView>
+    </View>
   );
 }
 
@@ -57,7 +61,7 @@ export function Section({ title, right, children, hint }: { title: string; right
 
 /* ---------- surfaces ---------- */
 export function Card({ children, style, highlight }: { children: ReactNode; style?: StyleProp<ViewStyle>; highlight?: boolean }) {
-  return <View style={[s.card, highlight && { borderColor: colors.accent }, style]}>{children}</View>;
+  return <View style={[s.card, highlight && s.cardHot, style]}>{children}</View>;
 }
 
 export function Tile({ label, value, sub, color, highlight }: { label: string; value: string; sub?: string; color?: string; highlight?: boolean }) {
@@ -128,8 +132,10 @@ export function Button({ title, onPress, kind = 'primary', disabled, busy, small
       accessibilityRole="button"
       disabled={disabled || busy}
       onPress={onPress}
-      style={({ pressed }) => [s.btn, small && s.btnSmall, { backgroundColor: bg, opacity: disabled ? 0.45 : pressed ? 0.8 : 1 }, style]}
+      style={({ pressed }) => [s.btn, small && s.btnSmall, kind === 'primary' && !small && s.btnGlow,
+        { backgroundColor: bg, opacity: disabled ? 0.45 : pressed ? 0.85 : 1, transform: [{ scale: pressed ? 0.97 : 1 }] }, style]}
     >
+      {kind === 'primary' ? <Gradient /> : null}
       {busy ? <ActivityIndicator color={fg} /> : <Text style={[s.btnText, small && { fontSize: 13 }, { color: fg }]}>{title}</Text>}
     </Pressable>
   );
@@ -266,9 +272,11 @@ const s = StyleSheet.create({
   big: { fontFamily: fonts.display, fontSize: 27, color: colors.text, marginTop: 6, fontVariant: ['tabular-nums'] },
   header: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 6 },
   rowCenter: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  card: { backgroundColor: colors.surface, borderColor: colors.line, borderWidth: 1, borderRadius: radius.card, padding: 18 },
+  card: { backgroundColor: colors.surface, borderColor: colors.line, borderWidth: 1, borderRadius: radius.card, padding: 18, boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05), 0 18px 36px -24px rgba(0,0,0,0.9)' },
+  cardHot: { borderColor: 'rgba(255,106,61,0.65)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06), 0 20px 44px -22px rgba(255,90,61,0.55)' },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: colors.line },
-  btn: { paddingVertical: 14, paddingHorizontal: 18, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },
+  btn: { paddingVertical: 14, paddingHorizontal: 18, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  btnGlow: { boxShadow: '0 12px 28px -12px rgba(255,90,61,0.8)' },
   btnSmall: { paddingVertical: 7, paddingHorizontal: 13 },
   btnText: { fontFamily: fonts.bodyBold, fontSize: 15 },
   chip: { paddingVertical: 8, paddingHorizontal: 14, borderRadius: radius.pill, borderWidth: 1, borderColor: colors.line },

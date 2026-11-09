@@ -1,7 +1,8 @@
 import { router } from 'expo-router';
 import { ScrollView, View, useWindowDimensions } from 'react-native';
 import { Leaderboard } from '../../components/Leaderboard';
-import { CampaignCard, Explainer, VideoRow, ViewsChart } from '../../components/parts';
+import { CampaignCard, Explainer, HeroCard, VideoRow, ViewsChart } from '../../components/parts';
+import { Rise } from '../../components/fx';
 import { Avatar, Card, Empty, ErrorNote, LinkButton, List, Loading, Screen, Section, T, Tile, Tiles } from '../../components/ui';
 import { Logo } from '../../components/Logo';
 import { useAuth } from '../../lib/auth';
@@ -20,25 +21,27 @@ export default function CreatorHome() {
     <Screen onRefresh={q.refresh} refreshing={q.refreshing}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 6 }}>
         <Logo size={28} style={{ flex: 1 }} />
-        {d ? (
-          <View style={{ backgroundColor: colors.moneySoft, paddingHorizontal: 14, paddingVertical: 7, borderRadius: 999 }}>
-            <T variant="bodyStrong" style={{ color: colors.money }}>{usd(d.balance.available_cents)}</T>
-          </View>
-        ) : null}
-        <Avatar name={profile?.name || '?'} />
+        <View style={{ borderRadius: 999, padding: 2, borderWidth: 2, borderColor: colors.accent }}>
+          <Avatar name={profile?.name || '?'} size={36} />
+        </View>
       </View>
+      <T variant="title" style={{ fontSize: 28 }}>{t('Hi {name} 👋', { name: (profile?.name || '').trim().split(' ')[0] || '' })}</T>
       {q.error ? <ErrorNote text={q.error} onRetry={q.reload} /> : null}
       {!d ? (q.error ? null : <Loading />) : (
         <>
-          <Tiles>
+          <Rise>
+            <HeroCard eyebrow={t("Available to withdraw")} value={usd(d.balance.available_cents)}
+              sub={t('{n} views', { n: num(d.balance.views) })} onPress={() => router.push('/(creator)/wallet')} />
+          </Rise>
+          <Rise order={1}><Tiles>
             <Tile highlight label={t("Views")} value={num(d.balance.views)} sub={t('{n} videos', { n: d.balance.videos })} />
             <Tile label={t("Earned")} value={usd(d.balance.earned_cents)} sub={t('{a} of {b} videos over the minimum', { a: d.balance.paid_videos, b: d.balance.videos }) + (d.balance.referral_earned_cents ? ' · ' + t('{x} from invites', { x: usd(d.balance.referral_earned_cents) }) : '') + (d.balance.bonus_cents ? ' · ' + t('{x} bonus', { x: usd(d.balance.bonus_cents) }) : '')} />
-          </Tiles>
-          <Card>
+          </Tiles></Rise>
+          <Rise order={2}><Card>
             <T variant="h2">{t("Views by posting day")}</T>
             <T variant="small">{t("Last 30 days")}</T>
             <View style={{ marginTop: 10 }}><ViewsChart subs={d.subs} /></View>
-          </Card>
+          </Card></Rise>
           {d.subs.length < 3 ? (() => { const c = d.joined[0]; const r = c ? rateFor(d.rates, profile!.id, c) : null; return c ? <Explainer minViews={r?.min_views} cpmCents={r?.cpm_cents} fixedCents={r?.fixed_cents ?? null} /> : <Explainer general />; })() : null}
           {d.boardSettings.visible ? (
             <Section title={t("Top creators this month")} hint={d.boardSettings.prize_text || t('Ranked by views gained this month.')}>
