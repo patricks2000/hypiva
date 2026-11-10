@@ -35,7 +35,8 @@ Deno.serve(async (req) => {
   if ((count ?? 0) >= 5) return json({ ok: true });
   const { error } = await admin.from('brand_leads').insert(lead);
   if (error) return json({ error: 'Something went wrong. Please email patrick@hypiva.com.' }, 500);
-  await sendEmails(lead, (count ?? 0) === 0).catch(() => {}); // the request is saved either way
+  const lang = ['nl', 'fr'].includes(s('lang', 2)) ? s('lang', 2) : 'en';
+  await sendEmails(lead, (count ?? 0) === 0, lang).catch(() => {}); // the request is saved either way
   return json({ ok: true });
 });
 
@@ -69,7 +70,15 @@ async function send(key: string, mail: Record<string, unknown>) {
 }
 
 // thankYou is only true for the first request from an address that day, so the form can't be used to flood someone's inbox.
-async function sendEmails(lead: { name: string; email: string; company: string; budget: string; currency: string; message: string }, thankYou: boolean) {
+// The "free sample" form on the homepage sends its request with this label at the start of the message.
+const SAMPLE = '[Free slideshow sample]';
+const SAMPLE_TEXT: Record<string, { subject: string; hi: string; p1: string; p2: string; p3: string; bye: string }> = {
+  en: { subject: 'Your free slideshow sample is on its way', hi: 'Thank you, {n}!', p1: "We've received your request for a free sample.", p2: 'Within 2 working days we will send you one example slideshow made for your app, so you can see exactly what our creators would post.', p3: 'Want to add screenshots or more details in the meantime? Just reply to this email.', bye: 'Kind regards,' },
+  nl: { subject: 'Je gratis voorbeeldslideshow komt eraan', hi: 'Dankjewel, {n}!', p1: 'We hebben je aanvraag voor een gratis voorbeeld ontvangen.', p2: 'Binnen 2 werkdagen sturen we je één voorbeeldslideshow die we voor jouw app maken, zodat je precies ziet wat onze creators zouden posten.', p3: 'Wil je in de tussentijd nog screenshots of meer informatie toevoegen? Beantwoord dan gewoon deze mail.', bye: 'Groetjes,' },
+  fr: { subject: 'Votre exemple de slideshow gratuit arrive', hi: 'Merci, {n} !', p1: 'Nous avons bien reçu votre demande d’exemple gratuit.', p2: 'Sous 2 jours ouvrés, nous vous enverrons un exemple de slideshow créé pour votre app, pour que vous voyiez exactement ce que nos créateurs publieraient.', p3: 'Vous souhaitez ajouter des captures ou des précisions entre-temps ? Répondez simplement à cet e-mail.', bye: 'Bien à vous,' },
+};
+
+async function sendEmails(lead: { name: string; email: string; company: string; budget: string; currency: string; message: string }, thankYou: boolean, lang = 'en') {
   const key = Deno.env.get('RESEND_API_KEY');
   if (!key) return;
   const from = Deno.env.get('FROM_EMAIL') ?? 'Hypiva <hello@hypiva.com>';
@@ -77,8 +86,24 @@ async function sendEmails(lead: { name: string; email: string; company: string; 
   const firstName = lead.name.split(' ')[0].slice(0, 40);
   const budget = lead.budget ? BUDGETS[lead.budget].split('{c}').join(lead.currency === 'EUR' ? '€' : '$') : '';
 
-  // 1) Thank-you to the brand. Replies go straight to the owner.
-  if (thankYou) await send(key, {
+  const isSample = lead.message.startsWith(SAMPLE);
+  // 1a) Free sample: tell the brand when to expect it, in the language of the page they used.
+  if (thankYou && isSample) {
+    const t = SAMPLE_TEXT[lang] ?? SAMPLE_TEXT.en;
+    const hi = t.hi.replace('{n}', firstName);
+    await send(key, {
+      from, to: lead.email, reply_to: owner,
+      subject: t.subject,
+      html: layout(`<p style="margin:0 0 16px;font-size:20px;font-weight:700;">${esc(hi)}</p>
+<p style="margin:0 0 16px;">${esc(t.p1)}</p>
+<p style="margin:0 0 16px;">${esc(t.p2)}</p>
+<p style="margin:0 0 16px;">${esc(t.p3)}</p>
+<p style="margin:0 0 4px;">${esc(t.bye)}</p>${signature}`),
+      text: `${hi}\n\n${t.p1}\n\n${t.p2}\n\n${t.p3}\n\n${t.bye}\nPatrick\nHypiva · ${CONTACT} · hypiva.com`,
+    });
+  }
+  // 1b) Thank-you to the brand for a campaign request. Replies go straight to the owner.
+  if (thankYou && !isSample) await send(key, {
     from, to: lead.email, reply_to: owner,
     subject: 'Thanks for reaching out to Hypiva',
     html: layout(`<p style="margin:0 0 16px;font-size:20px;font-weight:700;">Thank you, ${esc(firstName)}!</p>
@@ -93,8 +118,8 @@ async function sendEmails(lead: { name: string; email: string; company: string; 
   const row = (k: string, v: string) => v ? `<tr><td style="padding:4px 16px 4px 0;color:#8A8C96;vertical-align:top;">${k}</td><td style="padding:4px 0;">${v}</td></tr>` : '';
   await send(key, {
     from, to: owner, reply_to: lead.email,
-    subject: `New campaign request: ${lead.company || lead.name}`,
-    html: layout(`<p style="margin:0 0 16px;font-size:20px;font-weight:700;">New campaign request</p>
+    subject: `${isSample ? 'New free sample request' : 'New campaign request'}: ${lead.company || lead.name}`,
+    html: layout(`<p style="margin:0 0 16px;font-size:20px;font-weight:700;">${isSample ? 'New free sample request' : 'New campaign request'}</p>
 <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:15px;">
 ${row('Name', esc(lead.name))}${row('Email', `<a href="mailto:${esc(lead.email)}">${esc(lead.email)}</a>`)}${row('Company', esc(lead.company))}${row('Budget', esc(budget))}
 </table>

@@ -76,7 +76,8 @@
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email)) return say(T().email);
       if (!d.company) return say(T().what);
       var label = form.getAttribute('data-topic') || 'Free sample';
-      var body = { name: d.name, email: d.email, company: d.company, website: d.website || '',
+      var pageLang = document.documentElement.lang;
+      var body = { name: d.name, email: d.email, company: d.company, website: d.website || '', lang: pageLang === 'nl' || pageLang === 'fr' ? pageLang : 'en',
         message: '[' + label + '] ' + d.company + (d.note ? '\n' + d.note : '') };
       var old = btn.innerHTML;
       btn.disabled = true; btn.textContent = T().sending;
