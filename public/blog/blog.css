@@ -39,3 +39,9 @@ footer .wrap{display:flex;gap:18px;flex-wrap:wrap}
 footer .flinks{margin-left:auto;display:flex;gap:18px}
 footer a:hover{color:var(--text)}
 .creator-box{margin-top:20px;padding:24px 30px}.creator-box h2{font-size:20px}.creator-box p{margin-bottom:0}.creator-box a{color:var(--accent);font-weight:700}
+.tbl{overflow-x:auto;margin:18px 0 8px;border:1px solid var(--line,#2A2D38);border-radius:16px}
+.tbl table{width:100%;border-collapse:collapse;font-size:15.5px;min-width:520px}
+.tbl th,.tbl td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line,#2A2D38);vertical-align:top}
+.tbl tr:last-child td{border-bottom:0}
+.tbl th{font-weight:700;background:var(--surface,#16181F)}
+.tbl td:first-child{font-weight:600;color:var(--muted,#9A9CA8)}
