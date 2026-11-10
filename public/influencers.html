@@ -273,7 +273,7 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
 .about .sign{color:var(--text);font-weight:700;margin-bottom:0}
 @media (max-width:900px){.about{grid-template-columns:1fr;padding:22px;gap:22px}}
 </style>
-<link rel="stylesheet" href="/landing/fx.css?v=1">
+<link rel="stylesheet" href="/landing/fx.css?v=2">
 </head>
 <body>
 <nav class="top" aria-label="Main">
@@ -327,6 +327,32 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
       </div>
       <p class="timeline" data-nl="⏱ Van kennismaking tot je eerste video's: meestal binnen 7 dagen." data-fr="⏱ Du premier échange à vos premières vidéos : généralement en 7 jours.">⏱ From first chat to your first videos: usually within 7 days.</p>
 </div>
+    </div>
+  </section>
+
+  <section id="ideas" style="padding-top:20px">
+    <div class="wrap free">
+      <div>
+        <span class="pill" data-nl="🎁 Gratis ideeën" data-fr="🎁 Idées gratuites">🎁 Free ideas</span>
+        <h2 data-nl="Krijg 3 video-ideeën voor je product, <span class='hl'>gratis</span>" data-fr="Recevez 3 idées de vidéos pour votre produit, <span class='hl'>gratuitement</span>">Get 3 video ideas for your product, <span class="hl">for free</span></h2>
+        <p class="sub" data-nl="Vertel wat je verkoopt. Binnen 2 werkdagen sturen we je drie video-ideeën, elk met een hook, bedacht voor jouw product." data-fr="Dites-nous ce que vous vendez. Sous 2 jours ouvrés, nous vous envoyons trois idées de vidéos, chacune avec une accroche, pensées pour votre produit.">Tell us what you sell. Within 2 working days we send you three video ideas, each with a hook, made for your product.</p>
+        <ul class="free-steps"><li><i>1</i><span data-nl="Deel je product of website" data-fr="Indiquez votre produit ou votre site">Share your product or website</span></li><li><i>2</i><span data-nl="Wij bedenken drie video's, elk met een hook" data-fr="Nous imaginons trois vidéos, chacune avec une accroche">We come up with three videos, each with a hook</span></li><li><i>3</i><span data-nl="Je krijgt ze per mail, je zit nergens aan vast" data-fr="Vous les recevez par e-mail, sans engagement">You get them by email, no strings attached</span></li></ul>
+      </div>
+      <div class="free-card">
+        <span class="free-tag" data-nl="GRATIS" data-fr="GRATUIT">FREE</span>
+        <h3 data-nl="Vraag je gratis ideeën aan" data-fr="Demandez vos idées gratuites">Request your free ideas</h3>
+        <form class="lead freeform" novalidate data-topic="Free UGC video ideas">
+          <div class="row2">
+            <label><span data-nl="Je naam" data-fr="Votre nom">Your name</span><input name="name" required maxlength="100" autocomplete="name"></label>
+            <label><span data-nl="E-mail" data-fr="E-mail">Email</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
+          </div>
+          <label><span data-nl="Product of website" data-fr="Produit ou site web">Product or website</span><input name="company" required maxlength="120" placeholder="e.g. yourbrand.com" data-nl-placeholder="bijv. jouwmerk.nl" data-fr-placeholder="ex. votremarque.fr"></label>
+          <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+          <button class="btn primary" type="submit" data-nl="Vraag gratis ideeën aan →" data-fr="Recevoir mes idées gratuites →">Get my free ideas →</button>
+          <p class="formmsg" role="status" aria-live="polite"></p>
+          <p class="free-note" data-nl="Geen betaling, geen verplichting. Je hoort binnen 2 werkdagen van ons." data-fr="Aucun paiement, aucun engagement. Réponse sous 2 jours ouvrés.">No payment, no obligation. We reply within 2 working days.</p>
+        </form>
+      </div>
     </div>
   </section>
 
@@ -453,6 +479,7 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
 <script src="/landing/fab.js" defer></script>
 <script src="/landing/menu.js" defer></script>
 <script src="/landing/fx.js?v=1" defer></script>
+<script src="/landing/free.js" defer></script>
 <script src="/landing/lang.js?v=6"></script>
 <script src="/landing/contact.js" defer></script>
 <script src="/landing/reviews.js?v=3" defer></script>

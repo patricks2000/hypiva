@@ -279,7 +279,7 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
   .mpanel .mlang{align-self:flex-start;margin-top:6px;font-size:14px;padding:8px 14px}
 }
 </style>
-<link rel="stylesheet" href="/landing/fx.css?v=1">
+<link rel="stylesheet" href="/landing/fx.css?v=2">
 </head>
 <body>
 
@@ -351,6 +351,33 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
         </div>
       </div>
       <p class="ex-hint" data-nl="Tik of swipe door de slides →" data-fr="Touchez ou faites défiler les slides →">Tap or swipe through the slides →</p>
+    </div>
+  </section>
+
+  <section id="sample" style="padding-top:20px">
+    <div class="wrap free">
+      <div>
+        <span class="pill" data-nl="🎁 Gratis voorbeeld" data-fr="🎁 Exemple gratuit">🎁 Free sample</span>
+        <h2 data-nl="Zie je app als TikTok-slideshow, <span class='hl'>gratis</span>" data-fr="Voyez votre app en slideshow TikTok, <span class='hl'>gratuitement</span>">See your app as a TikTok slideshow, <span class="hl">for free</span></h2>
+        <p class="sub" data-nl="Vertel om welke app het gaat. Binnen 2 werkdagen krijg je een voorbeeldslideshow voor jouw app, zodat je precies ziet wat onze creators zouden posten." data-fr="Dites-nous de quelle app il s’agit. Sous 2 jours ouvrés, vous recevez un exemple de slideshow créé pour elle, pour voir exactement ce que nos créateurs publieraient.">Tell us which app it is. Within 2 working days you get an example slideshow made for it, so you see exactly what our creators would post.</p>
+        <ul class="free-steps"><li><i>1</i><span data-nl="Deel de naam of storelink van je app" data-fr="Indiquez le nom ou le lien de votre app">Share your app name or store link</span></li><li><i>2</i><span data-nl="Wij schrijven de hook en ontwerpen de slides" data-fr="Nous écrivons l’accroche et créons les slides">We write the hook and design the slides</span></li><li><i>3</i><span data-nl="Je krijgt je voorbeeld per mail, je zit nergens aan vast" data-fr="Vous recevez votre exemple par e-mail, sans engagement">You get your sample by email, no strings attached</span></li></ul>
+      </div>
+      <div class="free-card">
+        <span class="free-tag" data-nl="GRATIS" data-fr="GRATUIT">FREE</span>
+        <h3 data-nl="Vraag je gratis voorbeeld aan" data-fr="Demandez votre exemple gratuit">Request your free sample</h3>
+        <form class="lead freeform" novalidate data-topic="Free slideshow sample">
+          <div class="row2">
+            <label><span data-nl="Je naam" data-fr="Votre nom">Your name</span><input name="name" required maxlength="100" autocomplete="name"></label>
+            <label><span data-nl="E-mail" data-fr="E-mail">Email</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
+          </div>
+          <label><span data-nl="Naam of link van je app" data-fr="Nom ou lien de votre app">App name or link</span><input name="company" required maxlength="120" placeholder="e.g. App Store link" data-nl-placeholder="bijv. link naar de App Store" data-fr-placeholder="ex. lien App Store"></label>
+          <label><span data-nl="Wat moeten mensen onthouden? <em>(optioneel)</em>" data-fr="Que doit-on retenir ? <em>(facultatif)</em>">What should people remember? <em>(optional)</em></span><input name="note" maxlength="300" placeholder="e.g. helps you focus in minutes" data-nl-placeholder="bijv. helpt je in een paar minuten focussen" data-fr-placeholder="ex. aide à se concentrer en quelques minutes"></label>
+          <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+          <button class="btn primary" type="submit" data-nl="Vraag gratis voorbeeld aan →" data-fr="Recevoir mon exemple gratuit →">Get my free sample →</button>
+          <p class="formmsg" role="status" aria-live="polite"></p>
+          <p class="free-note" data-nl="Geen betaling, geen verplichting. Je hoort binnen 2 werkdagen van ons." data-fr="Aucun paiement, aucun engagement. Réponse sous 2 jours ouvrés.">No payment, no obligation. We reply within 2 working days.</p>
+        </form>
+      </div>
     </div>
   </section>
 
@@ -498,6 +525,7 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
 <script src="/landing/fab.js" defer></script>
 <script src="/landing/menu.js" defer></script>
 <script src="/landing/fx.js?v=1" defer></script>
+<script src="/landing/free.js" defer></script>
 <script src="/landing/lang.js?v=6"></script>
 </body>
 </html>

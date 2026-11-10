@@ -148,3 +148,22 @@ details[open]{border-color:rgba(255,106,61,.4)}
   .fx-r{opacity:1;transform:none}
   .btn,.ex-phone{transition:none}
 }
+
+/* ---------- Free sample / free ideas block ---------- */
+.free{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.free h2{font-size:clamp(32px,4.6vw,50px);font-weight:800;margin:14px 0 12px}
+.free .sub{color:var(--muted);font-size:19px;margin:0;max-width:520px}
+.free-steps{display:grid;gap:12px;margin:24px 0 0;padding:0;list-style:none}
+.free-steps li{display:flex;gap:14px;align-items:center;font-weight:600}
+.free-steps i{font-style:normal;flex:none;width:34px;height:34px;border-radius:10px;background:var(--grad);color:#1a0b05;display:grid;place-items:center;font-weight:800;font-family:var(--display)}
+.free-card{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.045),transparent 40%),var(--surface);border:1px solid rgba(255,106,61,.4);border-radius:28px;padding:28px;box-shadow:0 40px 90px -40px rgba(255,90,61,.6)}
+.free-card h3{font-size:24px;margin:0 0 16px}
+.free-card .lead{max-width:none}
+.free-card .lead button{justify-self:stretch;width:100%}
+.free-tag{position:absolute;right:-10px;top:-14px;background:#3DDC97;color:#06251A;font-weight:800;font-size:13px;padding:7px 12px;border-radius:999px;transform:rotate(6deg)}
+.free-note{font-size:13px;color:var(--faint);text-align:center;margin:0}
+@media (max-width:900px){.free{grid-template-columns:1fr;gap:28px}.free-card{padding:22px}.free-tag{right:8px}}
+.free-card em{font-style:normal;color:var(--faint);font-weight:500}
+.free h2{line-height:1.05}
+.free .hl{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.free-card .lead button{font:inherit;font-weight:700;font-size:16px;color:#1a0b05}
