@@ -279,7 +279,7 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
   .mpanel .mlang{align-self:flex-start;margin-top:6px;font-size:14px;padding:8px 14px}
 }
 </style>
-<link rel="stylesheet" href="/landing/fx.css?v=2">
+<link rel="stylesheet" href="/landing/fx.css?v=4">
 </head>
 <body>
 
@@ -372,6 +372,10 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
           </div>
           <label><span data-nl="Naam of link van je app" data-fr="Nom ou lien de votre app">App name or link</span><input name="company" required maxlength="120" placeholder="e.g. App Store link" data-nl-placeholder="bijv. link naar de App Store" data-fr-placeholder="ex. lien App Store"></label>
           <label><span data-nl="Wat moeten mensen onthouden? <em>(optioneel)</em>" data-fr="Que doit-on retenir ? <em>(facultatif)</em>">What should people remember? <em>(optional)</em></span><input name="note" maxlength="300" placeholder="e.g. helps you focus in minutes" data-nl-placeholder="bijv. helpt je in een paar minuten focussen" data-fr-placeholder="ex. aide à se concentrer en quelques minutes"></label>
+          <div class="shots">
+            <label class="shots-drop"><input class="shots-input" type="file" accept="image/*" multiple hidden><span class="shots-ic" aria-hidden="true">＋</span><span><b data-nl="Voeg screenshots van je app toe" data-fr="Ajoutez des captures de votre app">Add screenshots of your app</b><small data-nl="Optioneel, maximaal 5. Zo maken we een beter voorbeeld." data-fr="Facultatif, 5 maximum. Pour un meilleur exemple.">Optional, up to 5. Helps us make a better sample.</small></span></label>
+            <div class="shots-thumbs" aria-live="polite"></div>
+          </div>
           <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
           <button class="btn primary" type="submit" data-nl="Vraag gratis voorbeeld aan →" data-fr="Recevoir mon exemple gratuit →">Get my free sample →</button>
           <p class="formmsg" role="status" aria-live="polite"></p>
@@ -525,7 +529,7 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
 <script src="/landing/fab.js" defer></script>
 <script src="/landing/menu.js" defer></script>
 <script src="/landing/fx.js?v=1" defer></script>
-<script src="/landing/free.js" defer></script>
+<script src="/landing/free.js?v=2" defer></script>
 <script src="/landing/lang.js?v=6"></script>
 </body>
 </html>

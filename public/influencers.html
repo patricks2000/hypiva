@@ -273,7 +273,7 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
 .about .sign{color:var(--text);font-weight:700;margin-bottom:0}
 @media (max-width:900px){.about{grid-template-columns:1fr;padding:22px;gap:22px}}
 </style>
-<link rel="stylesheet" href="/landing/fx.css?v=2">
+<link rel="stylesheet" href="/landing/fx.css?v=4">
 </head>
 <body>
 <nav class="top" aria-label="Main">
@@ -347,6 +347,10 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
             <label><span data-nl="E-mail" data-fr="E-mail">Email</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
           </div>
           <label><span data-nl="Product of website" data-fr="Produit ou site web">Product or website</span><input name="company" required maxlength="120" placeholder="e.g. yourbrand.com" data-nl-placeholder="bijv. jouwmerk.nl" data-fr-placeholder="ex. votremarque.fr"></label>
+          <div class="shots">
+            <label class="shots-drop"><input class="shots-input" type="file" accept="image/*" multiple hidden><span class="shots-ic" aria-hidden="true">＋</span><span><b data-nl="Voeg foto's van je product toe" data-fr="Ajoutez des photos de votre produit">Add photos of your product</b><small data-nl="Optioneel, maximaal 5. Zo bedenken we betere ideeën." data-fr="Facultatif, 5 maximum. Pour de meilleures idées.">Optional, up to 5. Helps us make better ideas.</small></span></label>
+            <div class="shots-thumbs" aria-live="polite"></div>
+          </div>
           <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
           <button class="btn primary" type="submit" data-nl="Vraag gratis ideeën aan →" data-fr="Recevoir mes idées gratuites →">Get my free ideas →</button>
           <p class="formmsg" role="status" aria-live="polite"></p>
@@ -479,7 +483,7 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
 <script src="/landing/fab.js" defer></script>
 <script src="/landing/menu.js" defer></script>
 <script src="/landing/fx.js?v=1" defer></script>
-<script src="/landing/free.js" defer></script>
+<script src="/landing/free.js?v=2" defer></script>
 <script src="/landing/lang.js?v=6"></script>
 <script src="/landing/contact.js" defer></script>
 <script src="/landing/reviews.js?v=3" defer></script>
