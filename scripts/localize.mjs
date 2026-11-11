@@ -109,7 +109,7 @@ function structured(html, key, lang, url, desc) {
 
 /** Social sharing tags (link previews in WhatsApp, LinkedIn, X) and structured data, added to the head. */
 function headExtras(html, key, lang, url, desc) {
-  html = html.replace(/<meta property="og:image" content="[^"]*">/, `<meta property="og:image" content="${SITE}/landing/og.png">`);
+  html = html.replace(/<meta property="og:image" content="[^"]*">/, `<meta property="og:image" content="${SITE}/landing/og-card.jpg">`);
   const tags = [`<meta property="og:type" content="website">`, `<meta property="og:url" content="${url}">`, `<meta property="og:site_name" content="Hypiva">`,
     `<meta property="og:locale" content="${LOCALE[lang]}">`, `<meta name="twitter:card" content="summary_large_image">`, structured(html, key, lang, url, desc)].join('\n');
   return once(html, /<\/head>/, tags + '\n</head>');
