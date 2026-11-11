@@ -85,16 +85,47 @@ function translate(html, lang) {
   return out;
 }
 
+
+const strip = (h) => decode(h.replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim();
+const LOCALE = { en: 'en_US', nl: 'nl_NL', fr: 'fr_FR' };
+const SERVICE = {
+  home: { en: 'TikTok slideshow campaigns for apps', nl: 'TikTok-slideshowcampagnes voor apps', fr: 'Campagnes de slideshows TikTok pour apps' },
+  ugc: { en: 'UGC videos for brands', nl: "UGC-video's voor merken", fr: 'Vidéos UGC pour les marques' },
+};
+
+/** Structured data for search engines: the company, the service on this page and its FAQ, read from the page itself. */
+function structured(html, key, lang, url, desc) {
+  const faq = [...html.matchAll(/<details[^>]*>\s*<summary[^>]*>([\s\S]*?)<\/summary>([\s\S]*?)<\/details>/g)]
+    .map(([, q, a]) => ({ '@type': 'Question', name: strip(q), acceptedAnswer: { '@type': 'Answer', text: strip(a) } }))
+    .filter((x) => x.name && x.acceptedAnswer.text);
+  const org = { '@type': 'Organization', '@id': SITE + '/#org', name: 'Hypiva', url: SITE + '/', logo: SITE + '/landing/icon.png', email: 'patrick@hypiva.com',
+    founder: { '@type': 'Person', name: 'Patrick' }, address: { '@type': 'PostalAddress', addressCountry: 'NL' } };
+  const graph = [org,
+    { '@type': 'WebSite', '@id': SITE + '/#site', url: SITE + '/', name: 'Hypiva', publisher: { '@id': SITE + '/#org' }, inLanguage: ['en', 'nl', 'fr'] },
+    { '@type': 'Service', name: SERVICE[key][lang], description: desc, url, provider: { '@id': SITE + '/#org' }, serviceType: SERVICE[key].en, areaServed: ['NL', 'BE', 'FR', 'Worldwide'] }];
+  if (faq.length) graph.push({ '@type': 'FAQPage', url, inLanguage: lang, mainEntity: faq });
+  return '<script type="application/ld+json">' + JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c') + '</script>';
+}
+
+/** Social sharing tags (link previews in WhatsApp, LinkedIn, X) and structured data, added to the head. */
+function headExtras(html, key, lang, url, desc) {
+  html = html.replace(/<meta property="og:image" content="[^"]*">/, `<meta property="og:image" content="${SITE}/landing/og.png">`);
+  const tags = [`<meta property="og:type" content="website">`, `<meta property="og:url" content="${url}">`, `<meta property="og:site_name" content="Hypiva">`,
+    `<meta property="og:locale" content="${LOCALE[lang]}">`, `<meta name="twitter:card" content="summary_large_image">`, structured(html, key, lang, url, desc)].join('\n');
+  return once(html, /<\/head>/, tags + '\n</head>');
+}
+
 const once = (html, from, to) => { if (!from.test(html)) throw new Error('Not found in page: ' + from); return html.replace(from, () => to); };
 
 export function localize(dist) {
-  for (const page of Object.values(PAGES)) {
+  for (const [key, page] of Object.entries(PAGES)) {
     const source = new URL(page.file, dist);
     // Every language version points to all the others, so search engines show each visitor the right one.
     const alternates = [['en', page.path || '/'], ['nl', '/nl' + page.path], ['fr', '/fr' + page.path], ['x-default', page.path || '/']]
       .map(([l, p]) => `<link rel="alternate" hreflang="${l}" href="${SITE}${p}">`).join('\n');
     const english = once(readFileSync(source, 'utf8'), /<link rel="canonical"[^>]*>/, `<link rel="canonical" href="${SITE}${page.path || '/'}">\n${alternates}`);
-    writeFileSync(source, english);
+    const enDesc = decode((/<meta name="description" content="([^"]*)"/.exec(english) || [])[1] || '');
+    writeFileSync(source, headExtras(english, key, 'en', SITE + (page.path || '/'), enDesc));
     for (const lang of ['nl', 'fr']) {
       const t = page[lang], url = `${SITE}/${lang}${page.path}`;
       let html = translate(english, lang);
@@ -106,6 +137,7 @@ export function localize(dist) {
       html = once(html, /<link rel="canonical"[^>]*>/, `<link rel="canonical" href="${url}">`);
       // Links between the two pages stay inside the language.
       html = html.replace(/href="\/(ugc)?(#[\w-]*)?"/g, (_, ugc, hash) => `href="/${lang}${ugc ? '/ugc' : ''}${hash || ''}"`);
+      html = headExtras(html, key, lang, url, t.desc);
       mkdirSync(new URL(lang + '/', dist), { recursive: true });
       writeFileSync(new URL(`${lang}/${page.path ? 'ugc' : 'index'}.html`, dist), html);
     }
