@@ -65,7 +65,7 @@ main{overflow-x:clip}
 .fx-chip.c1{left:-36%;top:13%;transform:translateZ(90px);animation:fx-bob 5.5s ease-in-out -1s infinite}
 .fx-chip.c2{right:-32%;top:46%;transform:translateZ(130px);animation:fx-bob 6.5s ease-in-out -3s infinite}
 .fx-chip.c3{left:-28%;bottom:13%;transform:translateZ(70px);animation:fx-bob 6s ease-in-out -4s infinite}
-@media (max-width:900px){.fx-chip{font-size:12px;padding:9px 11px;border-radius:12px}.fx-chip.c1{left:-30%}.fx-chip.c2{right:-30%}.fx-chip.c3{left:-26%}}
+@media (max-width:900px){.fx-chip{font-size:12px;padding:9px 11px;border-radius:12px}.fx-chip.c1{left:-26%;top:3%}.fx-chip.c2{right:-20%}.fx-chip.c3{left:-22%}}
 
 /* ---------- Hero 3D scene (UGC page: three video cards) ---------- */
 .vcards.fx-stage{perspective:1200px}
