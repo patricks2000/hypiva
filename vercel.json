@@ -15,10 +15,6 @@
       "destination": "/nl/ugc.html"
     },
     {
-      "source": "/nl/ugc/:slug",
-      "destination": "/nl/ugc/:slug.html"
-    },
-    {
       "source": "/fr/ugc",
       "destination": "/fr/ugc.html"
     },
