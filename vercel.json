@@ -3,6 +3,22 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
+      "source": "/nl",
+      "destination": "/nl/index.html"
+    },
+    {
+      "source": "/fr",
+      "destination": "/fr/index.html"
+    },
+    {
+      "source": "/nl/ugc",
+      "destination": "/nl/ugc.html"
+    },
+    {
+      "source": "/fr/ugc",
+      "destination": "/fr/ugc.html"
+    },
+    {
       "source": "/privacy",
       "destination": "/privacy.html"
     },

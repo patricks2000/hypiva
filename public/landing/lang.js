@@ -39,7 +39,13 @@
   var langs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || '']);
   var first = langs[0] || '';
   var browser = /^nl\b/i.test(first) ? 'nl' : /^fr\b/i.test(first) ? 'fr' : 'en';
-  var start = q || saved || browser;
+  // /nl and /fr are real pages in that language (made at build time), so there the address decides.
+  var pathLang = (location.pathname.match(/^\/(nl|fr)(\/|$)/) || [])[1];
+  var base = location.pathname.replace(/^\/(nl|fr)(?=\/|$)/, '').replace(/\/$/, '') || '/';
+  if (base === '/influencers') base = '/ugc';
+  var hasPages = base === '/' || base === '/ugc';
+  function urlFor(lang) { return lang === 'en' ? base : '/' + lang + (base === '/' ? '' : base); }
+  var start = pathLang || q || saved || browser;
   // Tapping the button opens a small menu with the three languages (instead of cycling blindly).
   var FLAGS = { en: '🇬🇧', nl: '🇳🇱', fr: '🇫🇷' };
   var CHEVRON = '<svg class="lchev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
@@ -83,7 +89,12 @@
   }
   menu.addEventListener('click', function (e) {
     var m = e.target.closest('button'); if (!m) return;
-    set(m.getAttribute('data-l')); closeMenu();
+    var l = m.getAttribute('data-l'); closeMenu();
+    // Choosing a language opens that language's own page; pages without one switch in place.
+    if (hasPages && urlFor(l) !== (pathLang ? '/' + pathLang + (base === '/' ? '' : base) : base)) {
+      try { localStorage.setItem('hypiva-lang', l); } catch (err) {}
+      location.href = urlFor(l) + location.hash;
+    } else set(l);
   });
   btns.forEach(function (b) {
     b.setAttribute('aria-haspopup', 'menu'); b.setAttribute('aria-expanded', 'false');
