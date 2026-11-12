@@ -188,4 +188,4 @@ details[open]{border-color:rgba(255,106,61,.4)}
 @media (max-width:700px){.final{padding:44px 20px 34px}}
 /* UGC hero: the "checked" label sits under the cards, not on top of them. */
 .vcards .fx-chip.u1{bottom:-5%}
-@media (max-width:900px){.vcards .fx-chip.u1{bottom:-7%}}
+@media (max-width:900px){.vcards .fx-chip.u1{bottom:-1%}}
