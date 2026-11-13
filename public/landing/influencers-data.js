@@ -25,6 +25,6 @@ window.HYPIVA_INFLUENCERS = [
       fr: 'Joos est une créatrice sportive et pétillante qui adore s&#39;entraîner, sortir manger et tester de nouvelles choses. Elle dit franchement ce qu&#39;elle pense, des adresses lunch aux snacks, en passant par la beauté, la mode et le parfum. C&#39;est pour ça que son audience fait confiance à ses conseils.'
     },
     gallery: ['/landing/joos/laugh.webp', '/landing/joos/selfie.webp', '/landing/joos/sport.webp'],
-    tiktok: ''
+    tiktok: 'https://www.tiktok.com/@joosie.vdgrint'
   }
 ];
