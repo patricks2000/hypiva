@@ -1,5 +1,5 @@
-// The influencers shown on hypiva.com/creators. To add someone: copy one block, change the texts,
-// put their photos in /landing/<slug>/ and the card + their own page (/creators/<slug>) appear automatically.
+// The influencers shown on hypiva.com/influencers and the UGC page. To add someone: copy one block, change the texts,
+// put their photos in /landing/<slug>/ and the card + their own page (/influencers/<slug>) appear automatically.
 // Texts have an English, Dutch (nl) and French (fr) version. Never put prices or private details (home town, workplace) here.
 window.HYPIVA_INFLUENCERS = [
   {
@@ -9,6 +9,7 @@ window.HYPIVA_INFLUENCERS = [
     photoPos: '50% 22%',
     followers: '28k+',
     platform: 'TikTok',
+    services: ['influencer', 'ugc'], // 'influencer' = shown on /influencers, 'ugc' = shown on the UGC page
     role: { en: 'Sporty micro-influencer', nl: 'Sportieve micro-influencer', fr: 'Micro-influenceuse sportive' },
     language: { en: 'Dutch', nl: 'Nederlands', fr: 'Néerlandais' },
     region: { en: 'Central Netherlands', nl: 'Midden-Nederland', fr: 'Centre des Pays-Bas' },

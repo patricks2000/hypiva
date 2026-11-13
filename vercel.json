@@ -32,15 +32,11 @@
     },
     {
       "source": "/influencers",
-      "destination": "/influencers.html"
+      "destination": "/influencers-list.html"
     },
     {
-      "source": "/creators",
-      "destination": "/creators.html"
-    },
-    {
-      "source": "/creators/:slug",
-      "destination": "/creator.html"
+      "source": "/influencers/:slug",
+      "destination": "/influencer-profile.html"
     },
     {
       "source": "/blog",

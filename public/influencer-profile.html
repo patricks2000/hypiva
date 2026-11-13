@@ -284,9 +284,11 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
 .stats div{display:flex;gap:8px;align-items:center;padding:10px 15px;border-radius:16px;background:var(--surface);border:1px solid var(--line);font-weight:600;font-size:15px}
 .stats b{color:var(--accent);font-family:var(--display);font-size:18px}
 .pabout{color:var(--muted);font-size:19px;margin:0 0 20px;max-width:560px}
-.tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
-.tag{padding:7px 12px;border-radius:999px;background:var(--surface2);border:1px solid var(--line);font-size:14px;font-weight:600}
+.ptags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+.ptag{padding:7px 12px;border-radius:999px;background:var(--surface2);border:1px solid var(--line);font-size:14px;font-weight:600}
 .phero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.badge{padding:6px 12px;border-radius:999px;background:var(--accentSoft);color:var(--accent);font-weight:700;font-size:13px;letter-spacing:.02em}
 .note{margin-top:16px;color:var(--faint);font-size:14px}
 .pgal{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:14px;margin-top:56px}
 .pgal img{width:100%;height:100%;object-fit:cover;border-radius:22px;aspect-ratio:3/4}
@@ -303,13 +305,13 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
 <nav class="top" aria-label="Main">
   <div class="wrap">
     <a class="brand" href="/"><img src="/landing/icon.png" alt=""><span>hyp<b>iva</b></span></a>
-    <div class="links"><a href="/">Slideshows</a><a href="/ugc">UGC</a><a href="/creators" class="on">Influencers</a><a href="/creators#how" data-nl="Hoe het werkt" data-fr="Comment ça marche">How it works</a><a href="/creators#contact">Contact</a></div>
+    <div class="links"><a href="/">Slideshows</a><a href="/ugc">UGC</a><a href="/influencers" class="on">Influencers</a><a href="/influencers#how" data-nl="Hoe het werkt" data-fr="Comment ça marche">How it works</a><a href="/influencers#contact">Contact</a></div>
     <button class="langbtn" id="langBtn" type="button" aria-label="Switch language">NL</button>
-    <a class="btn primary cta" href="/creators#contact"><span class="long" data-nl="Neem contact op" data-fr="Contactez-nous">Contact us</span><span class="short">Contact</span></a>
+    <a class="btn primary cta" href="/influencers#contact"><span class="long" data-nl="Neem contact op" data-fr="Contactez-nous">Contact us</span><span class="short">Contact</span></a>
     <button class="menubtn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mpanel"><span></span></button>
   </div>
-  <div class="sublinks"><a href="/">Slideshows</a><a href="/ugc">UGC</a><a href="/creators" style="color:var(--text)">Influencers</a><a href="/creators#how" data-nl="Hoe het werkt" data-fr="Comment ça marche">How it works</a><a href="/creators#contact">Contact</a></div>
-  <div class="mpanel" id="mpanel"><a href="/" data-nl="📱 Slideshows voor apps" data-fr="📱 Slideshows pour apps">📱 Slideshows for apps</a><a href="/ugc" data-nl="🎥 UGC voor merken" data-fr="🎥 UGC pour marques">🎥 UGC for brands</a><a href="/creators" data-nl="🤝 Influencers" data-fr="🤝 Influenceurs">🤝 Influencers</a><a href="/creators#contact">Contact</a></div>
+  <div class="sublinks"><a href="/">Slideshows</a><a href="/ugc">UGC</a><a href="/influencers" style="color:var(--text)">Influencers</a><a href="/influencers#how" data-nl="Hoe het werkt" data-fr="Comment ça marche">How it works</a><a href="/influencers#contact">Contact</a></div>
+  <div class="mpanel" id="mpanel"><a href="/" data-nl="📱 Slideshows voor apps" data-fr="📱 Slideshows pour apps">📱 Slideshows for apps</a><a href="/ugc" data-nl="🎥 UGC voor merken" data-fr="🎥 UGC pour marques">🎥 UGC for brands</a><a href="/influencers" data-nl="🤝 Influencers" data-fr="🤝 Influenceurs">🤝 Influencers</a><a href="/influencers#contact">Contact</a></div>
 </nav>
 
 <main>
@@ -323,8 +325,8 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
   </div>
 </footer>
 <script src="/landing/menu.js" defer></script>
-<script src="/landing/influencers-data.js?v=2"></script>
-<script src="/landing/influencers-page.js?v=2"></script>
-<script src="/landing/lang.js?v=7"></script>
+<script src="/landing/influencers-data.js?v=3"></script>
+<script src="/landing/influencers-page.js?v=3"></script>
+<script src="/landing/lang.js?v=8"></script>
 </body>
 </html>
