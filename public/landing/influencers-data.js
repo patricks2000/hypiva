@@ -20,9 +20,9 @@ window.HYPIVA_INFLUENCERS = [
       { en: '🏋️‍♀️ Sport', nl: '🏋️‍♀️ Sport', fr: '🏋️‍♀️ Sport' }
     ],
     about: {
-      en: 'Joos makes videos about the things she enjoys herself: going out for food and discovering lunch spots, snacks, beauty and skincare, fashion and jewellery, perfume and sport.',
-      nl: 'Joos maakt video&#39;s over de dingen die ze zelf leuk vindt: uit eten gaan en lunchspots ontdekken, snacks, beauty en skincare, mode en sieraden, parfum en sport.',
-      fr: 'Joos fait des vidéos sur ce qu&#39;elle aime : sortir manger et découvrir des adresses lunch, les snacks, la beauté et les soins, la mode et les bijoux, le parfum et le sport.'
+      en: 'Joos is an upbeat creator who makes videos about the things she enjoys herself: going out for food and discovering lunch spots, snacks, beauty and skincare, fashion and jewellery, perfume and sport.',
+      nl: 'Joos is een vrolijke creator die video&#39;s maakt over de dingen die ze zelf leuk vindt: uit eten gaan en lunchspots ontdekken, snacks, beauty en skincare, mode en sieraden, parfum en sport.',
+      fr: 'Joos est une créatrice pétillante qui fait des vidéos sur ce qu&#39;elle aime : sortir manger et découvrir des adresses lunch, les snacks, la beauté et les soins, la mode et les bijoux, le parfum et le sport.'
     },
     gallery: ['/landing/joos/laugh.webp', '/landing/joos/selfie.webp', '/landing/joos/sport.webp'],
     tiktok: 'https://www.tiktok.com/@joosie.vdgrint'
