@@ -35,6 +35,14 @@
       "destination": "/influencers.html"
     },
     {
+      "source": "/creators",
+      "destination": "/creators.html"
+    },
+    {
+      "source": "/creators/:slug",
+      "destination": "/creator.html"
+    },
+    {
       "source": "/blog",
       "destination": "/blog/index.html"
     },

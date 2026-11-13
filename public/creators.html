@@ -287,6 +287,12 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
 .cr .meta{color:var(--muted);font-size:15px}
 .tags{display:flex;flex-wrap:wrap;gap:6px}
 .tag{padding:5px 10px;border-radius:999px;background:var(--surface2);border:1px solid var(--line);font-size:13px;font-weight:600}
+a.cr{color:inherit;transition:transform .25s,border-color .25s,box-shadow .25s}
+a.cr:hover{transform:translateY(-4px);border-color:rgba(255,106,61,.5);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.cr .ph{position:relative}
+.cr .ph img{transition:transform .5s}
+a.cr:hover .ph img{transform:scale(1.04)}
+.cr .go{position:absolute;right:14px;bottom:14px;padding:9px 14px;border-radius:999px;background:rgba(13,14,19,.8);backdrop-filter:blur(8px);font-weight:700;font-size:14px}
 .cr.more{align-items:center;justify-content:center;text-align:center;padding:30px;border-style:dashed;background:transparent;min-height:300px}
 .cr.more .e{font-size:34px}
 .cr.more p{color:var(--muted);margin:8px 0 18px}
@@ -331,15 +337,7 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
         <h2 data-nl="Een kleine groep, met echte volgers" data-fr="Un petit groupe, avec une vraie audience">A small group, with a real audience</h2>
         <p data-nl="We werken met een paar influencers die we goed kennen. Zo weten we zeker dat het past, en dat de video eerlijk overkomt." data-fr="Nous travaillons avec quelques influenceurs que nous connaissons bien. Ainsi nous savons que ça colle, et que la vidéo sonne vrai.">We work with a few influencers we know well. That way we know it fits, and that the video comes across as honest.</p>
       </div>
-      <div class="crs">
-        <article class="cr">
-          <div class="ph"><img src="/landing/joos/bench.webp" alt="Joos" width="733" height="1100" loading="lazy"></div>
-          <div class="bd">
-            <h3>Joos</h3>
-            <div class="meta"><span data-nl="Sportieve micro-influencer · 28k+ volgers op TikTok · Nederlands" data-fr="Micro-influenceuse sportive · 28k+ abonnés sur TikTok · Néerlandais">Sporty micro-influencer · 28k+ followers on TikTok · Dutch</span></div>
-            <div class="tags"><span class="tag" data-nl="🍽️ Eten & restaurants" data-fr="🍽️ Cuisine & restaurants">🍽️ Food & restaurants</span><span class="tag">💄 Beauty</span><span class="tag" data-nl="👗 Mode & sieraden" data-fr="👗 Mode & bijoux">👗 Fashion & jewellery</span><span class="tag">🌸 Parfum</span><span class="tag">🏋️‍♀️ Sport</span></div>
-          </div>
-        </article>
+      <div class="crs" id="infGrid">
         <article class="cr more">
           <div class="e">✨</div>
           <h3 data-nl="Meer influencers volgen" data-fr="D'autres influenceurs arrivent">More influencers coming</h3>
@@ -401,6 +399,8 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
   </div>
 </footer>
 <script src="/landing/menu.js" defer></script>
+<script src="/landing/influencers-data.js?v=1"></script>
+<script src="/landing/influencers-page.js?v=1"></script>
 <script src="/landing/lang.js?v=7"></script>
 </body>
 </html>
