@@ -16,7 +16,7 @@
     grid.innerHTML = people.map(function (p) {
       var meta = service === 'ugc'
         ? '<span data-nl="UGC-creator" data-fr="Créatrice UGC">UGC creator</span> · <span' + t(p.language) + '</span>'
-        : '<span' + t(p.role) + '</span> · ' + esc(p.followers) + ' <span data-nl="volgers op" data-fr="abonnés sur">followers on</span> ' + esc(p.platform);
+        : esc(p.followers) + ' <span data-nl="volgers op" data-fr="abonnés sur">followers on</span> ' + esc(p.platform) + ' · <span' + t(p.language) + '</span>';
       return '<a class="cr" href="/influencers/' + esc(p.slug) + from + '">' +
         '<div class="ph"><img src="' + esc(p.photo) + '" alt="' + esc(p.name) + '" loading="lazy" style="object-position:' + esc(p.photoPos || '50% 25%') + '"><span class="go" data-nl="Bekijk profiel →" data-fr="Voir le profil →">View profile →</span></div>' +
         '<div class="bd"><h3>' + esc(p.name) + '</h3><div class="meta">' + meta + '</div>' +
