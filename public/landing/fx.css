@@ -189,3 +189,30 @@ details[open]{border-color:rgba(255,106,61,.4)}
 /* UGC hero: the "checked" label sits under the cards, not on top of them. */
 .vcards .fx-chip.u1{bottom:-5%}
 @media (max-width:900px){.vcards .fx-chip.u1{bottom:-1%}}
+
+/* ---------- Hero you can touch: drag to turn it, swipe for the next picture ---------- */
+.fx-stage{touch-action:pan-y;cursor:grab;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.fx-stage.fx-grabbing{cursor:grabbing}
+.fx-stage img{-webkit-user-drag:none}
+/* homepage phone: every screen fills the same frame and fades when it changes */
+.fx-scene .phone img{aspect-ratio:1/2;object-fit:cover;object-position:top;transition:opacity .17s}
+.fx-scene .phone img.fx-swap{opacity:0}
+/* UGC cards: all three hang from the middle, so they can glide to another spot */
+.fx-stage .vc{left:50%;right:auto;top:0;margin-left:-115px;z-index:1;cursor:pointer}
+.fx-stage .vc.b{z-index:2;cursor:grab}
+.fx-stage .vc.a{transform:translate3d(-52%,60px,-70px) rotateX(var(--rx,0deg)) rotateY(calc(28deg + var(--ry,0deg))) rotate(-6deg)}
+.fx-stage .vc.b{transform:translate3d(0,0,60px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+.fx-stage .vc.c{transform:translate3d(52%,70px,-70px) rotateX(var(--rx,0deg)) rotateY(calc(-28deg + var(--ry,0deg))) rotate(6deg)}
+.fx-stage.fx-swapping .vc{transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+@media (max-width:900px){.fx-stage .vc{margin-left:-85px}}
+/* each card keeps its own colour wherever it sits */
+.vc.k1{background:linear-gradient(160deg,#FFB27A,#FF5A3D)}.vc.k2{background:linear-gradient(160deg,#B9A8FF,#7B61FF)}.vc.k3{background:linear-gradient(160deg,#8FE3D6,#18A999)}
+/* dots under the scene */
+.fx-dots{position:relative;z-index:4;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:22px;cursor:default}
+.fx-dots button{width:9px;height:9px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.22);cursor:pointer;transition:background .2s,width .2s;position:relative}
+.fx-dots button::after{content:"";position:absolute;inset:-10px}
+.fx-dots button.on{width:26px;border-radius:6px;background:var(--grad)}
+.fx-dots span{margin-left:8px;font-size:13px;font-weight:600;color:var(--faint)}
+.vcards .fx-dots{position:absolute;left:0;right:0;bottom:-40px;margin:0}
+@media (max-width:900px){.vcards .fx-dots{bottom:-52px}}
+.fx-chip{transition:opacity .25s}.fx-alt .fx-chip.c2{opacity:0}
