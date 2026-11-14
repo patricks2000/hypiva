@@ -2,6 +2,7 @@
 // so hypiva.com shows the homepage and every app route (/sign-in, /home, ...) is served by app.html.
 import { renameSync, copyFileSync, rmSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { localize } from './localize.mjs';
+import { influencerPages } from './influencer-pages.mjs';
 
 const dist = new URL('../dist/', import.meta.url);
 if (!existsSync(new URL('home.html', dist))) throw new Error('dist/home.html missing: is public/home.html there?');
@@ -13,3 +14,4 @@ const app = new URL('app.html', dist);
 writeFileSync(app, readFileSync(app, 'utf8').replace('<head>', '<head><meta name="robots" content="noindex">'));
 console.log('Homepage at /, app at /app.html');
 localize(dist);
+influencerPages(dist);

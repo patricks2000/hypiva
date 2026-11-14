@@ -44,7 +44,7 @@
     },
     {
       "source": "/influencers/:slug",
-      "destination": "/influencer-profile.html"
+      "destination": "/profiles/:slug.html"
     },
     {
       "source": "/blog",

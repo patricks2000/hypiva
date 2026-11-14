@@ -7,6 +7,7 @@ window.HYPIVA_INFLUENCERS = [
     name: 'Joos',
     photo: '/landing/joos/bench.webp',
     photoPos: '50% 22%',
+    share: '/landing/joos/share.jpg', // 1200x630 picture for link previews (WhatsApp, LinkedIn)
     followers: '28k+',
     platform: 'TikTok',
     services: ['influencer', 'ugc'], // 'influencer' = shown on /influencers, 'ugc' = shown on the UGC page
