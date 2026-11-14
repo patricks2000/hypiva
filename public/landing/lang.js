@@ -42,7 +42,7 @@
   // /nl and /fr are real pages in that language (made at build time), so there the address decides.
   var pathLang = (location.pathname.match(/^\/(nl|fr)(\/|$)/) || [])[1];
   var base = location.pathname.replace(/^\/(nl|fr)(?=\/|$)/, '').replace(/\/$/, '') || '/';
-  var hasPages = base === '/' || base === '/ugc';
+  var hasPages = base === '/' || base === '/ugc' || base === '/influencers';
   function urlFor(lang) { return lang === 'en' ? base : '/' + lang + (base === '/' ? '' : base); }
   var start = pathLang || q || saved || browser;
   // Tapping the button opens a small menu with the three languages (instead of cycling blindly).

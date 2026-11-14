@@ -15,8 +15,16 @@
       "destination": "/nl/ugc.html"
     },
     {
+      "source": "/nl/influencers",
+      "destination": "/nl/influencers.html"
+    },
+    {
       "source": "/fr/ugc",
       "destination": "/fr/ugc.html"
+    },
+    {
+      "source": "/fr/influencers",
+      "destination": "/fr/influencers.html"
     },
     {
       "source": "/privacy",

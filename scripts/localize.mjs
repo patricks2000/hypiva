@@ -1,4 +1,4 @@
-// Builds real Dutch and French pages (/nl, /nl/ugc, /fr, /fr/ugc) from the English homepage and UGC page.
+// Builds real Dutch and French pages (/nl, /nl/ugc, /nl/influencers and the same under /fr) from the English pages.
 // The translations already sit in the HTML as data-nl / data-fr attributes (lang.js swaps them in the browser).
 // Search engines mostly read the page as served, so here the translation is written into the page itself,
 // with its own title, description, canonical address and links to the other languages.
@@ -15,6 +15,11 @@ const PAGES = {
     file: 'influencers.html', path: '/ugc',
     nl: { title: "UGC laten maken | UGC-video's voor merken | Hypiva", desc: "UGC laten maken voor je merk: echte UGC-video's van Nederlandse, Engelstalige en Franstalige creators voor TikTok, Instagram en advertenties. Prijs in overleg, eerste video's meestal binnen 7 dagen.", og: "Echte UGC-video's van Nederlandse, Engelstalige en Franstalige creators. Wij regelen alles." },
     fr: { title: 'Vidéos UGC pour les marques | Créateurs UGC | Hypiva', desc: 'Faites créer des vidéos UGC pour votre marque : de vraies vidéos de créateurs francophones, anglophones et néerlandophones pour TikTok, Instagram et vos publicités. Prix sur demande, premières vidéos généralement sous 7 jours.', og: 'De vraies vidéos UGC par des créateurs francophones, anglophones et néerlandophones. Nous gérons tout.' },
+  },
+  influencers: {
+    file: 'influencers-list.html', path: '/influencers',
+    nl: { title: 'Influencer marketing | Influencer inhuren voor TikTok | Hypiva', desc: 'Influencer marketing voor merken, restaurants en zaken: onze Nederlandse influencers posten over jouw product op hun eigen TikTok. Eerlijk, in hun eigen stijl, en wij regelen alles.', og: 'Jouw merk op TikTok, door influencers die het echt leuk vinden.' },
+    fr: { title: 'Marketing d’influence | Influenceurs TikTok | Hypiva', desc: 'Marketing d’influence pour marques, restaurants et commerces : nos influenceurs publient sur votre produit sur leur propre TikTok. Sincère, dans leur style, et nous gérons tout.', og: 'Votre marque sur TikTok, par des influenceurs qui l’aiment vraiment.' },
   },
 };
 
@@ -91,6 +96,7 @@ const LOCALE = { en: 'en_US', nl: 'nl_NL', fr: 'fr_FR' };
 const SERVICE = {
   home: { en: 'TikTok slideshow campaigns for apps', nl: 'TikTok-slideshowcampagnes voor apps', fr: 'Campagnes de slideshows TikTok pour apps' },
   ugc: { en: 'UGC videos for brands', nl: "UGC-video's voor merken", fr: 'Vidéos UGC pour les marques' },
+  influencers: { en: 'Influencer marketing', nl: 'Influencer marketing', fr: 'Marketing d’influence' },
 };
 
 /** Structured data for search engines: the company, the service on this page and its FAQ, read from the page itself. */
@@ -136,11 +142,11 @@ export function localize(dist) {
       html = once(html, /<meta property="og:description"[^>]*>/, `<meta property="og:description" content="${attr(t.og)}">`);
       html = once(html, /<link rel="canonical"[^>]*>/, `<link rel="canonical" href="${url}">`);
       // Links between the two pages stay inside the language.
-      html = html.replace(/href="\/(ugc)?(#[\w-]*)?"/g, (_, ugc, hash) => `href="/${lang}${ugc ? '/ugc' : ''}${hash || ''}"`);
+      html = html.replace(/href="\/(ugc|influencers)?(#[\w-]*)?"/g, (_, sub, hash) => `href="/${lang}${sub ? '/' + sub : ''}${hash || ''}"`);
       html = headExtras(html, key, lang, url, t.desc);
       mkdirSync(new URL(lang + '/', dist), { recursive: true });
-      writeFileSync(new URL(`${lang}/${page.path ? 'ugc' : 'index'}.html`, dist), html);
+      writeFileSync(new URL(`${lang}/${page.path ? page.path.slice(1) : 'index'}.html`, dist), html);
     }
   }
-  console.log('Dutch and French pages at /nl, /nl/ugc, /fr, /fr/ugc');
+  console.log('Dutch and French pages at /nl, /nl/ugc, /nl/influencers, /fr, /fr/ugc, /fr/influencers');
 }
