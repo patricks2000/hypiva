@@ -25,6 +25,7 @@ window.HYPIVA_INFLUENCERS = [
       fr: 'Joos est une créatrice pétillante qui fait des vidéos sur ce qu&#39;elle aime : sortir manger et découvrir des adresses lunch, les snacks, la beauté et les soins, la mode et les bijoux, le parfum et le sport.'
     },
     gallery: ['/landing/joos/laugh.webp', '/landing/joos/selfie.webp', '/landing/joos/sport.webp'],
+    email: 'joos@hypiva.com', // alias of patrick@hypiva.com, lands under the Gmail label 'Joos'
     tiktok: 'https://www.tiktok.com/@joosie.vdgrint'
   }
 ];

@@ -33,7 +33,7 @@
     document.title = p.name + ' | Hypiva';
     document.documentElement.setAttribute('data-nl-title', p.name + ' | Creator bij Hypiva');
     document.documentElement.setAttribute('data-fr-title', p.name + ' | Créatrice chez Hypiva');
-    var mail = 'mailto:patrick@hypiva.com?subject=' + encodeURIComponent('Samenwerking met ' + p.name);
+    var mail = 'mailto:' + (p.email || 'patrick@hypiva.com') + '?subject=' + encodeURIComponent('Samenwerking met ' + p.name);
     var back = fromUgc
       ? '<a class="back" href="/ugc#ugc-creators" data-nl="← Alle UGC-creators" data-fr="← Tous les créateurs UGC">← All UGC creators</a>'
       : '<a class="back" href="/influencers" data-nl="← Alle influencers" data-fr="← Tous les influenceurs">← All influencers</a>';
