@@ -24,7 +24,7 @@
       '<p class="formmsg" id="leadMsg" role="status"></p>' +
     '</form>' +
     '<p class="note"><span data-nl="Liever mailen?" data-fr="Vous préférez l&#39;e-mail ?">Prefer email?</span> <a href="mailto:' + esc(mail) + '?subject=' + encodeURIComponent('Samenwerking' + (p ? ' met ' + p.name : '')) + '" style="color:var(--accent);font-weight:700">' + esc(mail) + '</a></p>' +
-    '<p class="note" data-nl="Contact over samenwerkingen loopt altijd via Hypiva, niet rechtstreeks met de ' + (p ? 'creator' : 'influencer') + '." data-fr="Les collaborations passent toujours par Hypiva, pas directement par ' + (p ? 'le créateur' : 'l&#39;influenceur') + '.">Collaborations always go through Hypiva, not directly with the ' + (p ? 'creator' : 'influencer') + '.</p>';
+    '<p class="note" data-nl="Samenwerkingen lopen altijd via Hypiva. Persoonlijk contact met de ' + (p ? 'creator' : 'influencer') + ', ook via DM, is niet toegestaan." data-fr="Les collaborations passent toujours par Hypiva. Le contact personnel avec ' + (p ? 'le créateur' : 'l&#39;influenceur') + ', y compris par message privé, n&#39;est pas autorisé.">Collaborations always go through Hypiva. Contacting the ' + (p ? 'creator' : 'influencer') + ' personally, including via DM, is not allowed.</p>';
   }
 
   // A person's profile: photo, labels, numbers, text, tags, buttons, gallery and the request form.
