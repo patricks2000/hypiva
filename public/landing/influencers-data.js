@@ -9,6 +9,8 @@ window.HYPIVA_INFLUENCERS = [
     photoPos: '50% 22%',
     share: '/landing/joos/share.jpg', // 1200x630 picture for link previews (WhatsApp, LinkedIn)
     followers: '28k+',
+    likes: '700K+', // total likes on the platform, shown next to the followers
+    tagline: { en: 'Always with a <span class="hl">smile.</span>', nl: 'Altijd met een <span class="hl">lach.</span>', fr: 'Toujours avec le <span class="hl">sourire.</span>' },
     platform: 'TikTok',
     services: ['influencer', 'ugc'], // 'influencer' = shown on /influencers, 'ugc' = shown on the UGC page
     language: { en: 'Dutch', nl: 'Nederlands', fr: 'Néerlandais' },

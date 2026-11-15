@@ -94,7 +94,7 @@ details p{font-size:18px;max-width:820px;color:rgba(243,241,238,.78)}
 .final p{font-size:20px;color:rgba(243,241,238,.8)}
 .final > img{display:none}
 @media (max-width:600px){.final{padding:52px 18px}}
-.lead label,.lead .budget-head > span{font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.lead > label,.lead .row2 > label,.lead .budget-head > span{font-size:12px;letter-spacing:.14em;text-transform:uppercase}
 .lead input,.lead textarea,.lead select{border-radius:14px;padding:14px 16px}
 footer{border-top:1.5px solid var(--hair)}
 
@@ -147,3 +147,45 @@ footer{border-top:1.5px solid var(--hair)}
 .article h2,.article h3,.post h2,.cta-box h2,.legal h2{text-transform:none;font-variation-settings:"wdth" 100;letter-spacing:-.025em;line-height:1.15}
 .article h1{font-size:clamp(40px,7vw,84px);line-height:.92}
 .faq{grid-template-columns:minmax(0,1fr)}
+@media (max-width:900px){.mg-card{height:470px}.mg-tiles{padding-top:40px}}
+
+/* A creator's own page */
+.pwrap{padding-block:26px 90px}
+.phero{grid-template-columns:.9fr 1.1fr;gap:64px}
+.pphoto{border-radius:360px 360px 28px 28px;aspect-ratio:auto;height:min(720px,82vh);box-shadow:0 50px 100px rgba(0,0,0,.5)}
+.badges{gap:0;margin-bottom:0;align-items:center}
+.badges:before{content:"";flex:none;width:40px;height:2px;background:var(--accent);margin-right:14px}
+.badges .badge{background:none;border:0;padding:0;border-radius:0;color:var(--text);font-size:13px;font-weight:600;letter-spacing:.22em;text-transform:uppercase}
+.badges .badge + .badge:before{content:"&";margin:0 .5em}
+.phero h1{font-size:clamp(110px,16vw,250px);line-height:.84;margin:16px 0 0 -6px;background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--text);-webkit-text-fill-color:var(--text);width:auto}
+.pline{font-family:var(--serif);font-style:italic;font-size:clamp(38px,4.4vw,66px);line-height:1;margin:8px 0 28px}
+.pline .hl{font-family:inherit;color:var(--accent);-webkit-text-fill-color:var(--accent);background:none}
+.pnums{display:flex;gap:48px;flex-wrap:wrap;padding:24px 0;border-top:1.5px solid var(--hair);border-bottom:1.5px solid var(--hair);margin-bottom:26px}
+.pnums b{display:block;font-family:var(--display);font-weight:800;font-variation-settings:"wdth" 75;font-size:clamp(62px,7vw,104px);line-height:.86;letter-spacing:-.02em}
+.pnums b i{font-style:normal;color:var(--accent)}
+.pnums b.out{color:transparent;-webkit-text-stroke:2px var(--text)}
+.pnums span{color:var(--muted);font-size:13px;letter-spacing:.2em;text-transform:uppercase;font-weight:600}
+.pabout{font-size:19px;color:rgba(243,241,238,.82);margin-bottom:18px}
+.stats div{background:none;border:1.5px solid var(--hair);border-radius:999px;padding:8px 14px}
+.ptag{background:none;border:1.5px solid var(--hair)}
+.pgal{gap:18px;margin-top:70px}
+.pgal img{border-radius:24px}
+.pways{margin-top:100px}
+.pways h2{font-size:clamp(40px,6vw,88px)}
+.pway2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:40px}
+.pway{border:1.5px solid var(--hair);border-radius:28px;padding:34px;background:var(--surface)}
+.pway .n{color:var(--accent);font-weight:600;letter-spacing:.18em;font-size:13px}
+.pway h3{font-size:42px;line-height:1;margin:14px 0 12px;letter-spacing:-.03em}
+.pway p{margin:0;color:rgba(243,241,238,.78)}
+.pform{margin-top:100px}
+@media (max-width:900px){
+  .phero{grid-template-columns:1fr;gap:22px}.pphoto{height:470px;max-width:none;border-radius:240px 240px 22px 22px}
+  .pnums{gap:26px}.pgal{margin-top:44px;gap:10px}.pways{margin-top:64px}.pway2{grid-template-columns:1fr}.pway{padding:24px}.pway h3{font-size:34px}.pform{margin-top:64px}
+}
+.article{max-width:740px}
+/* Small phones: the creator button moves into the menu, so the menu button stays on screen */
+@media (max-width:480px){nav .creator{display:none}nav .cta{margin-left:auto}}
+.stars label{font-size:38px;letter-spacing:0;color:rgba(243,241,238,.28)}
+.stars input:checked ~ label,.stars label:hover,.stars label:hover ~ label{color:var(--accent)}
+.article a.post{color:inherit;text-decoration:none}
+.uhero h1{font-size:clamp(46px,6.6vw,96px)}

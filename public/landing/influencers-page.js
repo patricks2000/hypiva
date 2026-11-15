@@ -27,25 +27,33 @@
     '<p class="note" data-nl="Samenwerkingen lopen altijd via Hypiva. Persoonlijk contact met de ' + (p ? 'creator' : 'influencer') + ', ook via DM, is niet toegestaan." data-fr="Les collaborations passent toujours par Hypiva. Le contact personnel avec ' + (p ? 'le créateur' : 'l&#39;influenceur') + ', y compris par message privé, n&#39;est pas autorisé.">Collaborations always go through Hypiva. Contacting the ' + (p ? 'creator' : 'influencer') + ' personally, including via DM, is not allowed.</p>';
   }
 
-  // A person's profile: photo, labels, numbers, text, tags, buttons, gallery and the request form.
+  // A person's profile: photo, labels, name, a short line, the big numbers, text, tags, buttons, gallery,
+  // the two ways to work together and the request form.
   function profileHTML(p) {
     var badges = (has(p, 'influencer') ? '<span class="badge">Influencer</span>' : '') +
       (has(p, 'ugc') ? '<span class="badge" data-nl="UGC-creator" data-fr="Créatrice UGC">UGC creator</span>' : '');
+    var nums = has(p, 'influencer') ? '<div class="pnums">' +
+      '<div><b>' + esc(p.followers).toUpperCase().replace('+', '<i>+</i>') + '</b><span data-nl="volgers op ' + esc(p.platform) + '" data-fr="abonnés sur ' + esc(p.platform) + '">followers on ' + esc(p.platform) + '</span></div>' +
+      (p.likes ? '<div><b class="out">' + esc(p.likes) + '</b><span data-nl="likes op ' + esc(p.platform) + '" data-fr="likes sur ' + esc(p.platform) + '">likes on ' + esc(p.platform) + '</span></div>' : '') + '</div>' : '';
     var stats = '<div class="stats">' +
-      (has(p, 'influencer') ? '<div><b>' + esc(p.followers) + '</b><span data-nl="volgers op ' + esc(p.platform) + '" data-fr="abonnés sur ' + esc(p.platform) + '">followers on ' + esc(p.platform) + '</span></div>' : '') +
       '<div><b>🇳🇱</b><span' + t(p.language) + '</span></div>' +
       (p.region ? '<div><b>📍</b><span' + t(p.region) + '</span></div>' : '') + '</div>';
+    var ways = (has(p, 'influencer') && has(p, 'ugc')) ? '<div class="pways"><h2 data-nl="Twee manieren <span class=\'hl\'>om samen te werken.</span>" data-fr="Deux façons <span class=\'hl\'>de collaborer.</span>">Two ways <span class="hl">to work together.</span></h2><div class="pway2">' +
+      '<div class="pway"><span class="n" data-nl="01 · BEREIK" data-fr="01 · PORTÉE">01 · REACH</span><h3 data-nl="Influencerposts" data-fr="Posts d&#39;influence">Influencer posts</h3><p data-nl="Jouw merk in de eigen stijl van ' + esc(p.name) + ', voor ' + esc(p.followers) + ' volgers op ' + esc(p.platform) + '." data-fr="Votre marque dans le style de ' + esc(p.name) + ', pour ' + esc(p.followers) + ' abonnés sur ' + esc(p.platform) + '.">Your brand in ' + esc(p.name) + '&#39;s own style, for ' + esc(p.followers) + ' followers on ' + esc(p.platform) + '.</p></div>' +
+      '<div class="pway"><span class="n" data-nl="02 · CONTENT" data-fr="02 · CONTENU">02 · CONTENT</span><h3 data-nl="UGC-video&#39;s" data-fr="Vidéos UGC">UGC videos</h3><p data-nl="Echte video&#39;s voor je eigen kanalen en advertenties." data-fr="De vraies vidéos pour vos propres canaux et publicités.">Real videos for your own channels and ads.</p></div></div></div>' : '';
     return '<a class="back" href="/influencers" data-nl="← Alle influencers" data-fr="← Tous les influenceurs">← All influencers</a>' +
       '<div class="phero">' +
         '<div class="pphoto"><img src="' + esc(p.photo) + '" alt="' + esc(p.name) + '" style="object-position:' + esc(p.photoPos || '50% 25%') + '"></div>' +
-        '<div><div class="badges">' + badges + '</div><h1>' + esc(p.name) + '</h1>' + stats +
-        '<p class="pabout"' + t(p.about) + '</p>' +
+        '<div><div class="badges">' + badges + '</div><h1>' + esc(p.name) + '</h1>' +
+        (p.tagline ? '<p class="pline"' + t(p.tagline) + '</p>' : '') + nums +
+        '<p class="pabout"' + t(p.about) + '</p>' + stats +
         '<div class="ptags">' + tags(p, 'ptag') + '</div>' +
         '<div class="ctas"><a class="btn primary" href="#contact" data-nl="Samenwerken met ' + esc(p.name) + ' →" data-fr="Collaborer avec ' + esc(p.name) + ' →">Work with ' + esc(p.name) + ' →</a>' +
         (p.tiktok && has(p, 'influencer') ? '<a class="btn ghost" href="' + esc(p.tiktok) + '" target="_blank" rel="noopener">TikTok ↗</a>' : '') + '</div></div>' +
       '</div>' +
       (p.gallery && p.gallery.length ? '<div class="pgal">' + p.gallery.map(function (g, i) { return '<img src="' + esc(g) + '" alt="' + esc(p.name) + '" loading="lazy"' + (i === 0 ? ' class="wide"' : '') + '>'; }).join('') + '</div>' : '') +
-      '<div class="final pform" id="contact"><h2 data-nl="Samenwerken met ' + esc(p.name) + '?" data-fr="Collaborer avec ' + esc(p.name) + ' ?">Work with ' + esc(p.name) + '?</h2>' +
+      ways +
+      '<div class="final pform" id="contact"><h2 data-nl="Samenwerken <span class=\'hl\'>met ' + esc(p.name) + '?</span>" data-fr="Collaborer <span class=\'hl\'>avec ' + esc(p.name) + ' ?</span>">Work <span class="hl">with ' + esc(p.name) + '?</span></h2>' +
         '<p data-nl="Vertel kort over je merk of zaak en wat je in gedachten hebt. We reageren meestal binnen een dag." data-fr="Présentez brièvement votre marque ou commerce et votre idée. Nous répondons généralement sous un jour.">Tell us briefly about your brand or venue and what you have in mind. We usually reply within a day.</p>' +
         formHTML(p) + '</div>';
   }
