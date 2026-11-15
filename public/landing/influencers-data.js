@@ -16,11 +16,11 @@ window.HYPIVA_INFLUENCERS = [
     language: { en: 'Dutch', nl: 'Nederlands', fr: 'Néerlandais' },
     region: { en: 'Central Netherlands', nl: 'Midden-Nederland', fr: 'Centre des Pays-Bas' },
     tags: [
-      { en: '🍽️ Food & restaurants', nl: '🍽️ Eten & restaurants', fr: '🍽️ Cuisine & restaurants' },
-      { en: '💄 Beauty', nl: '💄 Beauty', fr: '💄 Beauté' },
-      { en: '👗 Fashion & jewellery', nl: '👗 Mode & sieraden', fr: '👗 Mode & bijoux' },
-      { en: '🌸 Perfume', nl: '🌸 Parfum', fr: '🌸 Parfum' },
-      { en: '🏋️‍♀️ Sport', nl: '🏋️‍♀️ Sport', fr: '🏋️‍♀️ Sport' }
+      { en: 'Food & restaurants', nl: 'Eten & restaurants', fr: 'Cuisine & restaurants' },
+      { en: 'Beauty', nl: 'Beauty', fr: 'Beauté' },
+      { en: 'Fashion & jewellery', nl: 'Mode & sieraden', fr: 'Mode & bijoux' },
+      { en: 'Perfume', nl: 'Parfum', fr: 'Parfum' },
+      { en: 'Sport', nl: 'Sport', fr: 'Sport' }
     ],
     about: {
       en: 'Joos is an upbeat creator who makes videos about the things she enjoys herself: going out for food and discovering lunch spots, snacks, beauty and skincare, fashion and jewellery, perfume and sport.',

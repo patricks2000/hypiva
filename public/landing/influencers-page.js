@@ -36,8 +36,8 @@
       '<div><b>' + esc(p.followers).toUpperCase().replace('+', '<i>+</i>') + '</b><span data-nl="volgers op ' + esc(p.platform) + '" data-fr="abonnés sur ' + esc(p.platform) + '">followers on ' + esc(p.platform) + '</span></div>' +
       (p.likes ? '<div><b class="out">' + esc(p.likes) + '</b><span data-nl="likes op ' + esc(p.platform) + '" data-fr="likes sur ' + esc(p.platform) + '">likes on ' + esc(p.platform) + '</span></div>' : '') + '</div>' : '';
     var stats = '<div class="stats">' +
-      '<div><b>🇳🇱</b><span' + t(p.language) + '</span></div>' +
-      (p.region ? '<div><b>📍</b><span' + t(p.region) + '</span></div>' : '') + '</div>';
+      '<div><span' + t(p.language) + '</span></div>' +
+      (p.region ? '<div><span' + t(p.region) + '</span></div>' : '') + '</div>';
     var ways = (has(p, 'influencer') && has(p, 'ugc')) ? '<div class="pways"><h2 data-nl="Twee manieren <span class=\'hl\'>om samen te werken.</span>" data-fr="Deux façons <span class=\'hl\'>de collaborer.</span>">Two ways <span class="hl">to work together.</span></h2><div class="pway2">' +
       '<div class="pway"><span class="n" data-nl="01 · BEREIK" data-fr="01 · PORTÉE">01 · REACH</span><h3 data-nl="Influencerposts" data-fr="Posts d&#39;influence">Influencer posts</h3><p data-nl="Jouw merk in de eigen stijl van ' + esc(p.name) + ', voor ' + esc(p.followers) + ' volgers op ' + esc(p.platform) + '." data-fr="Votre marque dans le style de ' + esc(p.name) + ', pour ' + esc(p.followers) + ' abonnés sur ' + esc(p.platform) + '.">Your brand in ' + esc(p.name) + '&#39;s own style, for ' + esc(p.followers) + ' followers on ' + esc(p.platform) + '.</p></div>' +
       '<div class="pway"><span class="n" data-nl="02 · CONTENT" data-fr="02 · CONTENU">02 · CONTENT</span><h3 data-nl="UGC-video&#39;s" data-fr="Vidéos UGC">UGC videos</h3><p data-nl="Echte video&#39;s voor je eigen kanalen en advertenties." data-fr="De vraies vidéos pour vos propres canaux et publicités.">Real videos for your own channels and ads.</p></div></div></div>' : '';

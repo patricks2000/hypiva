@@ -189,3 +189,23 @@ footer{border-top:1.5px solid var(--hair)}
 .stars input:checked ~ label,.stars label:hover,.stars label:hover ~ label{color:var(--accent)}
 .article a.post{color:inherit;text-decoration:none}
 .uhero h1{font-size:clamp(46px,6.6vw,96px)}
+
+/* Calmer and more matter-of-fact: no coloured page glow, no moving grid, no running light, plain shadows */
+body::before{display:none}
+.hero::after,.uhero::after{display:none}
+.glow:before,.uhero:before{display:none}
+.fx-scene .phone,.phone,.ex-phone{box-shadow:0 40px 80px -30px rgba(0,0,0,.9),0 0 0 1px #34343f}
+.ex:hover .ex-phone,.ex:focus-within .ex-phone{box-shadow:0 40px 80px -30px rgba(0,0,0,.9),0 0 0 1px #34343f}
+.final{animation:none;border:1.5px solid var(--hair);background:var(--surface);box-shadow:none}
+.free-card{box-shadow:none;border-color:var(--hair);background:var(--surface)}
+#how .step{box-shadow:none}
+.fx-r{transform:translateY(14px)}
+.btn.primary{box-shadow:none}
+.bar .emo,.ways i{display:none}
+.mg-word{position:absolute;left:28px;right:28px;top:84px;z-index:1;line-height:.84}
+.mg-word b{display:block;font-family:var(--display);font-weight:800;font-variation-settings:"wdth" 75;font-size:190px;letter-spacing:-.03em;color:transparent;-webkit-text-stroke:2px rgba(243,241,238,.8)}
+.mg-word i{display:block;font-family:var(--serif);font-size:96px;color:var(--accent);margin-top:-6px}
+@media (max-width:900px){.mg-word{top:64px}.mg-word b{font-size:150px}.mg-word i{font-size:76px}}
+footer .wrap > span:nth-child(2){white-space:nowrap}
+.plan.hot,.with,.opt.hot{box-shadow:none}
+.fab{box-shadow:0 10px 24px -10px rgba(0,0,0,.8)}
