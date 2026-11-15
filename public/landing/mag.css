@@ -1,0 +1,149 @@
+/* The magazine look for the whole site: big condensed headlines, an italic serif accent, hairlines instead of boxes.
+   Loaded last on every page, so it restyles the shared classes (hero, sec-h, pill, steps, trustcard, faq, final…)
+   without touching the markup or the scripts. Fonts come from the Google Fonts link in each page's head. */
+:root{
+  --serif:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --hair:rgba(243,241,238,.18);
+  --grad:linear-gradient(135deg,#FF7A45,#FF6A3D);
+}
+body{font-size:18px}
+/* A fine film grain over the page */
+body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:40;opacity:.11;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wrap{max-width:1240px}
+@media (min-width:821px){.wrap{padding-inline:40px}}
+
+/* Headlines */
+h1,h2{font-weight:800;font-variation-settings:"wdth" 75;text-transform:uppercase;letter-spacing:-.015em;line-height:.9;text-wrap:balance}
+h3{font-variation-settings:"wdth" 100}
+.hero h1,.uhero h1,.ihero h1{font-size:clamp(50px,8.6vw,124px);line-height:.88;margin-top:26px}
+.sec-h h2,.split h2,#how h2,.free h2{font-size:clamp(40px,6vw,88px);margin-top:18px}
+.sec-h{max-width:920px;margin-bottom:44px}
+.sec-h p,#how .sub,#how .sec-h p{font-size:20px;color:rgba(243,241,238,.78);margin-top:18px}
+h1 .hl,h2 .hl,.hero h1 .hl,.uhero h1 .hl,.uhero .hl,.free h2 .hl{font-family:var(--serif);font-style:italic;font-weight:400;font-variation-settings:normal;text-transform:none;letter-spacing:-.01em;line-height:1;font-size:1.04em;background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--accent);-webkit-text-fill-color:var(--accent)}
+.hero .lead,.uhero .lead,.ihero .lead{font-size:21px;color:rgba(243,241,238,.82);margin:30px 0 34px}
+
+/* Small labels: a short orange rule and spaced capitals */
+.pill,.eyebrow{display:inline-flex;align-items:center;gap:14px;background:none;padding:0;border-radius:0;color:var(--text);font-size:13px;font-weight:600;letter-spacing:.22em;text-transform:uppercase}
+.pill:before,.eyebrow:before{content:"";flex:none;width:40px;height:2px;background:var(--accent)}
+@media (max-width:520px){.pill,.eyebrow{font-size:12px;letter-spacing:.18em;gap:10px}.pill:before,.eyebrow:before{width:28px}}
+
+/* Buttons */
+.btn{font-size:17px;padding:16px 28px}
+.btn.primary{background:var(--accent);color:#14110f;box-shadow:0 14px 40px -12px rgba(255,106,61,.6)}
+.btn.ghost{background:rgba(243,241,238,.04);border:1.5px solid rgba(243,241,238,.28);color:var(--text)}
+nav .cta,nav .creator{font-size:14px;padding:10px 18px;box-shadow:none}
+nav .creator{border:1.5px solid rgba(243,241,238,.28)}
+@media (max-width:520px){nav .creator,nav .cta{padding:8px 11px;font-size:13px}}
+.svc{background:none;border:1.5px solid var(--hair)}
+.svc a.on{background:var(--accent);color:#14110f}
+.fab{background:var(--accent)}
+
+/* Hero: a soft orange glow, and the client quote as an italic line */
+.hero,.uhero,.ihero{position:relative;padding-block:64px 80px}
+.proof{background:none;border:0;border-top:1.5px solid var(--hair);border-radius:0;padding:24px 0 0;margin-top:40px;max-width:560px}
+.proof .st{color:var(--accent);font-size:14px;letter-spacing:.2em}
+.proof b{font-family:var(--serif);font-style:italic;font-weight:400;font-size:25px;line-height:1.15}
+.proof small{font-size:14px}
+.mg-badge{position:absolute;right:-6px;top:-26px;width:138px;height:138px;z-index:6;pointer-events:none}
+@media (max-width:900px){.mg-badge{width:104px;height:104px;right:0;top:-10px}.hero,.uhero,.ihero{padding-block:34px 56px}}
+
+/* The four facts: one hairline strip instead of a card */
+.trustcard{background:none;border:0;border-top:1.5px solid var(--hair);border-bottom:1.5px solid var(--hair);border-radius:0;margin-bottom:0}
+.trustcard > div{padding:26px 24px}
+.trustcard > div:first-child{padding-left:0}
+.trustcard > div + div{border-left:1.5px solid var(--hair)}
+.trustcard i{display:none}
+.trustcard b{font-family:var(--display);font-weight:800;font-size:23px;letter-spacing:-.03em}
+.trustcard span{font-size:15px}
+@media (max-width:700px){.trustcard{grid-template-columns:1fr 1fr}.trustcard > div{padding:16px 14px;align-items:flex-start}.trustcard > div:nth-child(odd){padding-left:0}.trustcard > div + div{border-top:0}.trustcard > div:nth-child(even){border-left:1.5px solid var(--hair)}.trustcard > div:nth-child(odd){border-left:0}.trustcard > div:nth-child(n+3){border-top:1.5px solid var(--hair)}.trustcard span{display:block;font-size:13px}.trustcard b{font-size:18px}}
+
+section{padding-block:104px}
+@media (max-width:820px){section{padding-block:64px}}
+
+/* Steps: numbered rows between hairlines */
+.steps,.steps.four,#how .steps{display:block}
+.step,#how .step{display:grid;grid-template-columns:84px minmax(0,1fr) minmax(0,1.1fr);gap:30px;align-items:center;background:none;border:0;border-top:1.5px solid var(--hair);border-radius:0;box-shadow:none;padding:30px 0}
+.step:last-child,#how .step:last-child{border-bottom:1.5px solid var(--hair)}
+.step .num,#how .step .num,.step .n{font-family:var(--body);font-weight:600;font-size:14px;letter-spacing:.18em;line-height:1;background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--accent);-webkit-text-fill-color:var(--accent);width:auto;height:auto;display:block}
+.step h3,#how .step h3{font-size:clamp(30px,4vw,54px);line-height:1;margin:0;letter-spacing:-.03em}
+.step:nth-child(even) h3{font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(36px,4.6vw,62px);letter-spacing:-.01em}
+.step p,#how .step p{font-size:19px;color:rgba(243,241,238,.78)}
+@media (max-width:820px){.step,#how .step{grid-template-columns:44px minmax(0,1fr);gap:6px 14px;padding:22px 0}.step p,#how .step p{grid-column:2;font-size:17px}}
+
+/* Cards keep their shape, with a fine light edge */
+.plan,.feat,.fact,.review,.bar,.about,.review-cta,.free-card,.cr,.cta-box,.post{border:1.5px solid var(--hair)}
+.plan.hot{border-color:rgba(255,106,61,.6)}
+.plan h3{font-size:34px;line-height:1.02}
+.plan .tag,.free-tag{background:none;padding:0;color:var(--accent);letter-spacing:.2em;font-size:12px}
+.factors span{background:none;border:1.5px solid var(--hair)}
+.review-stars,.proof .st{color:var(--accent)}
+.bar h3,.review-cta h3{font-size:26px}
+.about h2{font-size:clamp(36px,4.6vw,60px)}
+
+/* Questions: open rows instead of boxes */
+.faq{max-width:none;gap:0}
+.faq details,details{background:none;border:0;border-top:1.5px solid var(--hair);border-radius:0;padding:24px 0}
+.faq details:last-child{border-bottom:1.5px solid var(--hair)}
+summary{font-family:var(--display);font-weight:800;font-size:clamp(20px,2.4vw,28px);letter-spacing:-.02em;line-height:1.15}
+summary:after{font-family:var(--body);font-weight:400;font-size:30px}
+details p{font-size:18px;max-width:820px;color:rgba(243,241,238,.78)}
+
+/* Closing block */
+.final{border:1.5px solid var(--hair);background:radial-gradient(110% 120% at 50% 0%,rgba(255,106,61,.3),transparent 62%),var(--surface);padding:84px 28px}
+.final h2{font-size:clamp(44px,7.4vw,108px)}
+.final p{font-size:20px;color:rgba(243,241,238,.8)}
+.final > img{display:none}
+@media (max-width:600px){.final{padding:52px 18px}}
+.lead label,.lead .budget-head > span{font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.lead input,.lead textarea,.lead select{border-radius:14px;padding:14px 16px}
+footer{border-top:1.5px solid var(--hair)}
+
+/* New blocks on the home page: the running band, the three services and the creator languages */
+.mg-band{border-top:1.5px solid var(--hair);border-bottom:1.5px solid var(--hair);overflow:hidden;white-space:nowrap;padding:18px 0;margin-top:0}
+.mg-band div{display:inline-block;animation:mgrun 38s linear infinite}
+.mg-band span{font-family:var(--display);font-weight:800;font-variation-settings:"wdth" 75;text-transform:uppercase;letter-spacing:-.015em;font-size:clamp(34px,5vw,70px);line-height:1;margin-right:34px;vertical-align:middle}
+.mg-band span.s{font-family:var(--serif);font-style:italic;font-weight:400;font-variation-settings:normal;text-transform:none;color:var(--accent)}
+.mg-band span.o{color:transparent;-webkit-text-stroke:1.5px rgba(243,241,238,.75)}
+.mg-band i{font-style:normal;color:var(--accent);font-size:clamp(20px,2.4vw,32px);margin-right:34px;vertical-align:middle}
+@keyframes mgrun{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.mg-band div{animation:none}}
+.mg-svc{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.mg-card{position:relative;height:540px;border-radius:30px;overflow:hidden;border:1.5px solid var(--hair);background:var(--surface);display:flex;flex-direction:column;justify-content:flex-end;padding:28px;transition:border-color .2s,transform .2s}
+.mg-card:hover{border-color:var(--accent);transform:translateY(-4px)}
+.mg-card > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.mg-card:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,14,19,.2) 0,rgba(13,14,19,0) 30%,rgba(13,14,19,.6) 60%,rgba(13,14,19,.97) 100%)}
+.mg-card > *{position:relative;z-index:2}
+.mg-card > img,.mg-card .mg-tiles{z-index:0}
+.mg-card .n{position:absolute;left:28px;top:26px;z-index:3;color:var(--accent);font-weight:600;letter-spacing:.18em;font-size:14px}
+.mg-card h3{font-size:44px;line-height:1;margin:0 0 10px;letter-spacing:-.03em}
+.mg-card h3.s{font-family:var(--serif);font-style:italic;font-weight:400;font-size:56px;letter-spacing:-.01em}
+.mg-card p{margin:0;color:rgba(243,241,238,.84);font-size:17px;max-width:320px}
+.mg-card .go{margin-top:18px;font-weight:700;font-size:15px;color:var(--accent)}
+.mg-tiles{position:absolute;inset:0;display:flex;justify-content:center;align-items:flex-start;padding-top:70px}
+.mg-tile{position:relative;flex:none;width:132px;height:234px;border-radius:20px;overflow:hidden;border:1.5px solid rgba(243,241,238,.25);box-shadow:0 26px 50px rgba(0,0,0,.5);display:flex;flex-direction:column;justify-content:flex-end;padding:12px}
+.mg-tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.mg-tile:nth-child(1){transform:rotate(-8deg) translate(18px,14px)}
+.mg-tile:nth-child(2){z-index:2}
+.mg-tile:nth-child(3){transform:rotate(8deg) translate(-18px,14px)}
+.mg-tile b{position:absolute;left:10px;top:10px;font-size:8px;font-weight:700;letter-spacing:.14em;display:flex;gap:5px;align-items:center}
+.mg-tile b:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.mg-tile em{position:absolute;left:0;right:0;top:32%;text-align:center;font-style:normal;font-size:46px;line-height:1}
+.mg-tile span{position:relative;font-size:11px;font-weight:700;line-height:1.2}
+.mg-langs{display:grid;grid-template-columns:repeat(4,1fr) 1.6fr;gap:16px}
+.mg-lang{border:1.5px solid var(--hair);border-radius:26px;padding:26px;min-height:220px;display:flex;flex-direction:column;justify-content:space-between;background:var(--surface)}
+.mg-lang b{font-family:var(--display);font-weight:800;font-variation-settings:"wdth" 75;font-size:88px;line-height:.86;letter-spacing:-.02em}
+.mg-lang:nth-child(2) b{color:var(--accent)}
+.mg-lang:nth-child(4) b{color:transparent;-webkit-text-stroke:2px var(--text)}
+.mg-lang span{color:var(--muted);font-size:13px;letter-spacing:.2em;text-transform:uppercase;font-weight:600}
+.mg-lang.say{background:none;border:0;padding:6px 0 0 24px;justify-content:center;gap:22px}
+.mg-lang.say p{margin:0;color:rgba(243,241,238,.82);font-size:19px}
+.mg-lang.say .btn{align-self:flex-start}
+@media (max-width:900px){
+  .mg-svc{grid-template-columns:1fr}.mg-card{height:440px}.mg-tiles{padding-top:54px}.mg-tile{width:108px;height:190px;border-radius:16px;padding:9px}.mg-tile em{font-size:36px}.mg-tile span{font-size:9.5px}
+  .mg-langs{grid-template-columns:1fr 1fr;gap:10px}.mg-lang{min-height:150px;padding:18px;border-radius:20px}.mg-lang b{font-size:62px}.mg-lang.say{grid-column:1/3;padding:14px 0 0}
+}
+
+/* Articles and the privacy page: readable running text, only the page title gets the big headline look */
+.article h2,.article h3,.post h2,.cta-box h2,.legal h2{text-transform:none;font-variation-settings:"wdth" 100;letter-spacing:-.025em;line-height:1.15}
+.article h1{font-size:clamp(40px,7vw,84px);line-height:.92}
+.faq{grid-template-columns:minmax(0,1fr)}
