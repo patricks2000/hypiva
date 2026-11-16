@@ -30,5 +30,32 @@ window.HYPIVA_INFLUENCERS = [
     gallery: ['/landing/joos/laugh.webp', '/landing/joos/selfie.webp', '/landing/joos/sport.webp'],
     email: 'joos@hypiva.com', // alias of patrick@hypiva.com, lands under the Gmail label 'Joos'
     tiktok: 'https://www.tiktok.com/@joosie.vdgrint'
+  },
+  {
+    slug: 'valerie',
+    name: 'Valerie',
+    photo: '/landing/valerie/dinner.webp',
+    photoPos: '50% 30%',
+    share: '/landing/valerie/share.jpg',
+    followers: '12k+',
+    tagline: { en: 'An eye for <span class="hl">style.</span>', nl: 'Oog voor <span class="hl">stijl.</span>', fr: 'L&#39;œil pour le <span class="hl">style.</span>' },
+    platform: 'TikTok',
+    services: ['influencer', 'ugc'],
+    language: { en: 'Dutch', nl: 'Nederlands', fr: 'Néerlandais' },
+    region: { en: 'East Netherlands', nl: 'Oost-Nederland', fr: 'Est des Pays-Bas' },
+    tags: [
+      { en: 'Fashion & styling', nl: 'Mode & styling', fr: 'Mode & stylisme' },
+      { en: 'Beauty', nl: 'Beauty', fr: 'Beauté' },
+      { en: 'Sport', nl: 'Sport', fr: 'Sport' },
+      { en: 'Food & restaurants', nl: 'Eten & restaurants', fr: 'Cuisine & restaurants' }
+    ],
+    about: {
+      en: 'Valerie is creative and has an eye for detail. She loves styling and fashion (which she also studies), beauty, sport and discovering new places to eat. Spontaneous and always up for a fun new collaboration.',
+      nl: 'Valerie is creatief en heeft oog voor detail. Ze houdt van styling en mode (daar studeert ze ook in), beauty, sporten en nieuwe eettentjes ontdekken. Spontaan en altijd in voor een leuke nieuwe samenwerking.',
+      fr: 'Valerie est créative et a l&#39;œil pour le détail. Elle aime le stylisme et la mode (qu&#39;elle étudie aussi), la beauté, le sport et découvrir de nouvelles adresses. Spontanée et toujours partante pour une nouvelle collaboration.'
+    },
+    gallery: ['/landing/valerie/autumn.webp', '/landing/valerie/menu.webp', '/landing/valerie/mirror.webp'],
+    email: 'valerie@hypiva.com', // alias of patrick@hypiva.com (create it in Google Workspace)
+    tiktok: 'https://www.tiktok.com/@valsmidttt'
   }
 ];
