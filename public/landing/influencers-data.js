@@ -38,6 +38,7 @@ window.HYPIVA_INFLUENCERS = [
     photoPos: '50% 30%',
     share: '/landing/valerie/share.jpg',
     followers: '12k+',
+    likes: '298K+',
     tagline: { en: 'An eye for <span class="hl">style.</span>', nl: 'Oog voor <span class="hl">stijl.</span>', fr: 'L&#39;œil pour le <span class="hl">style.</span>' },
     platform: 'TikTok',
     services: ['influencer', 'ugc'],
