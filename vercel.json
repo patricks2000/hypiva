@@ -3,6 +3,18 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
+      "source": "/slideshows",
+      "destination": "/slideshows.html"
+    },
+    {
+      "source": "/nl/slideshows",
+      "destination": "/nl/slideshows.html"
+    },
+    {
+      "source": "/fr/slideshows",
+      "destination": "/fr/slideshows.html"
+    },
+    {
       "source": "/nl",
       "destination": "/nl/index.html"
     },
