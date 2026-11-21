@@ -214,6 +214,10 @@ footer .wrap > span{flex-wrap:wrap}
 .vc.a{left:0;top:60px;transform:rotate(-7deg);background:linear-gradient(160deg,#FFB27A,#FF5A3D)}
 .vc.b{left:50%;margin-left:-115px;top:0;z-index:2;background:linear-gradient(160deg,#B9A8FF,#7B61FF)}
 .vc.c{right:0;top:70px;transform:rotate(7deg);background:linear-gradient(160deg,#8FE3D6,#18A999)}
+/* A real client video in one of the cards: fills the card, with the TikTok bits on top. */
+.vc.real{background:#000}
+.vc .vc-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.vc.real .top,.vc.real .side,.vc.real .user{text-shadow:0 1px 6px rgba(0,0,0,.6);z-index:1}
 .trustcard{display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border:1px solid var(--line);border-radius:22px;margin-bottom:20px}
 .trustcard > div{padding:18px 20px;display:flex;gap:14px;align-items:flex-start}
 .trustcard > div + div{border-left:1px solid var(--line)}
@@ -305,7 +309,7 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
     </div>
     <div class="vcards fx-stage" aria-hidden="true"><span class="fx-chip u1" data-nl="Door ons gecheckt" data-fr="Vérifié par nous">Checked by us</span><span class="fx-chip u2" data-nl="Klaar voor je socials en ads" data-fr="Prêt pour vos réseaux et pubs">Ready for socials and ads</span>
         <div class="vc a k1"><div class="top">Following &nbsp;<u>For You</u></div><div class="emo">💄</div><div class="lab"><span data-nl="get ready with me" data-fr="get ready with me">get ready with me</span></div><div class="side">♥<br>💬<br>🔖</div><div class="user">@creator</div></div>
-        <div class="vc b k2"><div class="top">Following &nbsp;<u>For You</u></div><div class="emo">📦</div><div class="lab"><span data-nl="kijk wat er net binnenkwam" data-fr="regardez ce qui vient d'arriver">look what just arrived</span></div><div class="side">♥<br>💬<br>🔖</div><div class="user">@creator</div></div>
+        <div class="vc b k2 real"><video class="vc-vid" src="/landing/ugc/maryve.mp4" poster="/landing/ugc/maryve.jpg" muted loop playsinline autoplay preload="metadata"></video><div class="top">Following &nbsp;<u>For You</u></div><div class="side">♥<br>💬<br>🔖</div><div class="user" data-nl="Echte video · Maryve" data-fr="Vraie vidéo · Maryve">Real video · Maryve</div></div>
         <div class="vc c k3"><div class="top">Following &nbsp;<u>For You</u></div><div class="emo">👟</div><div class="lab"><span data-nl="ik pas mijn nieuwe set" data-fr="j'essaie mon nouvel ensemble">trying on my new set</span></div><div class="side">♥<br>💬<br>🔖</div><div class="user">@creator</div></div>
     </div>
   </div>
@@ -459,5 +463,13 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
 <script src="/landing/lang.js?v=8"></script>
 <script src="/landing/contact.js" defer></script>
 <script src="/landing/reviews.js?v=5" defer></script>
+<script>
+// Play the client video only while it is on screen.
+(function () {
+  var v = document.querySelector('.vc-vid');
+  if (!v || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver(function (e) { if (e[0].isIntersecting) { var p = v.play(); if (p && p.catch) p.catch(function () {}); } else v.pause(); }).observe(v);
+})();
+</script>
 </body>
 </html>
