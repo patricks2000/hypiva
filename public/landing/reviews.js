@@ -27,6 +27,25 @@
     var t = (x.translations && x.translations[lang]) || ((lang === 'en' || lang === 'nl') && (src === 'en' || src === 'nl') ? x.translation : null);
     return t ? { text: t, note: FROM[src] && FROM[src][lang] } : { text: x.body };
   }
+  // Common job titles in the page language; any other title stays as the client wrote it.
+  // French keeps "Founder": the French word changes with gender, which a title alone does not tell us.
+  var ROLES = [
+    { en: 'Owner', nl: 'Eigenaar', fr: 'Propriétaire', also: ['eigenares', 'owner', 'propriétaire', 'proprietaire'] },
+    { en: 'Founder', nl: 'Oprichter', fr: 'Founder', also: ['founder', 'oprichter', 'oprichtster', 'fondateur', 'fondatrice'] },
+    { en: 'Co-founder', nl: 'Medeoprichter', fr: 'Co-founder', also: ['co-founder', 'cofounder', 'medeoprichter', 'mede-oprichter', 'cofondateur', 'co-fondateur', 'cofondatrice'] },
+    { en: 'Marketing manager', nl: 'Marketingmanager', fr: 'Responsable marketing', also: ['marketing manager', 'marketingmanager', 'responsable marketing'] },
+  ];
+  function roleFor(r, lang) {
+    var k = String(r || '').trim().toLowerCase();
+    for (var i = 0; i < ROLES.length; i++) {
+      var x = ROLES[i];
+      if (x.also.indexOf(k) >= 0 || x.en.toLowerCase() === k || x.nl.toLowerCase() === k || x.fr.toLowerCase() === k) {
+        // Keep "Fondatrice" / "Oprichtster" when the client wrote it that way on a page in that language.
+        return x.also.indexOf(k) >= 0 && ((lang === 'fr' && /^(fondatrice|cofondatrice)$/.test(k)) || (lang === 'nl' && /^(eigenares|oprichtster)$/.test(k))) ? r : x[lang];
+      }
+    }
+    return r;
+  }
   var TAG = { slideshows: { en: 'slideshow campaign', nl: 'slideshow-campagne', fr: 'campagne slideshow' }, ugc: { en: 'UGC campaign', nl: 'UGC-campagne', fr: 'campagne UGC' } };
   var rows = [];
   var dots = null;
@@ -100,7 +119,7 @@
       var txt = el('div');
       txt.appendChild(el('b', '', x.name));
       // Same as the small quote at the top of the homepage: "Founder, TheCozyDev (slideshow campaign)".
-      var sub = [x.role, x.company].filter(Boolean).join(', '); // name, job title and company stay as the client wrote them
+      var sub = [roleFor(x.role, lang), x.company].filter(Boolean).join(', '); // name and company stay as the client wrote them; a common job title is shown in the page language
       var kind = '(' + TAG[x.service === 'ugc' ? 'ugc' : 'slideshows'][lang] + ')';
       txt.appendChild(el('span', '', sub ? sub + ' ' + kind : kind));
       who.appendChild(txt);
