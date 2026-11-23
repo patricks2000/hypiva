@@ -3,6 +3,18 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
+      "source": "/fr/tiktok-shop",
+      "destination": "/fr/tiktok-shop.html"
+    },
+    {
+      "source": "/nl/tiktok-shop",
+      "destination": "/nl/tiktok-shop.html"
+    },
+    {
+      "source": "/tiktok-shop",
+      "destination": "/tiktok-shop.html"
+    },
+    {
       "source": "/slideshows",
       "destination": "/slideshows.html"
     },

@@ -21,6 +21,11 @@ const PAGES = {
     nl: { title: "UGC laten maken | UGC-video's voor merken | Hypiva", desc: "UGC laten maken voor je merk: echte UGC-video's van Nederlandse creators voor TikTok, Instagram en advertenties. Prijs in overleg.", og: "Echte UGC-video's van Nederlandse creators. Wij regelen alles." },
     fr: { title: 'Vidéos UGC pour les marques | Créateurs UGC | Hypiva', desc: 'Faites créer des vidéos UGC pour votre marque : de vraies vidéos de créateurs néerlandais pour TikTok, Instagram et vos publicités. Prix sur demande.', og: 'De vraies vidéos UGC par des créateurs néerlandais. Nous gérons tout.' },
   },
+  tiktokShop: {
+    file: 'tiktok-shop.html', path: '/tiktok-shop',
+    nl: { title: "Video's voor je TikTok Shop | Hypiva", desc: "TikTok Shop video's voor merken: echte Nederlandse creators maken korte video's met je product erin gelinkt, zodat kijkers het meteen in TikTok kopen. Prijs in overleg.", og: 'Echte Nederlandse creators, je product gelinkt in de video. Wij regelen alles.' },
+    fr: { title: 'Vidéos pour votre TikTok Shop | Hypiva', desc: 'Vidéos TikTok Shop pour les marques : de vrais créateurs néerlandais réalisent des vidéos courtes avec votre produit lié, achetable directement dans TikTok. Prix sur demande.', og: 'De vrais créateurs néerlandais, votre produit lié dans la vidéo. Nous gérons tout.' },
+  },
   influencers: {
     file: 'influencers-list.html', path: '/influencers',
     nl: { title: 'Influencer marketing | Influencer inhuren voor TikTok | Hypiva', desc: 'Influencer marketing voor merken, restaurants en zaken: onze Nederlandse influencers posten over jouw product op hun eigen TikTok. Eerlijk, in hun eigen stijl, en wij regelen alles.', og: 'Jouw merk op TikTok, door influencers die het echt leuk vinden.' },
@@ -102,6 +107,7 @@ const SERVICE = {
   home: { en: 'Creator marketing: TikTok slideshows, UGC videos and influencer posts', nl: "Creatormarketing: TikTok-slideshows, UGC-video's en influencerposts", fr: 'Marketing de créateurs : slideshows TikTok, vidéos UGC et posts d’influenceurs' },
   slideshows: { en: 'TikTok slideshow campaigns for apps', nl: 'TikTok-slideshowcampagnes voor apps', fr: 'Campagnes de slideshows TikTok pour apps' },
   ugc: { en: 'UGC videos for brands', nl: "UGC-video's voor merken", fr: 'Vidéos UGC pour les marques' },
+  tiktokShop: { en: 'TikTok Shop videos for brands', nl: "TikTok Shop-video's voor merken", fr: 'Vidéos TikTok Shop pour les marques' },
   influencers: { en: 'Influencer marketing', nl: 'Influencer marketing', fr: 'Marketing d’influence' },
 };
 
@@ -148,7 +154,7 @@ export function localize(dist) {
       html = once(html, /<meta property="og:description"[^>]*>/, `<meta property="og:description" content="${attr(t.og)}">`);
       html = once(html, /<link rel="canonical"[^>]*>/, `<link rel="canonical" href="${url}">`);
       // Links between the two pages stay inside the language.
-      html = html.replace(/href="\/(ugc|influencers|slideshows)?(#[\w-]*)?"/g, (_, sub, hash) => `href="/${lang}${sub ? '/' + sub : ''}${hash || ''}"`);
+      html = html.replace(/href="\/(ugc|influencers|slideshows|tiktok-shop)?(#[\w-]*)?"/g, (_, sub, hash) => `href="/${lang}${sub ? '/' + sub : ''}${hash || ''}"`);
       html = headExtras(html, key, lang, url, t.desc);
       mkdirSync(new URL(lang + '/', dist), { recursive: true });
       writeFileSync(new URL(`${lang}/${page.path ? page.path.slice(1) : 'index'}.html`, dist), html);

@@ -234,7 +234,7 @@ footer .wrap > span{flex-wrap:wrap}
 .svc{display:inline-flex;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;gap:4px}
 .svc a{padding:8px 14px;border-radius:999px;font-weight:700;font-size:14px;color:var(--muted);white-space:nowrap}
 .svc a.on{background:var(--grad);color:#1a0b05}
-@media (max-width:520px){.svc{display:grid;grid-template-columns:1fr 1fr;width:100%}.svc a{text-align:center;font-size:13px;padding:8px 6px;white-space:normal}}
+@media (max-width:520px){.svc{display:grid;grid-template-columns:repeat(3,1fr);width:100%;border-radius:22px}.svc a{display:flex;align-items:center;justify-content:center;text-align:center;font-size:12.5px;line-height:1.2;padding:8px 6px;white-space:normal;border-radius:18px}}
 nav .links a.on{color:var(--text)}
 #how{padding-block:70px}
 #how h2{font-size:clamp(32px,4.6vw,50px);font-weight:800;margin:14px 0 10px}
@@ -288,22 +288,22 @@ nav.open .menubtn span::after{content:"";display:block;width:18px;height:2px;bac
 <nav class="top" aria-label="Main">
   <div class="wrap">
     <a class="brand" href="/"><img src="/landing/icon.png" alt=""><span>hyp<b>iva</b></span></a>
-    <div class="links"><a href="/slideshows" class="on">Slideshows</a><a href="/ugc">UGC</a><a href="/influencers">Influencers</a><a href="#pricing" data-nl="Prijzen" data-fr="Tarifs">Pricing</a><a href="#faq" data-nl="Vragen" data-fr="FAQ">FAQ</a><a href="#contact">Contact</a></div>
+    <div class="links"><a href="/slideshows" class="on">Slideshows</a><a href="/ugc">UGC</a><a href="/tiktok-shop">TikTok Shop</a><a href="/influencers">Influencers</a><a href="#pricing" data-nl="Prijzen" data-fr="Tarifs">Pricing</a><a href="#faq" data-nl="Vragen" data-fr="FAQ">FAQ</a><a href="#contact">Contact</a></div>
     <a class="login" href="/sign-in" data-nl="Inloggen" data-fr="Connexion">Log in</a>
     <a class="btn ghost creator" href="/sign-in?signup=1"><span class="long" data-nl="Word creator" data-fr="Devenir créateur">Become a creator</span><span class="short">Creator</span></a>
     <a class="btn primary cta" href="#contact"><span class="long" data-nl="Start een campagne" data-fr="Lancer une campagne">Launch a campaign</span><span class="short" data-nl="Start" data-fr="Commencer">Get started</span></a>
     <button class="langbtn main" type="button" aria-label="Naar Nederlands">NL</button>
     <button class="menubtn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mpanel"><span></span></button>
   </div>
-  <div class="sublinks"><button class="langbtn" type="button" aria-label="Naar Nederlands">NL</button><a href="/slideshows" style="color:var(--text)">Slideshows</a><a href="/ugc">UGC</a><a href="/influencers">Influencers</a><a href="#pricing" data-nl="Prijzen" data-fr="Tarifs">Pricing</a><a href="#faq" data-nl="Vragen" data-fr="FAQ">FAQ</a><a href="#contact">Contact</a></div>
-  <div class="mpanel" id="mpanel"><a href="/slideshows" data-nl="Slideshows voor apps" data-fr="Slideshows pour apps">Slideshows for apps</a><a href="/ugc" data-nl="UGC voor merken" data-fr="UGC pour marques">UGC for brands</a><a href="/influencers" data-nl="Influencers" data-fr="Influenceurs">Influencers</a><a href="#how" data-nl="Hoe het werkt" data-fr="Comment ça marche">How it works</a><a href="#pricing" data-nl="Prijzen" data-fr="Tarifs">Pricing</a><a href="#about" data-nl="Over ons" data-fr="À propos">About</a><a href="#faq" data-nl="Vragen" data-fr="FAQ">FAQ</a><a href="#contact">Contact</a><a href="/sign-in?signup=1" data-nl="Word creator" data-fr="Devenir créateur">Become a creator</a><a href="/sign-in" data-nl="Inloggen" data-fr="Connexion">Log in</a><button class="langbtn mlang" type="button" aria-label="Naar Nederlands">NL</button></div>
+  <div class="sublinks"><button class="langbtn" type="button" aria-label="Naar Nederlands">NL</button><a href="/slideshows" style="color:var(--text)">Slideshows</a><a href="/ugc">UGC</a><a href="/tiktok-shop">TikTok Shop</a><a href="/influencers">Influencers</a><a href="#pricing" data-nl="Prijzen" data-fr="Tarifs">Pricing</a><a href="#faq" data-nl="Vragen" data-fr="FAQ">FAQ</a><a href="#contact">Contact</a></div>
+  <div class="mpanel" id="mpanel"><a href="/slideshows" data-nl="Slideshows voor apps" data-fr="Slideshows pour apps">Slideshows for apps</a><a href="/ugc" data-nl="UGC voor merken" data-fr="UGC pour marques">UGC for brands</a><a href="/tiktok-shop">TikTok Shop</a><a href="/influencers" data-nl="Influencers" data-fr="Influenceurs">Influencers</a><a href="#how" data-nl="Hoe het werkt" data-fr="Comment ça marche">How it works</a><a href="#pricing" data-nl="Prijzen" data-fr="Tarifs">Pricing</a><a href="#about" data-nl="Over ons" data-fr="À propos">About</a><a href="#faq" data-nl="Vragen" data-fr="FAQ">FAQ</a><a href="#contact">Contact</a><a href="/sign-in?signup=1" data-nl="Word creator" data-fr="Devenir créateur">Become a creator</a><a href="/sign-in" data-nl="Inloggen" data-fr="Connexion">Log in</a><button class="langbtn mlang" type="button" aria-label="Naar Nederlands">NL</button></div>
 </nav>
 
 <main>
   <a class="fab" href="#contact" data-nl="Contact" data-fr="Contact">Contact</a>
   <div class="wrap hero">
     <div>
-      <div class="svc"><a href="/slideshows" class="on" data-nl="Slideshows voor apps" data-fr="Slideshows pour apps">Slideshows for apps</a><a href="/ugc" data-nl="UGC voor merken" data-fr="UGC pour marques">UGC for brands</a></div>
+      <div class="svc"><a href="/slideshows" class="on" data-nl="Slideshows voor apps" data-fr="Slideshows pour apps">Slideshows for apps</a><a href="/ugc" data-nl="UGC voor merken" data-fr="UGC pour marques">UGC for brands</a><a href="/tiktok-shop">TikTok Shop</a></div>
       <h1 data-nl="Jouw product op <span class='hl'>echte feeds.</span>" data-fr="Votre produit sur de <span class='hl'>vrais fils.</span>">Your product on <span class="hl">real feeds.</span></h1>
       <p class="lead" data-nl="Echte creators posten slideshows over je app of merk op hun eigen TikTok, in heel veel talen. Wij regelen alles, jij ziet elke video en de views live, en je betaalt per view." data-fr="De vrais créateurs publient des slideshows sur votre app ou votre marque sur leur propre TikTok, dans de nombreuses langues. On s'occupe de tout, vous voyez chaque vidéo et ses vues en direct, et vous payez à la vue.">Real creators post slideshows about your app or brand on their own TikTok, in many languages. We handle everything, you see every video and its views live, and you pay per view.</p>
       <div class="ctas">
