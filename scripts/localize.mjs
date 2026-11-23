@@ -8,13 +8,13 @@ const SITE = 'https://www.hypiva.com';
 const PAGES = {
   home: {
     file: 'index.html', path: '',
-    nl: { title: 'Echte creators voor jouw merk of zaak | Hypiva', desc: "Hypiva koppelt merken, apps en lokale zaken aan echte creators: TikTok-slideshows voor apps, UGC-video's voor merken en influencerposts. Wij regelen alles, van het eerste idee tot de video.", og: "TikTok-slideshows, UGC-video's en influencerposts. Wij regelen alles." },
-    fr: { title: 'De vrais créateurs pour votre marque ou commerce | Hypiva', desc: 'Hypiva met en relation marques, apps et commerces locaux avec de vrais créateurs : slideshows TikTok pour les apps, vidéos UGC pour les marques et posts d’influenceurs. On s’occupe de tout, de la première idée à la vidéo.', og: 'Slideshows TikTok, vidéos UGC et posts d’influenceurs. On s’occupe de tout.' },
+    nl: { title: 'UGC & influencer marketing met echte creators | Hypiva', desc: "UGC-video's, influencerposts en TikTok-slideshows door echte Nederlandse creators, voor merken, apps en lokale zaken. Wij regelen alles.", og: "TikTok-slideshows, UGC-video's en influencerposts. Wij regelen alles." },
+    fr: { title: 'UGC & marketing d’influence avec de vrais créateurs | Hypiva', desc: 'Vidéos UGC, posts d’influenceurs et slideshows TikTok par de vrais créateurs néerlandais, pour marques, apps et commerces. On s’occupe de tout.', og: 'Slideshows TikTok, vidéos UGC et posts d’influenceurs. On s’occupe de tout.' },
   },
   slideshows: {
     file: 'slideshows.html', path: '/slideshows',
-    nl: { title: 'TikTok-slideshows voor apps | Hypiva', desc: 'TikTok marketing voor apps en merken. Het creatornetwerk van Hypiva post slideshows over jouw app op veel echte TikTok-accounts, in meerdere talen. Je betaalt per view.', og: 'Echte creators. Echte views. Betaal per view.' },
-    fr: { title: 'Slideshows TikTok pour apps | Hypiva', desc: 'Marketing TikTok pour apps et marques. Le réseau de créateurs Hypiva publie des slideshows sur votre app sur de nombreux vrais comptes TikTok, en plusieurs langues. Vous payez à la vue.', og: 'De vrais créateurs. De vraies vues. Payez à la vue.' },
+    nl: { title: 'TikTok-slideshows voor apps | Hypiva', desc: 'TikTok-slideshows voor apps: creators posten slideshows over jouw app op echte TikTok-accounts. Je plant de content met ons en betaalt per view.', og: 'Echte creators. Echte views. Betaal per view.' },
+    fr: { title: 'Slideshows TikTok pour apps | Hypiva', desc: 'Slideshows TikTok pour apps : des créateurs publient des slideshows sur votre app sur de vrais comptes TikTok. Vous planifiez avec nous et payez à la vue.', og: 'De vrais créateurs. De vraies vues. Payez à la vue.' },
   },
   ugc: {
     file: 'influencers.html', path: '/ugc',

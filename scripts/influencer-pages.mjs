@@ -20,7 +20,8 @@ export function influencerPages(dist) {
     const url = `${SITE}/influencers/${p.slug}`;
     const roles = [(p.services || []).includes('influencer') && 'TikTok influencer', (p.services || []).includes('ugc') && 'UGC creator'].filter(Boolean).join(' & ');
     const title = `${p.name}, ${roles} | Hypiva`;
-    const desc = plain(p.about.en) + ` Work with ${p.name} through Hypiva.`;
+    // Short enough for search results (about 150 characters): who, where, reach, and what you can book.
+    const desc = `${p.name}: TikTok creator from ${p.region ? p.region.en : 'the Netherlands'} with ${p.followers} followers${p.likes ? ' and ' + p.likes + ' likes' : ''}. Book ${p.name} for UGC videos and influencer posts through Hypiva.`;
     const image = SITE + (p.share || p.photo);
     const ld = { '@context': 'https://schema.org', '@type': 'ProfilePage', url, name: title, mainEntity: {
       '@type': 'Person', name: p.name, description: plain(p.about.en), image, url,
