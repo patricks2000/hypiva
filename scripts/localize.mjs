@@ -111,7 +111,8 @@ function structured(html, key, lang, url, desc) {
     .map(([, q, a]) => ({ '@type': 'Question', name: strip(q), acceptedAnswer: { '@type': 'Answer', text: strip(a) } }))
     .filter((x) => x.name && x.acceptedAnswer.text);
   const org = { '@type': 'Organization', '@id': SITE + '/#org', name: 'Hypiva', url: SITE + '/', logo: SITE + '/landing/icon.png', email: 'patrick@hypiva.com',
-    founder: { '@type': 'Person', name: 'Patrick' }, address: { '@type': 'PostalAddress', addressCountry: 'NL' } };
+    founder: { '@type': 'Person', name: 'Patrick' }, address: { '@type': 'PostalAddress', addressCountry: 'NL' },
+    sameAs: ['https://www.tiktok.com/@hypiva.agency', 'https://www.instagram.com/hypiva/', 'https://www.linkedin.com/company/hypiva/', 'https://x.com/hypiva'] };
   const graph = [org,
     { '@type': 'WebSite', '@id': SITE + '/#site', url: SITE + '/', name: 'Hypiva', publisher: { '@id': SITE + '/#org' }, inLanguage: ['en', 'nl', 'fr'] },
     { '@type': 'Service', name: SERVICE[key][lang], description: desc, url, provider: { '@id': SITE + '/#org' }, serviceType: SERVICE[key].en, areaServed: ['NL', 'BE', 'FR', 'Worldwide'] }];
